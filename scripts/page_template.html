@@ -383,7 +383,7 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
 .badge { font-size: 11px; font-weight: 600; line-height: 1.4; border-radius: 999px; padding: 0 7px; border: 1px solid var(--accent-line); background: var(--accent-soft); color: var(--ink); white-space: nowrap; }
 .pz td.big { font-family: var(--font-display); font-size: 19px; font-weight: 600; color: var(--ink); }
 .pz td.nd { color: var(--ink-3); font-style: italic; font-size: 13px; }
-.pz td.agent { text-align: left; font-size: 13px; color: var(--ink-2); }
+.pz .eff { display: inline-block; font-size: 11.5px; font-weight: 600; line-height: 1.35; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: 999px; padding: 0 7px; margin-left: 2px; white-space: nowrap; vertical-align: 1px; overflow-wrap: normal; }
 .pz td.rate { font-size: 13px; color: var(--ink-2); }
 .pz td.rate b { font-weight: 600; color: var(--ink); }
 .pz td.rate .rel { display: block; font-size: 12px; color: var(--ink-3); line-height: 1.3; }
@@ -500,14 +500,14 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
         <div class="panel-head">
           <div>
             <h2 id="pz-h">Price and speed</h2>
-            <p id="pz-sub">What your picks cost and how fast they answer, next to how well they do on one job. Click a column to sort.</p>
+            <p id="pz-sub">What your picks cost and how fast they answer, next to how well each effort level does on one job. Click a column to sort.</p>
           </div>
           <div class="pz-ctl"><label for="pz-job">Judge value on</label><select id="pz-job"></select></div>
         </div>
         <div id="pz-host"></div>
         <div class="sc-title">
           <h3 id="sc-h">Rating vs price</h3>
-          <p>Each dot is one of your picks. Further left is cheaper, higher up is rated better, so dots toward the top left are the best value.</p>
+          <p id="sc-sub">Each dot is one effort level of a pick. Further left is cheaper, higher up is rated better, so dots toward the top left are the best value. Efforts of one model share a price per token, so they line up vertically.</p>
         </div>
         <div class="scatter-wrap" id="scatter"></div>
         <div class="sc-legend" id="sc-legend"></div>
@@ -559,7 +559,7 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
         <div class="panel-head">
           <div>
             <h2 id="h2h-h">Head to head</h2>
-            <p>Rating with its confidence interval. Where a whisker reaches the shaded band, that model can't be told apart from the leader yet.</p>
+            <p>Rating with its confidence interval, one bar per effort level. Where a whisker reaches the shaded band, that entry can't be told apart from the leader yet.</p>
           </div>
           <div class="h2h-ctl"><label for="h2h-cat">Leaderboard</label><select id="h2h-cat"></select></div>
         </div>
@@ -711,41 +711,75 @@ function presetBy(S, sc, by, n = 20, k = 6) {
     .slice(0, k);
 }
 
-/* price table rows for the selected models, with badges and the chosen job's rating */
+/* The price table and its chart are always split by effort: a picked family expands to each of
+   its leaderboard entries (effort level or setup), a picked variant stays one row.
+   -> [{ vi, fam, effort }] in pick order, then the family's rank order. */
+function effortRows(SP, S, sel) {
+  const vis = [];
+  for (const mi of sel) for (const vi of (S.fam ? S.models[mi].members : [mi])) if (!vis.includes(vi)) vis.push(vi);
+  return vis.map(vi => {
+    const f = SP.F.models[SP.famOf[vi]];
+    const k = f.members.indexOf(vi);
+    // short label drops date stamps; keep them when two entries of one model would read the same
+    const short = vs => viaShort(vs) || "Default";
+    const clash = f.members.some((o, j) => j !== k && short(f.vias[j]) === short(f.vias[k]));
+    return { vi, fam: f.name, effort: clash ? (f.vias[k] || "Default") : short(f.vias[k]) };
+  });
+}
+
+/* price table rows (one per model + effort), with badges and the chosen job's rating for that effort */
 const PZ_COLS = [
   ["name", "Model", 1], ["blend", "Blended", 1], ["tps", "Speed", -1], ["rate", "Rating", -1], ["ttft", "First token", 1],
   ["inp", "Input", 1], ["out", "Output", 1], ["ctx", "Context", -1], ["agent", "Agent task", 1],
 ];
-function priceTable(S, sel, job, sc, sort) {
-  const c = job ? S.byKey.get(job.key) : null;
-  const A = c ? analyze(c, sel, sc) : null;
-  const rowOf = mi => A && A.rows.find(r => r.mi === mi) || null;
-  const rows = sel.map(mi => {
-    const m = S.models[mi], p = m.price || {};
-    const ag = (p.agent || []).slice().sort((a, b) => a.cost - b.cost);
-    return { mi, m, r: rowOf(mi), blend: blendOf(m), inp: p.flags & 4 ? null : (p.inp ?? null), out: p.flags & 4 ? null : (p.out ?? null),
-      tps: tpsOf(m), ttft: p.ttft || null, ctx: p.ctx || null, agent: ag, agentMin: ag.length ? ag[0].cost : null, badges: [] };
+function priceTable(SP, S, sel, job, sc, sort) {
+  const V = SP.V;
+  const ents = effortRows(SP, S, sel);
+  const vsel = ents.map(e => e.vi);
+  // ratings come from each entry's own row on the board, never from a sibling effort
+  const c = job ? V.byKey.get(job.key) : null;
+  const A = c ? analyze(c, vsel, sc) : null;
+  const rowOf = vi => A && A.rows.find(r => r.mi === vi) || null;
+  const rows = ents.map(e => {
+    const m = V.models[e.vi], p = m.price || {};
+    // per-variant price carries only this entry's own agent cost (0 or 1)
+    const task = (p.agent || []).find(a => a.vi === e.vi) || null;
+    return { mi: e.vi, vi: e.vi, m, fam: e.fam, effort: e.effort, label: `${e.fam} · ${e.effort}`, r: rowOf(e.vi),
+      blend: blendOf(m), inp: p.flags & 4 ? null : (p.inp ?? null), out: p.flags & 4 ? null : (p.out ?? null),
+      tps: tpsOf(m), ttft: p.ttft || null, ctx: p.ctx || null, task, badges: [] };
   });
-  const pickMin = (key) => { const xs = rows.filter(x => x[key] != null); return xs.length > 1 ? xs.reduce((a, b) => b[key] < a[key] ? b : a) : null; };
-  const pickMax = (key) => { const xs = rows.filter(x => x[key] != null); return xs.length > 1 ? xs.reduce((a, b) => b[key] > a[key] ? b : a) : null; };
-  const cheap = pickMin("blend"), fast = pickMax("tps");
-  if (cheap) cheap.badges.push("Cheapest");
-  if (fast) fast.badges.push("Fastest");
-  // best value: cheapest pick that is as good as the best pick on the chosen job
+  // price per token and speed are per model, so every effort of the cheapest/fastest model shares the badge;
+  // no badge when all rows have the same value
+  const extreme = (key, lower) => {
+    const xs = rows.filter(x => x[key] != null);
+    if (xs.length < 2) return [];
+    const top = xs.reduce((a, b) => (lower ? b[key] < a[key] : b[key] > a[key]) ? b : a)[key];
+    return xs.every(x => x[key] === top) ? [] : xs.filter(x => x[key] === top);
+  };
+  const cheap = extreme("blend", true), fast = extreme("tps", false);
+  cheap.forEach(x => x.badges.push("Cheapest"));
+  fast.forEach(x => x.badges.push("Fastest"));
+  // best value: cheapest row that is as good as the best row on the chosen job. Efforts of one model
+  // share a per-token price, so a tie goes to the lower measured cost per agent task, then the higher rating.
   let best = null;
   if (A && A.lead && A.rows.length > 1) {
     const bt = c.arena.stype === "bt";
     const ok = rows.filter(x => x.r && x.blend != null && (x.r.isLead || x.r.tied || (bt && A.lead.score - x.r.score <= CLOSE_PTS)));
-    if (ok.length) best = ok.reduce((a, b) => b.blend < a.blend ? b : a);
+    const beats = (b, a) => b.blend !== a.blend ? b.blend < a.blend
+      : (a.task && b.task && a.task.cost !== b.task.cost) ? b.task.cost < a.task.cost : b.r.score > a.r.score;
+    if (ok.length) best = ok.reduce((a, b) => beats(b, a) ? b : a);
     if (best) best.badges.push("Best value");
   }
   const key = sort && sort.key || "blend", dir = sort && sort.dir || 1;
-  const val = x => key === "name" ? x.m.name.toLowerCase() : key === "rate" ? (x.r ? x.r.score : null) : key === "agent" ? x.agentMin : x[key];
+  const val = x => key === "name" ? x.fam.toLowerCase() : key === "rate" ? (x.r ? x.r.score : null) : key === "agent" ? (x.task ? x.task.cost : null) : x[key];
+  // ties (efforts of one model share most columns) go to the better-rated effort, then pick order
+  const sc_ = x => x.r ? x.r.score : -Infinity;
+  const tie = (a, b) => (sc_(b) > sc_(a) ? 1 : sc_(b) < sc_(a) ? -1 : 0) || vsel.indexOf(a.vi) - vsel.indexOf(b.vi);
   rows.sort((a, b) => {
     const va = val(a), vb = val(b);
-    if (va == null && vb == null) return sel.indexOf(a.mi) - sel.indexOf(b.mi);
+    if (va == null && vb == null) return tie(a, b);
     if (va == null) return 1; if (vb == null) return -1;
-    return (va < vb ? -1 : va > vb ? 1 : 0) * dir || sel.indexOf(a.mi) - sel.indexOf(b.mi);
+    return (va < vb ? -1 : va > vb ? 1 : 0) * dir || tie(a, b);
   });
   return { rows, A, c, cheap, fast, best };
 }
@@ -1014,7 +1048,7 @@ function boot() {
   else if (!SP.hasSpeed) {
     document.querySelectorAll("[data-speed]").forEach(el => { el.hidden = true; if (el.tagName === "OPTION") el.remove(); });
     $("pz-h").textContent = "Price";
-    $("pz-sub").textContent = "What your picks cost, next to how well they do on one job. Click a column to sort.";
+    $("pz-sub").textContent = "What your picks cost, next to how well each effort level does on one job. Click a column to sort.";
     $("lede").textContent = "Pick the models you care about from all 11 LMArena leaderboards and see which one wins each job and what it costs. A model's effort levels (High, Max, Search…) count as one model, using whichever ranks best on each leaderboard. Ranks and ratings come from blind human votes; prices come from models.dev and OpenRouter.";
   }
   else $("lede").textContent = "Pick the models you care about from all 11 LMArena leaderboards and see which one wins each job, what it costs and how fast it is. A model's effort levels (High, Max, Search…) count as one model, using whichever ranks best on each leaderboard. Ranks and ratings come from blind human votes; prices and speeds come from models.dev and OpenRouter.";
@@ -1178,30 +1212,31 @@ function boot() {
     $("pz-job").disabled = !jobs.length;
     $("pz-notes").innerHTML = `<span><b>Prices</b> are list prices in US dollars per million tokens. Most come from <a href="https://models.dev" target="_blank" rel="noopener">models.dev ↗</a>, which lists the maker's own price; the rest come from <a href="https://openrouter.ai/models" target="_blank" rel="noopener">OpenRouter ↗</a>, marked † when that is OpenRouter's listed price, which can be a cheaper third-party host. <b>Blended</b> assumes 3 input tokens for every output token. Free tiers count as no data.</span>
       <span>${SP.hasSpeed ? `<b>Speed</b> (output tokens per second) and <b>first token</b> (seconds until the answer starts) are OpenRouter medians over the last 30 minutes, averaged across hosts, so treat them as a snapshot. ` : `Speed data is not included in this build. `}Prices fetched ${esc(DATA.pricesAt || "?")}.</span>
-      <span><b>Effort levels</b> (High, Max…) cost the same per token, but higher levels write more tokens, so each task costs more. <b>Agent task</b> is Arena's measured median cost per task on its agent leaderboard, per effort level.</span>`;
+      <span><b>One row per effort level</b> (High, Max…) or setup, as Arena lists it. Rating, rank and agent task cost are that entry's own; “not ranked” means Arena has no rating for that effort on this job. Price per token, speed and context belong to the model, so they repeat on each of its rows.</span>
+      <span><b>Effort levels</b> cost the same per token, but higher levels write more tokens, so each task costs more. <b>Agent task</b> is Arena's measured median cost per task on its agent leaderboard for that effort.</span>`;
     if (!st.sel.length) { host.innerHTML = `<div class="empty-state">Pick a few models to compare prices.</div>`; $("scatter").innerHTML = ""; $("sc-legend").innerHTML = ""; return; }
-    const T = priceTable(S, st.sel, job, st.sc, st.psort);
+    const T = priceTable(SP, S, st.sel, job, st.sc, st.psort);
     const st_ = T.c ? T.c.arena.stype : "bt";
     const nd = `<td class="nd">no data</td>`;
     const money = (v, cls, flag) => v == null ? nd : `<td class="num ${cls || ""}">${fmtUsd(v)}${flag ? `<span class="flag" title="OpenRouter's listed price; it can be a cheaper third-party host than the maker">†</span>` : ""}</td>`;
     const cols = SP.hasSpeed ? PZ_COLS : PZ_COLS.filter(([key]) => key !== "tps" && key !== "ttft");
     const head = cols.map(([key, label, def]) => {
-      const sub = { name: "", rate: job ? job.label : "", blend: "$ / M tokens", inp: "$ / M", out: "$ / M", tps: "tok / s", ttft: "seconds", ctx: "tokens", agent: "Arena, per effort" }[key];
+      const sub = { name: "and effort", rate: job ? job.label : "", blend: "$ / M tokens", inp: "$ / M", out: "$ / M", tps: "tok / s", ttft: "seconds", ctx: "tokens", agent: "$ per task, Arena" }[key];
       const sorted = st.psort.key === key;
-      return `<th class="${key === "name" ? "pz-name pz-l" : key === "agent" ? "pz-l" : ""}"><button type="button" class="pz-sort" data-psort="${key}" data-def="${def}"${sorted ? ` aria-sort="${st.psort.dir === 1 ? "ascending" : "descending"}"` : ""}>${label}${sub ? `<small>${esc(sub)}</small>` : ""}</button></th>`;
+      return `<th class="${key === "name" ? "pz-name pz-l" : ""}"><button type="button" class="pz-sort" data-psort="${key}" data-def="${def}"${sorted ? ` aria-sort="${st.psort.dir === 1 ? "ascending" : "descending"}"` : ""}>${label}${sub ? `<small>${esc(sub)}</small>` : ""}</button></th>`;
     }).join("");
     const body = T.rows.map(x => {
       const p = x.m.price;
       const flagOR = p && (p.flags & 2);
-      let rate = nd;
+      let rate = job ? `<td class="nd" title="Arena has no ${esc(job.label)} rating for ${esc(x.m.name)}">not ranked</td>` : nd;
       if (x.r) {
         const L = T.A.lead;
         const rel = x.r.isLead ? (T.A.rows.length > 1 ? `<b>Best</b>` : "") : x.r.tied ? `<span class="tie">tied</span>` : fmtGap(st_, L.score - x.r.score).replace(" back", " behind");
-        rate = `<td class="rate num" title="Rank ${x.r.rank} of ${T.A.n} on ${esc(T.c.full)}">${fmtScore(st_, x.r.score, false)}${rel ? `<span class="rel">${rel}</span>` : ""}</td>`;
+        rate = `<td class="rate num" title="${esc(x.m.name)}: rank ${x.r.rank} of ${T.A.n} on ${esc(T.c.full)}">${fmtScore(st_, x.r.score, false)}${rel ? `<span class="rel">${rel}</span>` : ""}</td>`;
       }
-      const agent = x.agent.length ? `<td class="agent num">${x.agent.map(a => `<span title="${esc(a.effort)}: median ${fmtUsd(a.cost)} and ${a.toks ? a.toks.toLocaleString() : "?"} output tokens per task">${esc(a.effort)} ${fmtUsd(a.cost)}</span>`).join(" · ")}</td>` : `<td class="nd" style="text-align:left">no data</td>`;
-      const note = p && p.note ? ` title="${esc(p.note)}"` : "";
-      return `<tr><td class="pz-name pz-l"${note}><div class="pz-nm">${esc(x.m.name)}</div><span class="mname-org">${esc(orgLabel(x.m.org))}</span>${x.badges.length ? `<div class="pz-badges">${x.badges.map(b => `<span class="badge">${b}</span>`).join("")}</div>` : ""}</td>` +
+      const agent = x.task ? `<td class="num" title="${esc(x.m.name)}: median ${fmtUsd(x.task.cost)} and ${x.task.toks ? x.task.toks.toLocaleString() : "?"} output tokens per task">${fmtUsd(x.task.cost)}</td>` : nd;
+      const note = ` title="${esc(x.m.name + (p && p.note ? "\n" + p.note : ""))}"`;
+      return `<tr><td class="pz-name pz-l"${note}><div class="pz-nm">${esc(x.fam)} <span class="eff">${esc(x.effort)}</span></div><span class="mname-org">${esc(orgLabel(x.m.org))}</span>${x.badges.length ? `<div class="pz-badges">${x.badges.map(b => `<span class="badge">${b}</span>`).join("")}</div>` : ""}</td>` +
         money(x.blend, "big", flagOR) + (!SP.hasSpeed ? "" : x.tps != null ? `<td class="num big">${Math.round(x.tps)}</td>` : nd) + rate +
         (!SP.hasSpeed ? "" : x.ttft != null ? `<td class="num">${x.ttft.toFixed(1)} s</td>` : nd) + money(x.inp) + money(x.out) +
         (x.ctx ? `<td class="num">${fmtCtx(x.ctx)}</td>` : nd) + agent + `</tr>`;
@@ -1215,10 +1250,18 @@ function boot() {
     $("sc-h").textContent = job ? `${job.label} rating vs price` : "Rating vs price";
     if (!T.A || !T.A.rows.length) { host.innerHTML = `<p class="note" style="padding:12px 0">None of your picks are ranked on this job.</p>`; lg.innerHTML = ""; return; }
     const st_ = T.c.arena.stype, bt = st_ === "bt";
-    const pts = T.rows.filter(x => x.r && x.blend != null);
-    const noPrice = T.rows.filter(x => x.r && x.blend == null).map(x => x.m.name);
-    const noRate = T.rows.filter(x => !x.r).map(x => x.m.name);
-    const extra = [noPrice.length ? `No price: ${noPrice.map(esc).join(", ")}` : "", noRate.length ? `Not ranked on ${esc(job.label)}: ${noRate.map(esc).join(", ")}` : ""].filter(Boolean);
+    // on the agent board Arena measured the cost of each effort per task; a per-token price can't tell
+    // efforts apart, so plot that instead. Every other job uses the blended price per million tokens.
+    const perTask = T.c.arena.id === "agent" && T.rows.some(x => x.r && x.task);
+    const xv = x => perTask ? (x.task ? x.task.cost : null) : x.blend;
+    if (perTask) $("sc-h").textContent = `${job.label} rating vs cost per task`;
+    $("sc-sub").textContent = perTask
+      ? "Each dot is one effort level of a pick, placed by Arena's measured cost per agent task, so higher efforts that write more tokens sit further right. Dots toward the top left are the best value."
+      : "Each dot is one effort level of a pick. Further left is cheaper, higher up is rated better, so dots toward the top left are the best value. Efforts of one model share a price per token, so they line up vertically.";
+    const pts = T.rows.filter(x => x.r && xv(x) != null);
+    const noPrice = T.rows.filter(x => x.r && xv(x) == null).map(x => x.label);
+    const noRate = T.rows.filter(x => !x.r).map(x => x.label);
+    const extra = [noPrice.length ? `${perTask ? "No cost per task" : "No price"}: ${noPrice.map(esc).join(", ")}` : "", noRate.length ? `Not ranked on ${esc(job.label)}: ${noRate.map(esc).join(", ")}` : ""].filter(Boolean);
     if (!pts.length) { host.innerHTML = `<p class="note" style="padding:12px 0">None of your picks ranked here have a price.</p>`; lg.innerHTML = extra.map(t => `<span>${t}</span>`).join(""); return; }
     const W = Math.max(300, host.clientWidth - 32);
     const narrow = W < 520;
@@ -1226,7 +1269,7 @@ function boot() {
     const fs = narrow ? 11 : 12;
     const m = { l: bt ? 58 : 66, r: 12, t: 14, b: 42 };
     const x0 = m.l, x1 = W - m.r, y0 = H - m.b, y1 = m.t;
-    let pmin = Math.min(...pts.map(x => x.blend)), pmax = Math.max(...pts.map(x => x.blend));
+    let pmin = Math.min(...pts.map(xv)), pmax = Math.max(...pts.map(xv));
     let lo = Math.log10(pmin) - 0.25, hi = Math.log10(pmax) + 0.25;
     if (hi - lo < 1) { const mid = (hi + lo) / 2; lo = mid - 0.5; hi = mid + 0.5; }
     const X = v => x0 + (Math.log10(v) - lo) / (hi - lo) * (x1 - x0);
@@ -1238,7 +1281,7 @@ function boot() {
     const Y = v => y0 - (v - ylo) / (yhi - ylo) * (y0 - y1);
     const L = T.A.lead;
     const isClose = r => r.isLead || r.tied || (bt && L.score - r.score <= CLOSE_PTS);
-    let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(job.label)} rating against blended price for ${pts.length} picks">`;
+    let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(job.label)} rating against ${perTask ? "cost per agent task" : "blended price"} for ${pts.length} model and effort pairs">`;
     s += `<g>`;
     for (const t of yt) { const y = Y(t); if (y < y1 - 1 || y > y0 + 1) continue;
       s += `<line x1="${x0}" x2="${x1}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`;
@@ -1247,20 +1290,22 @@ function boot() {
       s += `<line x1="${x}" x2="${x}" y1="${y1}" y2="${y0}" stroke="var(--line)" stroke-width="1"/>`;
       s += `<text x="${x}" y="${y0 + 16}" text-anchor="middle" font-size="${fs}" fill="var(--ink-3)" class="num">${fmtAxisUsd(t)}</text>`; }
     s += `<line x1="${x0}" x2="${x1}" y1="${y0}" y2="${y0}" stroke="var(--line-strong)" stroke-width="1"/>`;
-    s += `<text x="${(x0 + x1) / 2}" y="${H - 6}" text-anchor="middle" font-size="${fs}" fill="var(--ink-2)">Blended price per million tokens (log scale) →</text>`;
+    s += `<text x="${(x0 + x1) / 2}" y="${H - 6}" text-anchor="middle" font-size="${fs}" fill="var(--ink-2)">${perTask ? "Cost per agent task, Arena median (log scale)" : "Blended price per million tokens (log scale)"} →</text>`;
     s += `<text transform="translate(${fs} ${(y0 + y1) / 2}) rotate(-90)" text-anchor="middle" font-size="${fs}" fill="var(--ink-2)">Rating →</text>`;
     s += `</g>`;
     // dots, then labels placed greedily around each dot without overlapping
-    const placed = pts.map(x => ({ x, cx: X(x.blend), cy: Y(x.r.score) }));
+    const placed = pts.map(x => ({ x, cx: X(xv(x)), cy: Y(x.r.score) }));
     const boxes = placed.map(p => ({ x: p.cx - 7, y: p.cy - 7, w: 14, h: 14 }));
     const hit = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
     const cw = fs * 0.58;
     let labels = "";
     // place labels for higher-rated dots first so the winners get the clean spot
     [...placed].sort((a, b) => b.x.r.score - a.x.r.score).forEach(p => {
-      let name = p.x.m.name;
-      const maxCh = narrow ? 18 : 26;
-      if (name.length > maxCh) name = name.slice(0, maxCh - 1) + "…";
+      // "Claude Opus 5.5 · High": shorten the model name, never the effort
+      const maxCh = narrow ? 22 : 32, tail = " · " + p.x.effort;
+      let name = p.x.fam;
+      if (name.length + tail.length > maxCh) name = name.slice(0, Math.max(6, maxCh - tail.length - 1)) + "…";
+      name += tail;
       const w = name.length * cw, h = fs + 2;
       const cands = [[p.cx + 9, p.cy - h / 2, "start"], [p.cx - 9 - w, p.cy - h / 2, "end"], [p.cx - w / 2, p.cy - 10 - h, "middle"], [p.cx - w / 2, p.cy + 9, "middle"],
         [p.cx + 7, p.cy - 8 - h, "start"], [p.cx + 7, p.cy + 7, "start"], [p.cx - 7 - w, p.cy - 8 - h, "end"], [p.cx - 7 - w, p.cy + 7, "end"]];
@@ -1287,7 +1332,7 @@ function boot() {
     svg.addEventListener("pointermove", e => {
       const g = e.target.closest(".sc-dot"); if (!g) { tip.hidden = true; return; }
       const p = placed[+g.dataset.k], x = p.x;
-      tip.innerHTML = `<b>${esc(x.m.name)}</b><br>${esc(job.label)}: ${fmtScore(st_, x.r.score, false)} (rank ${x.r.rank} of ${T.A.n})${x.r.isLead && T.A.rows.length > 1 ? ", best of your picks" : x.r.tied ? ", tied with the best" : ""}<br>${fmtUsd(x.blend)} per M tokens blended${x.tps != null ? `<br>${Math.round(x.tps)} tok/s` : ""}`;
+      tip.innerHTML = `<b>${esc(x.label)}</b><br>${esc(job.label)}: ${fmtScore(st_, x.r.score, false)} (rank ${x.r.rank} of ${T.A.n})${x.r.isLead && T.A.rows.length > 1 ? ", best of your picks" : x.r.tied ? ", tied with the best" : ""}<br>${fmtUsd(x.blend)} per M tokens blended${x.task ? `<br>${fmtUsd(x.task.cost)} per agent task` : ""}${x.tps != null ? `<br>${Math.round(x.tps)} tok/s` : ""}`;
       tip.hidden = false;
       const sb = svg.getBoundingClientRect(), scale = sb.width / W, hb = host.getBoundingClientRect();
       let left = 16 + p.cx * scale + 12; const tw = tip.offsetWidth;
@@ -1295,7 +1340,7 @@ function boot() {
       tip.style.left = left + "px"; tip.style.top = (6 + p.cy * scale + 12) + "px";
     });
     svg.addEventListener("pointerleave", () => { tip.hidden = true; });
-    const unl = placed.filter(p => !p.labeled).map(p => p.x.m.name);
+    const unl = placed.filter(p => !p.labeled).map(p => p.x.label);
     lg.innerHTML = `<span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--accent)"/></svg>As good as the best pick (tied${bt ? ` or within ${CLOSE_PTS} pts` : ""})</span>
       <span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--behind-fill)"/></svg>Further behind</span>` +
       (unl.length ? `<span>Unlabeled (hover the dot): ${unl.map(esc).join(", ")}</span>` : "") + extra.map(t => `<span>${t}</span>`).join("");
@@ -1401,7 +1446,10 @@ function boot() {
     const c = renderH2HSelect();
     const host = $("chart");
     if (!c) { host.innerHTML = `<p class="note" style="padding:20px 0">Pick models to draw the chart.</p>`; $("chart-legend").innerHTML = ""; return; }
-    const A = analyze(c, st.sel, st.sc);
+    // one bar per model + effort, each with its own rating (same split as the price table)
+    const ents = effortRows(SP, S, st.sel);
+    const lab = new Map(ents.map(e => [e.vi, `${e.fam} · ${e.effort}`]));
+    const A = analyze(SP.V.byKey.get(c.key), ents.map(e => e.vi), st.sc);
     const rows = [...A.rows].sort((x, y) => y.score - x.score);
     const W = Math.max(300, host.clientWidth - 32);
     const narrow = W < 520;
@@ -1416,7 +1464,7 @@ function boot() {
     const X = v => x0 + (v - lo) / (hi - lo) * (x1 - x0);
     const st_ = c.arena.stype;
     const L = A.lead;
-    let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(c.full)}: rating and confidence interval for ${rows.length} selected models">`;
+    let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(c.full)}: rating and confidence interval for ${rows.length} model and effort pairs">`;
     // leader band
     if (L && rows.length > 1) {
       s += `<rect x="${X(L.lo)}" y="${top - 6}" width="${Math.max(1, X(L.hi) - X(L.lo))}" height="${rows.length * rowH + 6}" fill="var(--accent-soft)" rx="3"/>`;
@@ -1432,10 +1480,11 @@ function boot() {
     s += `</g>`;
     rows.forEach((r, k) => {
       const y = top + k * rowH + rowH / 2;
-      const m = S.models[r.mi];
-      const name = m.name;
+      const name = lab.get(r.mi);
       const maxChars = Math.floor((labelW - 34) / 6.6);
-      const shown = name.length > maxChars ? name.slice(0, Math.max(4, maxChars - 1)) + "…" : name;
+      // shorten the model name, never the effort
+      const cut = name.lastIndexOf(" · "), tail = name.slice(cut);
+      const shown = name.length > maxChars ? name.slice(0, Math.max(4, maxChars - tail.length - 1)) + "…" + tail : name;
       const isL = r.isLead, tied = r.tied;
       const col = isL ? "var(--accent)" : tied ? "var(--accent)" : "var(--ink-2)";
       s += `<g class="h2h-row" data-k="${k}">`;
@@ -1452,7 +1501,7 @@ function boot() {
     host.innerHTML = s;
     const svg = host.querySelector("svg"), tip = host.querySelector("#tip");
     const show = (k, evt) => {
-      const r = rows[k], m = S.models[r.mi];
+      const r = rows[k];
       tip.innerHTML = `<b>${esc(r.vname)}</b><br>Rank ${r.rank} of ${A.n} on ${esc(c.full)}<br>Rating ${fmtScore(st_, r.score, true)}<br>CI ${fmtScore(st_, r.lo, true)} to ${fmtScore(st_, r.hi, true)}<br>${r.votes.toLocaleString()} ${c.arena.id === "agent" ? "observations" : "votes"}` + (r.isLead && rows.length > 1 ? "<br>Best of your picks" : r.tied ? "<br>Statistically tied with the best pick" : rows.length > 1 ? "<br>Clearly behind the best pick" : "");
       tip.hidden = false;
       const hb = host.getBoundingClientRect(), sb = svg.getBoundingClientRect();
@@ -1470,8 +1519,8 @@ function boot() {
          <span><svg width="14" height="14"><circle cx="7" cy="7" r="4.5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/></svg>CI overlaps the best (≈ tied)</span>
          <span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--ink-2)"/></svg>Clearly behind</span>
          <span><svg width="18" height="12"><rect width="18" height="12" rx="2" fill="var(--accent-soft)"/></svg>Best pick's confidence interval</span>
-         <span>${A.rows.length} of ${st.sel.length} picks ranked here · ${A.n} models on this board · snapshot ${fmtDate(c.date)}</span>`
-      : `<span>Only one of your picks is ranked on this board (${A.n} models, snapshot ${fmtDate(c.date)}).</span>`;
+         <span>${A.rows.length} of ${ents.length} model and effort pairs ranked here · ${A.n} models on this board · snapshot ${fmtDate(c.date)}</span>`
+      : `<span>Only one model and effort pair of your picks is ranked on this board (${A.n} models, snapshot ${fmtDate(c.date)}).</span>`;
   }
 
   /* ---- state sync ---- */
@@ -1582,5 +1631,5 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 function fmtDate(iso) { const [y, m, d] = (iso || "").split("-"); return y ? `${+d} ${MONTHS[+m - 1]} ${y}` : "?"; }
 
 if (typeof document !== "undefined") boot();
-else if (typeof globalThis !== "undefined") globalThis.__arena = { decode, presetTop, presetFlagship, presetBy, priceTable, valueNotes, fmtUsd, fmtCtx, costLine, logTicks, JOBS, analyze, jobBoard, cheatSheet, encodeHash, decodeHash, resolveIds, viaShort, heatClass, niceTicks, DATA };
+else if (typeof globalThis !== "undefined") globalThis.__arena = { decode, presetTop, presetFlagship, presetBy, priceTable, effortRows, valueNotes, fmtUsd, fmtCtx, costLine, logTicks, JOBS, analyze, jobBoard, cheatSheet, encodeHash, decodeHash, resolveIds, viaShort, heatClass, niceTicks, DATA };
 </script>
