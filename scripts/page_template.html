@@ -200,9 +200,9 @@ h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter
 .pk-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--ink-2); }
 .pk-row select { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 6px; padding: 3px 6px; font-size: 13px; max-width: 100%; }
 .pk-row label { display: inline-flex; gap: 5px; align-items: center; }
-.pk-list { overflow-y: auto; min-height: 0; flex: 1; padding: 4px 6px 10px; }
+.pk-list { overflow-y: auto; min-height: 0; flex: 1; padding: 0 6px 10px; }
 @media (max-width: 980px) { .pk-list { max-height: 60vh; } }
-.pk-group { padding: 10px 10px 4px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); display: flex; justify-content: space-between; position: sticky; top: 0; background: var(--surface); z-index: 1; }
+.pk-group { padding: 10px 10px 6px; align-items: center; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); display: flex; justify-content: space-between; position: sticky; top: 0; background: var(--surface); z-index: 1; }
 .pk-item {
   width: 100%; display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 9px; align-items: center;
   border: 0; background: transparent; text-align: left; padding: 6px 10px; border-radius: 7px;
@@ -229,6 +229,26 @@ h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter
 .pk-eff-l { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 7px; min-width: 0; }
 .pk-arenas { font-size: 12px; color: var(--ink-3); line-height: 1.3; }
 .pk-count { font-size: 13px; color: var(--ink-3); }
+.pk-count:empty { display: none; }
+.pk-bulk { justify-content: space-between; }
+.pk-bulk label { cursor: help; }
+.pk-bulk-r { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; margin-left: auto; }
+.pk-bulk-btn { font-size: 12.5px; padding: 2px 9px; font-weight: 500; }
+.pk-gr { display: inline-flex; gap: 8px; align-items: center; }
+.pk-gall {
+  border: 1px solid var(--line-strong); background: var(--surface); border-radius: 6px; padding: 1px 8px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--ink-2); white-space: nowrap;
+}
+.pk-gall:hover { border-color: var(--accent); color: var(--accent); }
+.pk-gall[data-on="true"] { border-color: var(--accent-line); background: var(--accent-soft); color: var(--ink); }
+/* long selections: the chips, cards and rows past a cap fold behind a "Show all" button */
+.chip-more { border: 1px dashed var(--accent-line); background: transparent; border-radius: 999px; padding: 3px 11px; font-size: 14px; line-height: 1.3; color: var(--accent); font-weight: 500; }
+.chip-more:hover { background: var(--accent-soft); }
+.cap-foot { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; padding: 10px 16px 12px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-3); background: var(--surface); }
+.cs-grid + .cap-foot { border-top: 0; }
+.cap-btn { font-size: 13px; padding: 3px 10px; }
+.jb-more { list-style: none; }
+.jb-more .cap-btn { padding: 1px 8px; font-size: 12.5px; }
 
 /* ---------- shared state swatches (winner / tied / behind / not tested) ---------- */
 .key-sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; flex: none; vertical-align: -1px; }
@@ -564,7 +584,7 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
 .sets-foot-acts { display: flex; gap: 6px; flex-wrap: wrap; }
 .toast {
   position: fixed; z-index: 30; left: 50%; transform: translateX(-50%);
-  bottom: calc(16px + env(safe-area-inset-bottom, 0px)); max-width: calc(100% - 32px);
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: max-content; max-width: calc(100% - 32px);
   display: flex; align-items: center; gap: 4px 12px; flex-wrap: wrap;
   background: var(--ink); color: var(--bg); border-radius: 10px; padding: 8px 10px 8px 14px;
   font-size: 14px; box-shadow: 0 8px 28px rgba(0, 0, 0, .25);
@@ -656,7 +676,10 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
           <div class="pk-row">
             <label>Sort <select id="pk-sort"><option value="rank">Best rank</option><option value="cheap" data-price>Cheapest</option><option value="fast" data-price data-speed>Fastest</option><option value="name">Name</option></select></label>
             <label><input type="checkbox" id="pk-group" checked> Group by vendor</label>
-            <span class="pk-count" id="pk-count"></span>
+          </div>
+          <div class="pk-row pk-bulk">
+            <label id="pk-cur-l"><input type="checkbox" id="pk-cur"> Current only</label>
+            <span class="pk-bulk-r"><span class="pk-count" id="pk-count" aria-live="polite"></span><button type="button" class="pk-all pk-bulk-btn" id="pk-bulk" hidden></button></span>
           </div>
         </div>
         <div class="pk-list" id="pk-list" role="list"></div>
@@ -672,6 +695,7 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
           </div>
         </div>
         <div class="cs-grid" id="cheat"></div>
+        <div class="cap-foot" id="cheat-cap" hidden></div>
         <p class="tie-note" id="tie-note"><span class="key-sw s-tie" aria-hidden="true"></span><span><b>Tied</b> means too close to call based on the votes so far: the gap is smaller than the uncertainty in both ratings, so more votes could flip the order.</span></p>
       </section>
 
@@ -857,6 +881,7 @@ function decode(D) {
   const E = makeSpace(arenas, groups, base, eEnts, vnames, false);
   const F = makeSpace(arenas, groups, base, fEnts, vnames, true);
   E.flagshipOrgs = F.flagshipOrgs = D.flagshipOrgs;
+  markCurrent(arenas, E, F, vnames);
   // speed is optional (needs an OpenRouter API key at build time)
   const hasSpeed = hasPrices && fEnts.some(f => f.price && f.price.tps > 0);
   E.hasPrices = F.hasPrices = hasPrices;
@@ -866,14 +891,45 @@ function decode(D) {
   return { E, F, famOf, effOf, vById, vnames, hasPrices, hasSpeed };
 }
 
-/* compact price row from build_page.py: [in, out, blend, ctx, tok/s, ttft, flags, agent, note, [models.dev id, OpenRouter id]]
+/* compact price row from build_page.py: [in, out, blend, ctx, tok/s, ttft, flags, agent, note, [models.dev id, OpenRouter id], released]
    flags 1 = from OpenRouter, 2 = OpenRouter listed price (maybe a third-party host), 4 = free tier (price unknown) */
 function parsePrice(p, keep) {
   if (!p) return null;
-  const [inp, out, blend, ctx, tps, ttft, flags, agent, note, ids] = p;
+  const [inp, out, blend, ctx, tps, ttft, flags, agent, note, ids, released] = p;
   let ag = (agent || []).map(([effort, cost, toks, avi]) => ({ effort, cost, toks, vi: avi }));
   if (keep) ag = ag.filter(a => keep.has(a.vi));
-  return { inp, out, blend, ctx, tps, ttft, flags: flags || 0, agent: ag, note: note || "", ids: ids || [null, null] };
+  return { inp, out, blend, ctx, tps, ttft, flags: flags || 0, agent: ag, note: note || "", ids: ids || [null, null],
+    released: typeof released === "string" && /^\d{4}-\d{2}-\d{2}$/.test(released) ? released : null };
+}
+
+/* "Current only" in the picker. An entry is current when it was released within CURRENT_MONTHS of the newest
+   leaderboard snapshot. The release date is the models.dev / OpenRouter date, else the newest date stamp in
+   its Arena names ("Claude 3 Opus (20240229)"). With no date at all, it counts as current when it ranks in the
+   top quarter of any overall leaderboard. Every board in the data is a fresh snapshot and the Text board still
+   lists 2023 models, so "ranked on a recent board" can't tell old from new. */
+const CURRENT_MONTHS = 12;
+const MON3 = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+function nameStamp(name) {
+  let best = null;
+  for (const m of String(name).matchAll(/(?:^|[^0-9])(20[12]\d)-?(0[1-9]|1[0-2])-?([0-3]\d)(?![0-9])/g)) { const d = `${m[1]}-${m[2]}-${m[3]}`; if (!best || d > best) best = d; }
+  if (!best) for (const m of String(name).matchAll(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]* (20[12]\d)\b/gi)) {
+    const d = `${m[2]}-${String(MON3.indexOf(m[1].toLowerCase()) + 1).padStart(2, "0")}-01`; if (!best || d > best) best = d; }
+  return best;
+}
+function markCurrent(arenas, E, F, vnames) {
+  const ref = arenas.reduce((a, x) => x.date > a ? x.date : a, "");
+  const cutoff = ref ? new Date(Date.parse(ref) - CURRENT_MONTHS * 30.44 * 864e5).toISOString().slice(0, 10) : "";
+  for (const m of E.models) {
+    let d = m.price && m.price.released || null, src = d ? "release" : null;
+    if (!d) for (const vi of m.members) { const s = nameStamp(vnames[vi]); if (s && (!d || s > d)) { d = s; src = "name"; } }
+    m.released = d; m.relSrc = src;
+    m.current = d ? d >= cutoff : !!(m.best && m.best.p <= 0.25);
+  }
+  for (const f of F.models) {
+    f.current = f.effs.some(ei => E.models[ei].current);
+    f.released = f.effs.map(ei => E.models[ei].released).filter(Boolean).sort().pop() || null;
+  }
+  E.currentRef = F.currentRef = ref; E.currentCutoff = F.currentCutoff = cutoff;
 }
 const blendOf = m => (m && m.price && m.price.blend > 0) ? m.price.blend : null;
 const tpsOf = m => (m && m.price && m.price.tps > 0) ? m.price.tps : null;
@@ -1508,6 +1564,8 @@ function boot() {
     sortCol: S.byKey.get("text/overall") ? S.byKey.get("text/overall").i : -1,
     h2h: "text/overall", q: "", org: "all", arena: "any", sort: "rank", group: true, more: false,
     maxp: 0, mins: 0, psort: { key: "blend", dir: 1 }, vjob: "chat",
+    cur: false,          // picker: "Current only"
+    open: new Set(),     // expanded long lists: "chips", "cs", "pz", "mx", "h2h", "jb:<job id>"
   };
 
   // restore: hash wins, then local storage, then a sensible example selection
@@ -1594,6 +1652,12 @@ function boot() {
     $("pk-org").innerHTML = `<option value="all">All vendors</option>` + orgsSorted.map(o => `<option value="${esc(o)}">${esc(orgLabel(o))} (${orgCounts.get(o)})</option>`).join("");
   }
   renderPickerMeta();
+  {
+    const cut = S.currentCutoff, nOld = SP.E.models.filter(m => !m.current).length;
+    $("pk-cur-l").title = `Hide models released before ${fmtDate(cut)}, ${CURRENT_MONTHS} months before the newest leaderboard snapshot (${fmtDate(S.currentRef)}). ` +
+      `The release date comes from models.dev or OpenRouter, else from the date in Arena's model name. A model with no known date stays when it ranks in the top quarter of any overall leaderboard. ` +
+      `Hides ${nOld} of ${SP.E.models.length} model and effort pairs.`;
+  }
   $("pk-arena").innerHTML = `<option value="any">Any arena</option>` + S.arenas.map(a => `<option value="${a.id}">${esc(a.label)}</option>`).join("");
   const chipOrgs = ["all", ...S.flagshipOrgs, "meta", "mistral"].filter(o => o === "all" || orgCounts.has(o));
   function renderOrgChips() {
@@ -1601,14 +1665,18 @@ function boot() {
     $("pk-org").value = orgCounts.has(st.org) || st.org === "all" ? st.org : "all";
   }
 
+  let pkOld = 0;  // entries the last render hid only because of "Current only"
   function pickerRows() {
     const q = normTxt(st.q);
-    let list = S.models.filter(m =>
+    const pass = m =>
       (st.org === "all" || m.org === st.org) &&
       (st.arena === "any" || m.arenas.has(st.arena)) &&
       (!q || m.norm.includes(q)) &&
       (!st.maxp || (blendOf(m) != null && blendOf(m) < st.maxp)) &&
-      (!st.mins || (tpsOf(m) != null && tpsOf(m) > st.mins)));
+      (!st.mins || (tpsOf(m) != null && tpsOf(m) > st.mins));
+    let list = S.models.filter(pass);
+    pkOld = 0;
+    if (st.cur) { const n = list.length; list = list.filter(m => m.current); pkOld = n - list.length; }
     const rk = m => m.textRank != null ? m.textRank : 10000 + (m.best ? m.best.p * 1000 : 2000);
     const unk = (v, big) => v == null ? big : v;
     if (st.sort === "name") list.sort((a, b) => a.fam.localeCompare(b.fam) || a.i - b.i);
@@ -1662,25 +1730,89 @@ function boot() {
     for (const m of list) { if (!byFam.has(m.fi)) byFam.set(m.fi, []); byFam.get(m.fi).push(m); }
     return [...byFam].map(([fi, ents]) => famHTML(fi, ents.sort((a, b) => a.i - b.i))).join("");
   }
+  /* bulk select: a vendor header's "Select all" / "Clear all" and, with one vendor filtered, the button by the
+     count. Both act on exactly the entries the last render showed, so search, arena, price, speed, "Current only"
+     and the effort/combine mode all apply. */
+  const BULK_WARN = 25;  // adding more than this in one click shows a toast with Undo
+  let pkShown = [], pkByOrg = new Map();
+  const allPicked = list => { const s = new Set(st.sel); return list.length > 0 && list.every(mi => s.has(mi)); };
+  const gallLabel = list => allPicked(list) ? "Clear all" : "Select all";
+  const bulkLabel = list => allPicked(list) ? `Clear ${list.length} shown` : `Select all ${list.length} shown`;
+  function renderBulk() {
+    const one = st.org !== "all" && pkShown.length > 0;
+    const b = $("pk-bulk");
+    b.hidden = !one;
+    if (one) {
+      b.textContent = bulkLabel(pkShown);
+      b.dataset.on = allPicked(pkShown);
+      b.setAttribute("aria-label", `${allPicked(pkShown) ? "Clear" : "Select"} all ${pkShown.length} ${orgLabel(st.org)} entries shown`);
+    }
+    const old = pkOld ? `${pkOld} older hidden` : "";
+    $("pk-count").textContent = one ? old : `${pkShown.length} shown${old ? " · " + old : ""}`;
+    for (const g of $("pk-list").querySelectorAll(".pk-gall")) {
+      const list = pkByOrg.get(g.dataset.org) || [];
+      g.textContent = gallLabel(list);
+      g.dataset.on = allPicked(list);
+      g.setAttribute("aria-label", `${allPicked(list) ? "Clear" : "Select"} all ${list.length} ${orgLabel(g.dataset.org)} entries shown`);
+    }
+  }
+  function bulkToggle(list, from) {
+    if (!list.length) return;
+    const prevIds = st.sel.map(mi => S.models[mi].id), before = st.sel.length;
+    const undo = () => { st.sel = resolveIds(SP, prevIds, st.fam); changed(true); };
+    const noun = n => `model${n === 1 ? "" : "s"}`;
+    if (allPicked(list)) {
+      const drop = new Set(list);
+      st.sel = st.sel.filter(mi => !drop.has(mi));
+      changed(true);
+      const n = before - st.sel.length;
+      if (n > BULK_WARN) note(`Cleared ${n} ${noun(n)} from ${from}.`, undo);
+    } else {
+      const have = new Set(st.sel), add = list.filter(mi => !have.has(mi));
+      st.sel = [...st.sel, ...add];
+      changed(true);
+      if (add.length > BULK_WARN) note(`Added ${add.length} ${noun(add.length)} from ${from}.`, undo);
+    }
+  }
   function renderPicker() {
     const list = pickerRows();
-    $("pk-count").textContent = `${list.length} shown`;
-    if (!list.length) { $("pk-list").innerHTML = `<div class="pk-empty">No models match. Try a shorter search, pick “All” vendors${st.maxp || st.mins ? ", or loosen the price and speed filters (models with no price or speed data are hidden while they're on)" : ""}.</div>`; return; }
+    pkShown = list.map(m => m.i);
+    pkByOrg = new Map();
+    for (const m of list) { if (!pkByOrg.has(m.org)) pkByOrg.set(m.org, []); pkByOrg.get(m.org).push(m.i); }
+    if (!list.length) {
+      $("pk-list").innerHTML = `<div class="pk-empty">No models match. Try a shorter search, pick “All” vendors${st.maxp || st.mins ? ", or loosen the price and speed filters (models with no price or speed data are hidden while they're on)" : ""}${st.cur ? ", or turn off “Current only”" : ""}.</div>`;
+      renderBulk(); return;
+    }
     if (st.group) {
       const groups = new Map();
       for (const m of list) { if (!groups.has(m.org)) groups.set(m.org, []); groups.get(m.org).push(m); }
       const keys = [...groups.keys()];
       if (st.sort === "name") keys.sort((a, b) => orgLabel(a).localeCompare(orgLabel(b)));
-      $("pk-list").innerHTML = keys.map(o => `<div class="pk-group"><span>${esc(orgLabel(o))}</span><span>${groups.get(o).length}</span></div>` + blocksHTML(groups.get(o))).join("");
+      // one vendor filtered: the "Select all N shown" button by the count does the same, so the header skips it
+      const gall = o => st.org === "all" ? `<button type="button" class="pk-gall" data-org="${esc(o)}"></button>` : "";
+      $("pk-list").innerHTML = keys.map(o => `<div class="pk-group"><span>${esc(orgLabel(o))}</span><span class="pk-gr"><span class="num">${groups.get(o).length}</span>${gall(o)}</span></div>` + blocksHTML(groups.get(o))).join("");
     } else {
       $("pk-list").innerHTML = blocksHTML(list);
     }
+    renderBulk();
   }
 
   /* ---- selection chips ---- */
+  /* long lists fold past a cap; st.open remembers which ones the reader expanded */
+  const CAP = { chips: 12, cs: 12, pz: 15, mx: 20, h2h: 20, jb: 8 };
+  const capped = (key, n) => n > CAP[key.split(":")[0]] + 2 && !st.open.has(key);  // never fold away just 1 or 2
+  const capList = (key, xs) => capped(key, xs.length) ? xs.slice(0, CAP[key.split(":")[0]]) : xs;
+  const capBtn = (key, n, what) => n > CAP[key.split(":")[0]] + 2
+    ? `<button type="button" class="btn cap-btn" data-cap="${esc(key)}" aria-expanded="${!capped(key, n)}">${capped(key, n) ? `Show all ${n}${what ? " " + what : ""}` : "Show fewer"}</button>` : "";
   function renderChips() {
+    // phones stack the chips almost one per line, so fold sooner
+    CAP.chips = typeof matchMedia === "function" && matchMedia("(max-width: 560px)").matches ? 6 : 12;
+    const chip = mi => { const m = S.models[mi]; return `<span class="chip"><span class="chip-name" title="${esc(m.nvar > 1 ? m.name + " = " + m.members.map(vi => DATA.models[vi][0]).join(", ") : m.name)}">${esc(m.fam)}</span>${effPill(m)}<button type="button" class="x" data-rm="${mi}" aria-label="Remove ${esc(m.name)}">×</button></span>`; };
+    const shown = capList("chips", st.sel), more = st.sel.length - shown.length;
     $("chips").innerHTML = st.sel.length
-      ? st.sel.map(mi => { const m = S.models[mi]; return `<span class="chip"><span class="chip-name" title="${esc(m.nvar > 1 ? m.name + " = " + m.members.map(vi => DATA.models[vi][0]).join(", ") : m.name)}">${esc(m.fam)}</span>${effPill(m)}<button type="button" class="x" data-rm="${mi}" aria-label="Remove ${esc(m.name)}">×</button></span>`; }).join("")
+      ? shown.map(chip).join("") + (more
+        ? `<button type="button" class="chip-more" data-cap="chips" aria-expanded="false" title="Show every pick">+${more} more</button>`
+        : st.sel.length > CAP.chips + 2 ? `<button type="button" class="chip-more" data-cap="chips" aria-expanded="true">Show fewer</button>` : "")
       : `<span class="empty-chips">No models selected. Use a quick pick or browse the list.</span>`;
     $("sc-on").setAttribute("aria-pressed", st.sc);
     $("sc-off").setAttribute("aria-pressed", !st.sc);
@@ -1699,10 +1831,15 @@ function boot() {
     const shown = jobs.filter(J => J.kind !== "none");
     const nm = mi => nameHTML(S.models[mi]);
     // cheat sheet
+    $("cheat-cap").hidden = true;
     if (!st.sel.length) {
       $("cheat").innerHTML = `<div class="cs-empty">Pick a few models above to see what each one is best at.</div>`;
     } else {
-      const C = cheatSheet(st.sel, jobs);
+      const Call = cheatSheet(st.sel, jobs), C = capList("cs", Call);
+      if (Call.length > CAP.cs + 2) {
+        $("cheat-cap").hidden = false;
+        $("cheat-cap").innerHTML = `<span>${C.length < Call.length ? `Showing the ${C.length} picks that win the most jobs, of ${Call.length}.` : `All ${Call.length} picks.`}</span>${capBtn("cs", Call.length, "picks")}`;
+      }
       const line = (cls, label, items) => items.length ? `<div class="cs-line l-${cls}"><span class="key-sw s-${cls === "best" ? "win" : cls === "tied" ? "tie" : cls === "solo" ? "win" : cls}" aria-hidden="true"></span><dt>${label}</dt><dd>${esc(items.join(", "))}</dd></div>` : "";
       $("cheat").innerHTML = C.map(o => {
         const m = S.models[o.mi];
@@ -1739,19 +1876,22 @@ function boot() {
       const VN = valueNotes(S, J);
       const tags = mi => (VN.value && VN.value.mi === mi ? `<span class="jb-tag">Best value</span>` : "") +
         (VN.fastTag === mi ? `<span class="jb-tag">Fastest</span>` : "");
-      const rows = A.rows.map(r => {
+      // folded: the first few rows, plus every tied row and the best value / fastest pick, which the notes name
+      const jkey = "jb:" + J.id;
+      const rowsShown = capped(jkey, A.rows.length) ? A.rows.filter((r, k) => k < CAP.jb || r.tied || (VN.value && VN.value.mi === r.mi) || VN.fastTag === r.mi) : A.rows;
+      const rows = rowsShown.map(r => {
         const pct = Math.min(100, r.gap / full * 100);
         const val = r.isLead ? (A.rows.length > 1 ? "Winner" : "Tested") : r.tied ? fmtGap(st_, r.gap).replace(" back", "") + " · tied" : fmtGap(st_, r.gap);
         return `<li class="jb-row s-${r.state}" title="${esc(rowTip(J.c, A, r) + (r.isLead ? "" : "\n" + fmtGap(st_, r.gap) + " behind " + S.models[L.mi].name + (r.tied ? ", too close to call" : "")))}">` +
           `<span class="jb-name">${nm(r.mi)}${viaTag(r)}${tags(r.mi)}</span>` +
           `<span class="jb-track">${r.isLead ? "" : `<span class="jb-bar${r.gap > full ? " over" : ""}" style="width:${pct.toFixed(1)}%"></span>`}</span>` +
           `<span class="jb-val num">${val}</span></li>`;
-      }).join("");
+      }).join("") + (A.rows.length > CAP.jb + 2 ? `<li class="jb-more muted">${rowsShown.length < A.rows.length ? `${A.rows.length - rowsShown.length} more behind · ` : ""}${capBtn(jkey, A.rows.length, "")}</li>` : "");
       return `<article class="job"><div class="job-top"><h3>${esc(J.label)}</h3><span class="job-src">${esc(J.c.full)} · ${A.n} ranked</span></div>` +
         `<div class="job-win"><span><b>${esc(S.models[L.mi].fam)}</b>${S.models[L.mi].effort ? " " + effPill(S.models[L.mi], true) : ""}${viaTag(L)}</span>${verdict}</div><ul class="jb-rows">${rows}</ul>` +
         (VN.value ? `<p class="jb-value"><b>Best value: ${nm(VN.value.mi)}</b>, ${esc(VN.value.text)}.</p>` : "") +
         (VN.fast && VN.fast.text && !VN.fast.merged ? `<p class="jb-value"><b>Fastest close pick: ${nm(VN.fast.mi)}</b>, ${esc(VN.fast.text)}.</p>` : "") +
-        (J.missing.length ? `<p class="jb-missing">Not tested: ${J.missing.map(nm).join(", ")}</p>` : "") + `</article>`;
+        (J.missing.length ? `<p class="jb-missing">Not tested: ${J.missing.length > 8 ? J.missing.slice(0, 6).map(nm).join(", ") + ` and ${J.missing.length - 6} more` : J.missing.map(nm).join(", ")}</p>` : "") + `</article>`;
     }).join("");
   }
 
@@ -1779,7 +1919,8 @@ function boot() {
       const sorted = st.psort.key === key;
       return `<th class="${key === "name" ? "pz-name pz-l" : ""}"><button type="button" class="pz-sort" data-psort="${key}" data-def="${def}"${sorted ? ` aria-sort="${st.psort.dir === 1 ? "ascending" : "descending"}"` : ""}>${label}${sub ? `<small>${esc(sub)}</small>` : ""}</button></th>`;
     }).join("");
-    const body = T.rows.map(x => {
+    const pzRows = capList("pz", T.rows);
+    const body = pzRows.map(x => {
       const p = x.m.price;
       const flagOR = p && (p.flags & 2);
       let rate = job ? `<td class="nd" title="Arena has no ${esc(job.label)} rating for ${esc(x.m.name)}">not ranked</td>` : nd;
@@ -1795,7 +1936,8 @@ function boot() {
         (!SP.hasSpeed ? "" : x.ttft != null ? `<td class="num">${x.ttft.toFixed(1)} s</td>` : nd) + money(x.inp) + money(x.out) +
         (x.ctx ? `<td class="num">${fmtCtx(x.ctx)}</td>` : nd) + agent + `</tr>`;
     }).join("");
-    host.innerHTML = `<div class="pz-scroll"><table class="pz"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+    host.innerHTML = `<div class="pz-scroll"><table class="pz"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>` +
+      (T.rows.length > CAP.pz + 2 ? `<div class="cap-foot"><span>${pzRows.length < T.rows.length ? `Showing ${pzRows.length} of ${T.rows.length} rows in this sort order. Badges compare every row.` : `All ${T.rows.length} rows.`}</span>${capBtn("pz", T.rows.length, "rows")}</div>` : "");
     renderScatter(T, job);
   }
 
@@ -1815,7 +1957,8 @@ function boot() {
     const pts = T.rows.filter(x => x.r && xv(x) != null);
     const noPrice = T.rows.filter(x => x.r && xv(x) == null).map(x => x.label);
     const noRate = T.rows.filter(x => !x.r).map(x => x.label);
-    const extra = [noPrice.length ? `${perTask ? "No cost per task" : "No price"}: ${noPrice.map(esc).join(", ")}` : "", noRate.length ? `Not ranked on ${esc(job.label)}: ${noRate.map(esc).join(", ")}` : ""].filter(Boolean);
+    const few = xs => esc(listNames(xs, 6));
+    const extra = [noPrice.length ? `${perTask ? "No cost per task" : "No price"}: ${few(noPrice)}` : "", noRate.length ? `Not ranked on ${esc(job.label)}: ${few(noRate)}` : ""].filter(Boolean);
     if (!pts.length) { host.innerHTML = `<p class="note" style="padding:12px 0">None of your picks ranked here have a price.</p>`; lg.innerHTML = extra.map(t => `<span>${t}</span>`).join(""); return; }
     const W = Math.max(300, host.clientWidth - 32);
     const narrow = W < 520;
@@ -1853,8 +1996,13 @@ function boot() {
     const hit = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
     const cw = fs * 0.58;
     let labels = "";
-    // place labels for higher-rated dots first so the winners get the clean spot
-    [...placed].sort((a, b) => b.x.r.score - a.x.r.score).forEach(p => {
+    // place labels for higher-rated dots first so the winners get the clean spot. With many picks only the
+    // top few (plus the best value pick) get a label; the rest stay dots with a tooltip, so the chart stays readable.
+    const maxLabels = narrow ? 8 : 14;
+    const bestMi = T.best ? T.best.mi : -1;
+    let nLab = 0;
+    [...placed].sort((a, b) => (b.x.mi === bestMi) - (a.x.mi === bestMi) || b.x.r.score - a.x.r.score).forEach(p => {
+      if (nLab >= maxLabels) return;
       // "Claude Opus 5.5 · High": shorten the model name, never the effort
       const maxCh = narrow ? 22 : 32, tail = p.x.effort ? " · " + p.x.effort : "";
       let fam = p.x.fam;
@@ -1871,14 +2019,16 @@ function boot() {
         pick = { b, anchor }; break;
       }
       if (!pick) return; // no clean spot: the tooltip and the table still name it
-      boxes.push(pick.b);
+      boxes.push(pick.b); nLab++;
       const tx = pick.anchor === "start" ? pick.b.x : pick.anchor === "end" ? pick.b.x + w : pick.b.x + w / 2;
       labels += `<text x="${tx.toFixed(1)}" y="${(pick.b.y + h - 3).toFixed(1)}" text-anchor="${pick.anchor}" font-size="${fs}" fill="${p.x.r.isLead ? "var(--ink)" : "var(--ink-2)"}"${p.x.r.isLead ? ' font-weight="600"' : ""}>${esc(fam)}${tail ? `<tspan font-weight="700" fill="var(--ink)">${esc(tail)}</tspan>` : ""}</text>`;
       p.labeled = true;
     });
-    placed.forEach((p, k) => {
+    // the dots that matter (as good as the best) draw last, on top of the crowd
+    placed.map((p, k) => [p, k]).sort((a, b) => isClose(a[0].x.r) - isClose(b[0].x.r)).forEach(([p, k]) => {
       const close = isClose(p.x.r);
-      s += `<g class="sc-dot" data-k="${k}"><circle cx="${p.cx}" cy="${p.cy}" r="14" fill="transparent"/><circle cx="${p.cx}" cy="${p.cy}" r="${p.x.r.isLead ? 6.5 : 5.5}" fill="${close ? "var(--accent)" : "var(--behind-fill)"}" stroke="var(--surface)" stroke-width="2"/></g>`;
+      const rr = (p.x.r.isLead ? 1 : 0) + (placed.length > 30 ? 4.5 : 5.5);
+      s += `<g class="sc-dot" data-k="${k}"><circle cx="${p.cx}" cy="${p.cy}" r="${placed.length > 30 ? 8 : 14}" fill="transparent"/><circle cx="${p.cx}" cy="${p.cy}" r="${rr}" fill="${close ? "var(--accent)" : "var(--behind-fill)"}" stroke="var(--surface)" stroke-width="${placed.length > 30 ? 1.5 : 2}"/></g>`;
     });
     s += labels + `</svg><div class="tip" id="sc-tip" hidden></div>`;
     host.innerHTML = s;
@@ -1897,7 +2047,7 @@ function boot() {
     const unl = placed.filter(p => !p.labeled).map(p => p.x.label);
     lg.innerHTML = `<span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--accent)"/></svg>As good as the best pick (tied${bt ? ` or within ${CLOSE_PTS} pts` : ""})</span>
       <span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--behind-fill)"/></svg>Further behind</span>` +
-      (unl.length ? `<span>Unlabeled (hover the dot): ${unl.map(esc).join(", ")}</span>` : "") + extra.map(t => `<span>${t}</span>`).join("");
+      (unl.length ? `<span>${unl.length > 6 ? `${unl.length} dots unlabeled; hover one for its name` : `Unlabeled (hover the dot): ${unl.map(esc).join(", ")}`}</span>` : "") + extra.map(t => `<span>${t}</span>`).join("");
   }
 
   /* ---- column chooser ---- */
@@ -1950,7 +2100,8 @@ function boot() {
       const sorted = c.i === st.sortCol;
       return `<th class="${firsts.has(c.i) ? "gstart" : ""}"><button type="button" class="colbtn" data-sort="${c.i}" ${sorted ? 'aria-sort="ascending"' : ""} title="Sort by ${esc(c.full)} (snapshot ${c.date}, ${(!st.sc && c.r) ? c.nr : c.n} models ranked)">${esc(c.label)}</button></th>`;
     }).join("") + `</tr></thead><tbody>`;
-    for (const mi of rows) {
+    const mxRows = capList("mx", rows);
+    for (const mi of mxRows) {
       const m = S.models[mi];
       h += `<tr><td class="mname"><div class="mname-in"><span class="mname-txt">${nameHTML(m)}<span class="mname-org">${esc(orgLabel(m.org))}</span></span><button type="button" class="rm" data-rm="${mi}" aria-label="Remove ${esc(m.name)}">×</button></div></td>`;
       for (const c of shownCats) {
@@ -1967,6 +2118,7 @@ function boot() {
       h += `</tr>`;
     }
     h += `</tbody></table></div>`;
+    if (rows.length > CAP.mx + 2) h += `<div class="cap-foot"><span>${mxRows.length < rows.length ? `Showing ${mxRows.length} of ${rows.length} picks${sc && an.has(st.sortCol) ? `, best on ${esc(sc.full)} first` : ""}.` : `All ${rows.length} picks.`}</span>${capBtn("mx", rows.length, "picks")}</div>`;
     h += `<div class="mx-foot"><div class="legend"><span>Rank within the full leaderboard:</span>
       <span class="sw"><i style="background:var(--heat-1)"></i>Top 2%</span>
       <span class="sw"><i style="background:var(--heat-2)"></i>Top 10%</span>
@@ -2003,7 +2155,7 @@ function boot() {
     // one bar per model + effort, each with its own rating (same split as the price table)
     const ents = effortEnts(SP, S, st.sel);
     const A = analyze(SP.E.byKey.get(c.key), ents, st.sc);
-    const rows = [...A.rows].sort((x, y) => y.score - x.score);
+    const rowsAll = [...A.rows].sort((x, y) => y.score - x.score), rows = capList("h2h", rowsAll);
     const W = Math.max(300, host.clientWidth - 32);
     const narrow = W < 520;
     const labelW = Math.round(Math.min(240, Math.max(118, W * (narrow ? 0.42 : 0.3))));
@@ -2073,7 +2225,7 @@ function boot() {
          <span><svg width="14" height="14"><circle cx="7" cy="7" r="4.5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/></svg>CI overlaps the best (≈ tied)</span>
          <span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--ink-2)"/></svg>Clearly behind</span>
          <span><svg width="18" height="12"><rect width="18" height="12" rx="2" fill="var(--accent-soft)"/></svg>Best pick's confidence interval</span>
-         <span>${A.rows.length} of ${ents.length} model and effort pairs ranked here · ${A.n} models on this board · snapshot ${fmtDate(c.date)}</span>`
+         <span>${A.rows.length} of ${ents.length} model and effort pairs ranked here${rows.length < rowsAll.length ? `, top ${rows.length} drawn` : ""} · ${A.n} models on this board · snapshot ${fmtDate(c.date)}</span>${capBtn("h2h", rowsAll.length, "bars")}`
       : `<span>Only one model and effort pair of your picks is ranked on this board (${A.n} models, snapshot ${fmtDate(c.date)}).</span>`;
   }
 
@@ -2090,7 +2242,7 @@ function boot() {
   }
   function renderResults() { renderChips(); renderBoards(); renderPrices(); renderMatrix(); renderChart(); }
   function renderAll() { renderOrgChips(); renderPicker(); renderCols(); renderResults(); }
-  function changed(pickerToo) { if (pickerToo) renderPicker(); renderResults(); persist(); }
+  function changed(pickerToo) { if (pickerToo) renderPicker(); else renderBulk(); renderResults(); persist(); }
 
   function toggle(mi) {
     const k = st.sel.indexOf(mi);
@@ -2100,6 +2252,8 @@ function boot() {
 
   /* ---- events ---- */
   $("pk-list").addEventListener("click", e => {
+    const ga = e.target.closest(".pk-gall");
+    if (ga) { bulkToggle(pkByOrg.get(ga.dataset.org) || [], orgLabel(ga.dataset.org)); return; }
     const all = e.target.closest(".pk-all");
     if (all) {
       const f = SP.F.models[+all.dataset.fam];
@@ -2117,6 +2271,18 @@ function boot() {
     changed(false);
   });
   document.addEventListener("click", e => {
+    const cap = e.target.closest("[data-cap]");
+    if (cap) {
+      const k = cap.dataset.cap, scroll = cap.getBoundingClientRect().top;
+      st.open.has(k) ? st.open.delete(k) : st.open.add(k);
+      if (k === "chips") renderChips(); else if (k === "cs" || k.startsWith("jb:")) renderBoards();
+      else if (k === "pz") renderPrices(); else if (k === "mx") renderMatrix(); else if (k === "h2h") renderChart();
+      // collapsing a long list: keep the button where the reader's eye is
+      const again = document.querySelector(`[data-cap="${k}"]`);
+      if (again && st.open.has(k) === false) { const d = again.getBoundingClientRect().top - scroll; if (Math.abs(d) > 4) window.scrollBy(0, d); }
+      if (again) again.focus();
+      return;
+    }
     const rm = e.target.closest("[data-rm]");
     if (rm) { toggle(+rm.dataset.rm); changed(true); return; }
     const ps = e.target.closest("[data-psort]");
@@ -2144,6 +2310,8 @@ function boot() {
   $("pk-arena").addEventListener("change", e => { st.arena = e.target.value; renderPicker(); });
   $("pk-sort").addEventListener("change", e => { st.sort = e.target.value; renderPicker(); });
   $("pk-group").addEventListener("change", e => { st.group = e.target.checked; renderPicker(); });
+  $("pk-cur").addEventListener("change", e => { st.cur = e.target.checked; renderPicker(); });
+  $("pk-bulk").addEventListener("click", () => bulkToggle(pkShown, orgLabel(st.org)));
   $("pk-toggle").addEventListener("click", () => {
     const p = $("picker"); const open = p.classList.toggle("collapsed") === false;
     $("pk-toggle").setAttribute("aria-expanded", open); $("pk-toggle").textContent = open ? "Hide list" : "Browse models";

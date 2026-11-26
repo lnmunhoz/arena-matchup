@@ -6,6 +6,8 @@ Arena Matchup is a single HTML page for picking an LLM. Choose a few models and 
 
 Each effort level counts as its own model. Claude Opus 5.5 at High and Claude Opus 5.5 at Max are two picks, and every part of the page names the effort level next to the model.
 
+To pick every model from one vendor, click **Select all** on that vendor's header in the model list. It picks only the entries that the search and filters show. **Current only** hides models released more than 12 months before the newest leaderboard snapshot.
+
 The page has four parts:
 
 - A cheat sheet lists what each pick is best at, tied on, or behind on, compared only with your other picks.

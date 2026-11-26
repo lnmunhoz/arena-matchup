@@ -271,7 +271,7 @@ def effort_level(eff: list[str]) -> tuple[int, int]:
 
 def price_row(rec: dict, name_to_vi: dict[str, int]):
     """Compact per-family price record (see decode() in the template):
-    [in, out, blend, ctx, tok/s, ttft_s, flags, agent, note, [models.dev id, OpenRouter id]]
+    [in, out, blend, ctx, tok/s, ttft_s, flags, agent, note, [models.dev id, OpenRouter id], released]
     flags: 1 = price from OpenRouter, 2 = OpenRouter top-level listed price (maybe third-party
     host), 4 = listed as free (price unknown). agent: [[effort, $/task, out tokens, variant idx]].
     API ids are null when unknown; the export dialog shows them so an agent can call the model."""
@@ -289,8 +289,10 @@ def price_row(rec: dict, name_to_vi: dict[str, int]):
     src, sid = rec.get("source"), rec.get("source_id")
     ids = [sid if src == "models.dev" else None,
            rec.get("openrouter_id") or (sid if src == "openrouter" else None)]
+    released = rec.get("released")
+    released = released[:10] if isinstance(released, str) and re.match(r"\d{4}-\d{2}-\d{2}", released) else None
     return [rnd(inp), rnd(out), rnd(blend), rec.get("context_tokens"), rec.get("tokens_per_sec"),
-            rec.get("ttft_s"), flags, agent, notes, ids]
+            rec.get("ttft_s"), flags, agent, notes, ids, released]
 
 
 def main() -> int:
