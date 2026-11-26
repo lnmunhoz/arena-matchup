@@ -229,6 +229,46 @@ def effort_label(model: str) -> str:
     return ", ".join(keep)
 
 
+# ---- effort entries ---------------------------------------------------------
+# The page's unit of comparison is model + effort level. Of a variant's dropped
+# qualifiers, effort words, think modes and thinking budgets name the effort;
+# dates, Preview/Beta stamps and setups (Search, Grounding, Codex Harness,
+# precision, media settings) are folded together so cells fill across arenas.
+EFFORT_TOK = re.compile(
+    r"^(?:low|medium|high|x-?high|max|minimal|none|thinking|non-?thinking|no-?thinking"
+    r"|reasoning|non-?reasoning|instant|thinking \d+k)$", re.I)
+BUDGET_TOK = re.compile(r"^\d+k$", re.I)  # "32K" is a thinking budget next to an effort, else a resolution
+STAMP_TOK = re.compile(rf"^(?:{_DATE}|preview|beta(?:\s+\d+)?)$", re.I)
+EFFORT_LEVEL = {"minimal": 1, "none": 1, "non-thinking": 1, "no-thinking": 1, "nonthinking": 1,
+                "non-reasoning": 1, "nonreasoning": 1, "instant": 1, "low": 2, "medium": 3,
+                "high": 4, "thinking": 4, "reasoning": 4, "xhigh": 5, "x-high": 5, "max": 6}
+
+
+def split_qualifiers(dropped: list[str]) -> tuple[list[str], list[str]]:
+    """Dropped qualifiers -> (effort tokens, setup tokens). Date and stage stamps are discarded."""
+    named = any(EFFORT_TOK.match(t) for t in dropped)
+    eff, setup = [], []
+    for t in dropped:
+        if EFFORT_TOK.match(t) or (named and BUDGET_TOK.match(t)):
+            eff.append(t)
+        elif not STAMP_TOK.match(t):
+            setup.append(t)
+    return eff, setup
+
+
+def effort_level(eff: list[str]) -> tuple[int, int]:
+    """-> (level 0-6, thinking budget in K) for ordering and shading. 0 = no effort named."""
+    lvl, budget = 0, 0
+    for t in eff:
+        k = t.lower()
+        m = re.search(r"(\d+)k$", k)
+        if m:
+            budget = int(m.group(1))
+            lvl = max(lvl, 4)
+        lvl = max(lvl, EFFORT_LEVEL.get(k, 0))
+    return lvl, budget
+
+
 def price_row(rec: dict, name_to_vi: dict[str, int]):
     """Compact per-family price record (see decode() in the template):
     [in, out, blend, ctx, tok/s, ttft_s, flags, agent, note]
@@ -377,7 +417,7 @@ def main() -> int:
         base = k.split("|")[0]
         return f"entry {base.rsplit('#', 1)[1]}" if "#" in base else ""
 
-    fam_of, via_of, fam_names = {}, {}, collections.defaultdict(collections.Counter)
+    fam_of, via_of, drop_of, fam_names = {}, {}, {}, collections.defaultdict(collections.Counter)
     slug_keys = []
     for k in keys:
         names = name_count[k]
@@ -389,6 +429,7 @@ def main() -> int:
         fd, dropped = family_parts(src)
         fk = canon(fd)
         fam_of[k] = fk
+        drop_of[k] = dropped
         via_of[k] = ", ".join(dropped + ([entry_note(k)] if entry_note(k) else []))
         fam_names[fk][fd] += sum(names.values())
     pretty_fams = set(fam_of.values())
@@ -399,6 +440,7 @@ def main() -> int:
         s, d = hit or cands[0]
         fk = canon(s)
         fam_of[k] = fk
+        drop_of[k] = d
         via_of[k] = ", ".join(d + ([entry_note(k)] if entry_note(k) else []))
         fam_names[fk][s] += 0 if hit else sum(name_count[k].values())
 
@@ -427,6 +469,33 @@ def main() -> int:
             fid = fnv36("family:" + fk, n)
         used_ids.add(fid)
         fams.append([nm, oidx[org], fid, [kidx[k] for k in ks], [via_of[k] for k in ks]])
+
+    # ---- effort entries: one per family + effort level (setups and dates folded in) ----
+    effs = []
+    for fi, fk in enumerate(fam_keys):
+        groups_ = {}
+        for k in fam_members[fk]:  # rank order
+            eff, setup = split_qualifiers(drop_of.get(k, []))
+            lab = ", ".join(eff)
+            if entry_note(k):
+                lab = f"{lab or 'Default'}, {entry_note(k)}"
+            g = groups_.setdefault(lab.lower(), {"label": lab, "eff": eff, "members": [], "setups": []})
+            g["members"].append(kidx[k])
+            g["setups"].append(", ".join(setup))
+        multi_eff = len(groups_) > 1
+        rows_ = []
+        for ek, g in groups_.items():
+            lvl, budget = effort_level(g["eff"])
+            # no effort named: "Default" when the model also has named levels, no tag otherwise
+            label_ = g["label"] or ("Default" if multi_eff else "")
+            n = 5
+            eid = fnv36(f"effort:{fk}|{ek}", n)
+            while eid in used_ids:
+                n += 1
+                eid = fnv36(f"effort:{fk}|{ek}", n)
+            used_ids.add(eid)
+            rows_.append(((lvl, budget, label_.lower()), [fi, label_, lvl, g["members"], g["setups"], eid]))
+        effs += [r for _, r in sorted(rows_, key=lambda x: x[0])]
 
     # ---- prices: join data/prices.json on exact Arena names, then normalized family name ----
     prices_out, price_report = None, None
@@ -492,6 +561,7 @@ def main() -> int:
         "orgs": orgs,
         "models": models,
         "fams": fams,
+        "effs": effs,  # [family idx, effort label, level 0-6, [variant idx], [setup per variant], id]
         "cats": cat_out,
         "rows": [[boards[i]["d"], boards[i]["r"]] for i in range(len(cats))],
         "flagshipOrgs": FLAGSHIP_ORGS,
@@ -531,7 +601,8 @@ def main() -> int:
         for k, v in unsafe.items():
             print(f"  {k!r}: {sorted(v)}")
     multi = [f for f in fams if len(f[3]) > 1]
-    print(f"families: {len(fams)} from {len(models)} entries; {len(multi)} families have 2+ variants")
+    print(f"families: {len(fams)} from {len(models)} entries; {len(multi)} families have 2+ variants; "
+          f"{len(effs)} model + effort entries")
     if price_report is None:
         print(f"prices: {args.prices} missing or unreadable; page hides the price UI")
     else:

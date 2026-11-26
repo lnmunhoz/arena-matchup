@@ -2,13 +2,15 @@
 
 Arena Matchup is a single HTML page for picking an LLM. Choose a few models and it shows which one wins each job, such as coding, writing, web app building or agentic work, and what each one costs. It combines all 11 leaderboards from [LMArena](https://arena.ai) (now arena.ai) with list prices from [models.dev](https://models.dev) and OpenRouter.
 
-![Arena Matchup comparing eight models: a cheat sheet of what each one is best at, and a price table](docs/screenshot.png)
+![Arena Matchup comparing six model and effort pairs, such as Claude Opus 5.5 at High and at Max, in a cheat sheet and a price table](docs/screenshot.png)
+
+Each effort level counts as its own model. Claude Opus 5.5 at High and Claude Opus 5.5 at Max are two picks, and every part of the page names the effort level next to the model.
 
 The page has four parts:
 
 - A cheat sheet lists what each pick is best at, tied on, or behind on, compared only with your other picks.
 - A job board shows, for each job, the winner and how many rating points behind it every other pick is.
-- A price table puts blended price per million tokens next to the rating on the job you choose, with one row per model and effort level (Claude Opus 5.5 · High, Claude Opus 5.5 · Max), and marks the cheapest row that is tied with the winner or within 15 points of it.
+- A price table puts blended price per million tokens next to the rating on the job you choose, one row per pick. It marks the cheapest row that is tied with the winner or within 15 points of it. On the Agentic work job it compares Arena's measured cost per agent task instead.
 - A rank matrix shows your picks' rank on every leaderboard and category.
 
 ## Quick start
@@ -43,12 +45,15 @@ With the key, `scripts/fetch_prices.py` reads per-provider stats from OpenRouter
 | List prices, context windows, release dates | [models.dev](https://models.dev) ([repo](https://github.com/anomalyco/models.dev)) | MIT |
 | Prices for models missing from models.dev, optional speed | [OpenRouter API](https://openrouter.ai/docs) | [OpenRouter terms](https://openrouter.ai/terms) |
 
-The leaderboard data in `index.html` comes from LMArena under CC BY 4.0. This project changes it: it merges effort levels into model families and joins prices. LMArena does not endorse this project.
+The leaderboard data in `index.html` comes from LMArena under CC BY 4.0. This project changes it. It merges the setup and date variants of each model and effort level, and it joins prices. LMArena does not endorse this project.
 
 ### Limits
 
 - **Style control is on by default.** For the text, vision, search and document arenas, the page shows LMArena's style-controlled ratings, which discount answer length and formatting. The toggle switches to the raw ratings.
-- **Effort levels are merged into families.** "Claude Opus 5.5 (High)" and "(Max)" count as one model, which takes the best rank any of its levels has on each leaderboard, and the job board and rank matrix name that level ("via High"). "Show each effort level separately" splits them again. The price table, its chart and the head-to-head chart always show one row per effort level, each with its own rating; an effort Arena hasn't rated on the chosen job shows as "not ranked". On the Agentic work job the price chart plots Arena's measured cost per task, which differs by effort, instead of the price per token, which doesn't.
+- **Each effort level is its own model.** "Claude Opus 5.5 (High)" and "Claude Opus 5.5 (Max)" are separate picks, each with its own ranks, ratings and agent task cost. Thinking modes and thinking budgets count as effort levels, so "Kimi K2.5 (Thinking)" and "Kimi K2.5 (Instant)" are separate picks too. A model that Arena lists with no effort level gets no tag, or "Default" when the same model also has named levels.
+- **Setups and date stamps don't split a pick.** "GPT-5.6 Sol (xHigh, Codex Harness)" and "GPT-5.6 Sol (xHigh)" are one pick, so its cells fill across arenas. The page adds "via Codex Harness" where it uses that setup's rating. An effort level that Arena hasn't rated on a leaderboard shows as "not tested" there.
+- **"Combine effort levels" is off by default.** Turned on, it merges the effort levels of each model again and uses whichever level ranks best on each leaderboard.
+- **Price per token is the same for every effort level of a model.** Higher levels write more tokens, so each task costs more. On the Agentic work job the price table, its chart and the best value notes compare Arena's measured cost per agent task, which differs by effort level.
 - **A tie means the confidence intervals overlap.** A pick is tied with the leader when its upper bound reaches the leader's lower bound. More votes could flip the order.
 - **Prices are list prices.** They are US dollars per million tokens before discounts, caching or batch pricing. Blended price is 3 parts input to 1 part output. A † marks OpenRouter's top-level price, which can come from a cheaper third-party host than the model maker.
 - **Speed is a 30-minute snapshot.** OpenRouter reports medians over the last 30 minutes, averaged across hosts. Numbers move with load.

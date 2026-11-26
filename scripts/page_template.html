@@ -29,6 +29,12 @@
   --tie-fill: #d9971c;
   --behind-fill: #a7afbf;
   --win-soft: #e5ecfc;
+  /* effort ramp: one violet hue, light = less effort, dark = Max. Kept apart from the blue win/heat scale */
+  --eff-1: #f1ecfb; --eff-ink-1: #3d2a6b;
+  --eff-2: #e0d5f7; --eff-ink-2: #33215e;
+  --eff-3: #c4b0ef; --eff-ink-3: #241447;
+  --eff-4: #7f5fd1; --eff-ink-4: #ffffff;
+  --eff-5: #4b2a9e; --eff-ink-5: #ffffff;
   --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --radius: 10px;
@@ -49,6 +55,11 @@
     --tie-fill: #d9a13a;
     --behind-fill: #4c566b;
     --win-soft: #1b2a4d;
+    --eff-1: #241d38; --eff-ink-1: #cfc3f0;
+    --eff-2: #33285a; --eff-ink-2: #ddd3fa;
+    --eff-3: #4a3a86; --eff-ink-3: #efe9ff;
+    --eff-4: #8b74e0; --eff-ink-4: #0f0822;
+    --eff-5: #c0afff; --eff-ink-5: #140a30;
     --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 14px rgba(0, 0, 0, .25);
     color-scheme: dark;
   }
@@ -67,6 +78,11 @@
   --tie-fill: #d9a13a;
   --behind-fill: #4c566b;
   --win-soft: #1b2a4d;
+  --eff-1: #241d38; --eff-ink-1: #cfc3f0;
+  --eff-2: #33285a; --eff-ink-2: #ddd3fa;
+  --eff-3: #4a3a86; --eff-ink-3: #efe9ff;
+  --eff-4: #8b74e0; --eff-ink-4: #0f0822;
+  --eff-5: #c0afff; --eff-ink-5: #140a30;
   --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 14px rgba(0, 0, 0, .25);
   color-scheme: dark;
 }
@@ -128,7 +144,8 @@ h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter
   display: grid; place-items: center; color: var(--ink-2); font-size: 15px; line-height: 1;
 }
 .chip .x:hover { background: var(--surface); color: var(--ink); }
-.chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.chip .ef { flex: none; }
 .empty-chips { color: var(--ink-3); font-size: 14px; }
 .presets { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .btn {
@@ -198,6 +215,15 @@ h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter
 .pk-rank { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--ink-2); text-align: right; white-space: nowrap; }
 .pk-rank small { font-family: var(--font-body); font-size: 11px; font-weight: 500; color: var(--ink-3); margin-right: 3px; }
 .pk-empty { padding: 20px 12px; color: var(--ink-3); font-size: 14px; }
+.pk-fam { padding: 4px 0 6px; border-radius: 7px; }
+.pk-fam + .pk-fam, .pk-item + .pk-fam, .pk-fam + .pk-item { border-top: 1px solid var(--line); }
+.pk-fam-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; align-items: center; padding: 6px 10px 2px; }
+.pk-fam-head .pk-name { font-weight: 600; }
+.pk-all { border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 1px 7px; font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+.pk-all:hover { border-color: var(--accent); color: var(--accent); }
+.pk-item.pk-eff { padding: 4px 10px 4px 18px; }
+.pk-eff-l { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 7px; min-width: 0; }
+.pk-arenas { font-size: 12px; color: var(--ink-3); line-height: 1.3; }
 .pk-count { font-size: 13px; color: var(--ink-3); }
 
 /* ---------- shared state swatches (winner / tied / behind / not tested) ---------- */
@@ -207,6 +233,20 @@ h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter
 .key-sw.s-behind { background: var(--behind-fill); }
 .key-sw.s-none { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line-strong); }
 .via { font-size: 12px; font-weight: 400; color: var(--ink-3); white-space: nowrap; }
+/* effort pill: model name first, then its effort level, shaded light (least effort) to dark (Max) */
+.ef {
+  display: inline-block; font-family: var(--font-body); font-size: 11.5px; font-weight: 600; line-height: 1.35;
+  letter-spacing: .01em; text-transform: none; border-radius: 999px; padding: 0 7px; border: 1px solid transparent;
+  white-space: nowrap; overflow-wrap: normal; vertical-align: .1em;
+}
+.ef.e0 { background: transparent; border-color: var(--line-strong); color: var(--ink-2); }
+.ef.e1 { background: var(--eff-1); color: var(--eff-ink-1); border-color: var(--eff-3); }
+.ef.e2 { background: var(--eff-2); color: var(--eff-ink-2); border-color: var(--eff-3); }
+.ef.e3 { background: var(--eff-3); color: var(--eff-ink-3); }
+.ef.e4 { background: var(--eff-4); color: var(--eff-ink-4); }
+.ef.e5 { background: var(--eff-5); color: var(--eff-ink-5); }
+.ef.lg { font-size: 13px; padding: 1px 8px; vertical-align: .2em; }
+.nm-wrap { overflow-wrap: anywhere; }
 
 /* ---------- cheat sheet ---------- */
 .cs-grid, .jb-grid { display: grid; gap: 0; overflow: hidden; border-top: 1px solid var(--line); margin-bottom: -1px; }
@@ -215,7 +255,7 @@ h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter
 .cs-card { background: var(--surface); padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .cs-head { display: flex; flex-direction: column; gap: 1px; }
 .cs-head h3 { font-family: var(--font-display); font-size: 23px; font-weight: 700; line-height: 1.05; letter-spacing: .005em; overflow-wrap: anywhere; }
-.cs-head span { font-size: 13px; color: var(--ink-3); }
+.cs-head > span { font-size: 13px; color: var(--ink-3); }
 .cs-lines { margin: 0; display: flex; flex-direction: column; gap: 8px; }
 .cs-line { display: grid; grid-template-columns: 12px minmax(0, 1fr); gap: 4px 9px; align-items: start; }
 .cs-line .key-sw { margin-top: 4px; }
@@ -383,7 +423,6 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
 .badge { font-size: 11px; font-weight: 600; line-height: 1.4; border-radius: 999px; padding: 0 7px; border: 1px solid var(--accent-line); background: var(--accent-soft); color: var(--ink); white-space: nowrap; }
 .pz td.big { font-family: var(--font-display); font-size: 19px; font-weight: 600; color: var(--ink); }
 .pz td.nd { color: var(--ink-3); font-style: italic; font-size: 13px; }
-.pz .eff { display: inline-block; font-size: 11.5px; font-weight: 600; line-height: 1.35; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: 999px; padding: 0 7px; margin-left: 2px; white-space: nowrap; vertical-align: 1px; overflow-wrap: normal; }
 .pz td.rate { font-size: 13px; color: var(--ink-2); }
 .pz td.rate b { font-weight: 600; color: var(--ink); }
 .pz td.rate .rel { display: block; font-size: 12px; color: var(--ink-3); line-height: 1.3; }
@@ -419,7 +458,7 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
   <header class="masthead">
     <div class="brand">
       <h1>Arena <span>Matchup</span></h1>
-      <p id="lede">Pick the models you care about from all 11 LMArena leaderboards and see which one wins each job. A model's effort levels (High, Max, Search…) count as one model, using whichever ranks best on each leaderboard. Ranks and ratings come from blind human votes; they say nothing about price or context window, which this dataset doesn't include.</p>
+      <p id="lede">Pick the models you care about from all 11 LMArena leaderboards and see which one wins each job. Each effort level (Claude Opus 5.5 High, Claude Opus 5.5 Max) counts as its own model, so you can see what the extra effort buys. Ranks and ratings come from blind human votes; they say nothing about price or context window, which this dataset doesn't include.</p>
     </div>
     <div class="sources">
       <div>Source: <a href="https://arena.ai/leaderboard" target="_blank" rel="noopener">arena.ai ↗</a> · <a href="https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset" target="_blank" rel="noopener">HF dataset lmarena-ai/leaderboard-dataset ↗</a></div>
@@ -437,13 +476,13 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
         <span class="eyebrow" style="margin-right:2px">Quick picks</span>
         <button class="btn" type="button" id="p-text">Top 10 text</button>
         <button class="btn" type="button" id="p-webdev">Top 10 WebDev</button>
-        <button class="btn" type="button" id="p-flag" title="Each vendor's highest-ranked Text model: Anthropic, OpenAI, Google, xAI, DeepSeek, Alibaba, Moonshot, Z.ai">Flagship per vendor</button>
-        <button class="btn" type="button" id="p-cheap" data-price title="Takes the 20 best-ranked models on the Text leaderboard, keeps those with a known price, and picks the 6 with the lowest blended price per million tokens">Cheapest good models</button>
-        <button class="btn" type="button" id="p-fast" data-price data-speed title="Takes the 20 best-ranked models on the Text leaderboard, keeps those with speed data, and picks the 6 with the most tokens per second">Fastest good models</button>
+        <button class="btn" type="button" id="p-flag" title="Each vendor's highest-ranked Text entry, effort level included: Anthropic, OpenAI, Google, xAI, DeepSeek, Alibaba, Moonshot, Z.ai">Flagship per vendor</button>
+        <button class="btn" type="button" id="p-cheap" data-price title="Takes the 20 best-ranked entries on the Text leaderboard, keeps those with a known price, and picks the 6 with the lowest blended price per million tokens">Cheapest good models</button>
+        <button class="btn" type="button" id="p-fast" data-price data-speed title="Takes the 20 best-ranked entries on the Text leaderboard, keeps those with speed data, and picks the 6 with the most tokens per second">Fastest good models</button>
         <button class="btn ghost" type="button" id="p-clear">Clear</button>
       </div>
       <div class="sc-wrap">
-        <label class="sep-toggle" title="Off: each model's effort levels and setups (High, Max, Search…) are merged and the best-ranked one counts on each leaderboard."><input type="checkbox" id="sep"> Show each effort level separately</label>
+        <label class="sep-toggle" title="On: a model's effort levels (High, Max…) merge into one entry, and whichever ranks best counts on each leaderboard. Off: each effort level is its own model."><input type="checkbox" id="comb"> Combine effort levels (best of each)</label>
         <span title="Style control adjusts ratings for answer length and markdown formatting. It's the default view on arena.ai and applies to Text, Vision, Search and Document.">Style control</span>
         <div class="seg" role="group" aria-label="Style control">
           <button type="button" id="sc-on" aria-pressed="true">On</button>
@@ -500,7 +539,7 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
         <div class="panel-head">
           <div>
             <h2 id="pz-h">Price and speed</h2>
-            <p id="pz-sub">What your picks cost and how fast they answer, next to how well each effort level does on one job. Click a column to sort.</p>
+            <p id="pz-sub">What your picks cost and how fast they answer, next to how well each one does on one job. Click a column to sort.</p>
           </div>
           <div class="pz-ctl"><label for="pz-job">Judge value on</label><select id="pz-job"></select></div>
         </div>
@@ -595,40 +634,63 @@ function decode(D) {
     i, arena: arenas[ai], cat, label, group: groups[gi], date, defOn: !!on,
     d: unpack(D.rows[i][0]), r: D.rows[i][1].length ? unpack(D.rows[i][1]) : null }));
   const vnames = D.models.map(m => m[0]);
-  // variant space: every leaderboard entry on its own
-  const vEnts = D.models.map(([name, oi, id], i) => ({ name, org: D.orgs[oi], id, members: [i], vias: [""] }));
-  // family space: effort levels / setups / dates of one model folded together
+  // family space ("Combine effort levels"): effort levels, setups and dates of one model folded together
   const fEnts = (D.fams && D.fams.length ? D.fams : D.models.map(([name, oi, id], i) => [name, oi, id, [i], [""]]))
-    .map(([name, oi, id, members, vias]) => ({ name, org: D.orgs[oi], id, members, vias }));
+    .map(([name, oi, id, members, vias]) => ({ name, fam: name, effort: "", lvl: 0, org: D.orgs[oi], id, members, vias, effs: [] }));
   const famOf = new Array(D.models.length);
   fEnts.forEach((f, fi) => f.members.forEach(vi => { famOf[vi] = fi; }));
-  // prices are per family; a single variant shows its family's price and only its own agent cost
+  // effort space (the default): one entry per model + effort level. Setups (Search, Codex Harness…) and
+  // date stamps fold into the matching effort level; vias hold the setup, so "via Codex Harness" shows only where it applies.
+  const effRows = D.effs && D.effs.length ? D.effs : fEnts.map((f, fi) => [fi, "", 0, f.members, f.members.map(() => ""), f.id]);
+  const eEnts = effRows.map(([fi, effort, lvl, members, setups, id]) => {
+    const f = fEnts[fi];
+    return { name: effort ? `${f.name} · ${effort}` : f.name, fam: f.name, effort, lvl, fi, org: f.org, id, members, vias: setups };
+  });
+  const effOf = new Array(D.models.length);
+  eEnts.forEach((e, ei) => { fEnts[e.fi].effs.push(ei); e.members.forEach(vi => { effOf[vi] = ei; }); });
+  // prices are per family; an effort entry shares its family's per-token price and keeps only its own agent costs
   const hasPrices = Array.isArray(D.prices) && D.prices.length === fEnts.length;
   if (hasPrices) {
     fEnts.forEach((f, fi) => { f.price = parsePrice(D.prices[fi], null); });
-    vEnts.forEach((v, vi) => { v.price = famOf[vi] != null ? parsePrice(D.prices[famOf[vi]], vi) : null; });
+    eEnts.forEach(e => { e.price = parsePrice(D.prices[e.fi], new Set(e.members)); });
   }
-  const V = makeSpace(arenas, groups, base, vEnts, vnames, false);
+  const E = makeSpace(arenas, groups, base, eEnts, vnames, false);
   const F = makeSpace(arenas, groups, base, fEnts, vnames, true);
-  V.flagshipOrgs = F.flagshipOrgs = D.flagshipOrgs;
+  E.flagshipOrgs = F.flagshipOrgs = D.flagshipOrgs;
   // speed is optional (needs an OpenRouter API key at build time)
   const hasSpeed = hasPrices && fEnts.some(f => f.price && f.price.tps > 0);
-  V.hasPrices = F.hasPrices = hasPrices;
-  V.hasSpeed = F.hasSpeed = hasSpeed;
-  return { V, F, famOf, hasPrices, hasSpeed };
+  E.hasPrices = F.hasPrices = hasPrices;
+  E.hasSpeed = F.hasSpeed = hasSpeed;
+  // old links and saved state may hold single-variant ids
+  const vById = new Map(D.models.map((m, i) => [m[2], i]));
+  return { E, F, famOf, effOf, vById, hasPrices, hasSpeed };
 }
 
 /* compact price row from build_page.py: [in, out, blend, ctx, tok/s, ttft, flags, agent, note]
    flags 1 = from OpenRouter, 2 = OpenRouter listed price (maybe a third-party host), 4 = free tier (price unknown) */
-function parsePrice(p, vi) {
+function parsePrice(p, keep) {
   if (!p) return null;
   const [inp, out, blend, ctx, tps, ttft, flags, agent, note] = p;
   let ag = (agent || []).map(([effort, cost, toks, avi]) => ({ effort, cost, toks, vi: avi }));
-  if (vi != null) ag = ag.filter(a => a.vi === vi);
+  if (keep) ag = ag.filter(a => keep.has(a.vi));
   return { inp, out, blend, ctx, tps, ttft, flags: flags || 0, agent: ag, note: note || "" };
 }
 const blendOf = m => (m && m.price && m.price.blend > 0) ? m.price.blend : null;
 const tpsOf = m => (m && m.price && m.price.tps > 0) ? m.price.tps : null;
+/* Arena's measured cost per agent task for this entry; row = its agent-board row, so a model + effort
+   tested with and without a harness uses the run that ranks */
+function taskOf(m, row) {
+  const ag = (m && m.price && m.price.agent) || [];
+  return (row && ag.find(a => a.vi === row.vi)) || (row ? null : ag[0] || null);
+}
+
+/* effort pill: level 0 (no tag / Default) is an outline, then light (Minimal, Low) to dark (Max) */
+const EFF_SHADE = [0, 1, 1, 2, 3, 4, 5];
+function effPill(m, big) {
+  return m && m.effort ? `<span class="ef e${EFF_SHADE[m.lvl] || 0}${big ? " lg" : ""}" title="Effort level">${esc(m.effort)}</span>` : "";
+}
+/* "Claude Opus 5.5 [High]": the model name, then its effort pill */
+function nameHTML(m, big) { return `<span class="nm-wrap">${esc(m.fam || m.name)}</span>${m.effort ? " " + effPill(m, big) : ""}`; }
 
 function fmtUsd(v) {
   if (v == null) return "no data";
@@ -672,19 +734,18 @@ function valueNotes(S, J) {
   const L = J.A.lead, lm = S.models[L.mi], bt = J.c.arena.stype === "bt";
   const close = closeRows(J);
   const relation = r => r.tied ? "tied with the winner" : `${Math.round(L.score - r.score)} pts behind the winner`;
-  const lb = blendOf(lm);
-  if (lb != null) {
-    const cheaper = close.filter(r => !r.isLead && blendOf(S.models[r.mi]) != null && blendOf(S.models[r.mi]) <= lb * 0.85)
-      .sort((a, b) => blendOf(S.models[a.mi]) - blendOf(S.models[b.mi]) || a.rank - b.rank);
+  // Agentic work: effort levels write very different token counts, so compare Arena's measured cost per task;
+  // every other job compares the blended price per token
+  const lt = J.c.arena.id === "agent" ? taskOf(lm, L) : null;
+  const costOf = lt ? (r => { const t = taskOf(S.models[r.mi], r); return t ? t.cost : null; }) : (r => blendOf(S.models[r.mi]));
+  const unit = lt ? "per agent task" : "per M";
+  const lb = blendOf(lm), lc = costOf(L);
+  if (lc != null) {
+    const cheaper = close.filter(r => !r.isLead && costOf(r) != null && costOf(r) <= lc * 0.85)
+      .sort((a, b) => costOf(a) - costOf(b) || a.rank - b.rank);
     if (cheaper.length) {
-      const r = cheaper[0], cb = blendOf(S.models[r.mi]);
-      out.value = { mi: r.mi, row: r, text: `${relation(r)} ${cheaperPhrase(cb, lb)} (${fmtUsd(cb)} vs ${fmtUsd(lb)} per M)` };
-      // agent board: effort levels write very different token counts, so add the measured cost per task
-      if (J.c.arena.id === "agent") {
-        const task = (m, row) => (m.price && m.price.agent || []).find(a => a.vi === row.vi) || null;
-        const ct = task(S.models[r.mi], r), lt = task(lm, L);
-        if (ct && lt) out.value.tail = `. Per agent task it costs ${fmtUsd(ct.cost)} (${ct.effort}) vs ${fmtUsd(lt.cost)} (${lt.effort})` + (ct.cost > lt.cost ? ", because it writes more tokens" : "");
-      }
+      const r = cheaper[0], cb = costOf(r);
+      out.value = { mi: r.mi, row: r, text: `${relation(r)} ${cheaperPhrase(cb, lc)} (${fmtUsd(cb)} vs ${fmtUsd(lc)} ${unit})` };
     }
   }
   const sped = close.filter(r => tpsOf(S.models[r.mi]) != null).sort((a, b) => tpsOf(S.models[b.mi]) - tpsOf(S.models[a.mi]));
@@ -698,7 +759,6 @@ function valueNotes(S, J) {
       if (out.value && out.value.mi === r.mi) { out.value.text += lt != null ? `, and faster (${Math.round(t)} vs ${Math.round(lt)} tok/s)` : `, ${Math.round(t)} tok/s`; out.fast.merged = true; }
     }
   }
-  if (out.value && out.value.tail) out.value.text += out.value.tail;
   return out;
 }
 
@@ -711,20 +771,13 @@ function presetBy(S, sc, by, n = 20, k = 6) {
     .slice(0, k);
 }
 
-/* The price table and its chart are always split by effort: a picked family expands to each of
-   its leaderboard entries (effort level or setup), a picked variant stays one row.
-   -> [{ vi, fam, effort }] in pick order, then the family's rank order. */
-function effortRows(SP, S, sel) {
-  const vis = [];
-  for (const mi of sel) for (const vi of (S.fam ? S.models[mi].members : [mi])) if (!vis.includes(vi)) vis.push(vi);
-  return vis.map(vi => {
-    const f = SP.F.models[SP.famOf[vi]];
-    const k = f.members.indexOf(vi);
-    // short label drops date stamps; keep them when two entries of one model would read the same
-    const short = vs => viaShort(vs) || "Default";
-    const clash = f.members.some((o, j) => j !== k && short(f.vias[j]) === short(f.vias[k]));
-    return { vi, fam: f.name, effort: clash ? (f.vias[k] || "Default") : short(f.vias[k]) };
-  });
+/* The price table and the head-to-head chart always show one row per model + effort level:
+   with effort levels combined, a picked model expands to each of its levels.
+   -> effort-entry indices, in pick order, then level order. */
+function effortEnts(SP, S, sel) {
+  const out = [];
+  for (const mi of sel) for (const ei of (S.fam ? S.models[mi].effs : [mi])) if (!out.includes(ei)) out.push(ei);
+  return out;
 }
 
 /* price table rows (one per model + effort), with badges and the chosen job's rating for that effort */
@@ -733,21 +786,24 @@ const PZ_COLS = [
   ["inp", "Input", 1], ["out", "Output", 1], ["ctx", "Context", -1], ["agent", "Agent task", 1],
 ];
 function priceTable(SP, S, sel, job, sc, sort) {
-  const V = SP.V;
-  const ents = effortRows(SP, S, sel);
-  const vsel = ents.map(e => e.vi);
+  const E = SP.E;
+  const vsel = effortEnts(SP, S, sel);
   // ratings come from each entry's own row on the board, never from a sibling effort
-  const c = job ? V.byKey.get(job.key) : null;
+  const c = job ? E.byKey.get(job.key) : null;
   const A = c ? analyze(c, vsel, sc) : null;
-  const rowOf = vi => A && A.rows.find(r => r.mi === vi) || null;
-  const rows = ents.map(e => {
-    const m = V.models[e.vi], p = m.price || {};
-    // per-variant price carries only this entry's own agent cost (0 or 1)
-    const task = (p.agent || []).find(a => a.vi === e.vi) || null;
-    return { mi: e.vi, vi: e.vi, m, fam: e.fam, effort: e.effort, label: `${e.fam} · ${e.effort}`, r: rowOf(e.vi),
+  const rowOf = ei => A && A.rows.find(r => r.mi === ei) || null;
+  const agentBoard = E.byKey.get("agent/overall");
+  const rows = vsel.map(ei => {
+    const m = E.models[ei], p = m.price || {};
+    // agent task cost is this effort level's own; "–" when Arena didn't measure that level
+    const task = taskOf(m, agentBoard ? agentBoard.d.get(ei) || null : null);
+    return { mi: ei, m, fam: m.fam, effort: m.effort, label: m.name, r: rowOf(ei),
       blend: blendOf(m), inp: p.flags & 4 ? null : (p.inp ?? null), out: p.flags & 4 ? null : (p.out ?? null),
-      tps: tpsOf(m), ttft: p.ttft || null, ctx: p.ctx || null, task, badges: [] };
+      tps: tpsOf(m), ttft: p.ttft || null, ctx: p.ctx || null, task, cost: null, badges: [] };
   });
+  // "Cheapest" and "Best value" compare cost per agent task on Agentic work, price per token elsewhere
+  const perTask = !!(c && c.arena.id === "agent" && rows.some(x => x.task));
+  rows.forEach(x => { x.cost = perTask ? (x.task ? x.task.cost : null) : x.blend; });
   // price per token and speed are per model, so every effort of the cheapest/fastest model shares the badge;
   // no badge when all rows have the same value
   const extreme = (key, lower) => {
@@ -756,22 +812,21 @@ function priceTable(SP, S, sel, job, sc, sort) {
     const top = xs.reduce((a, b) => (lower ? b[key] < a[key] : b[key] > a[key]) ? b : a)[key];
     return xs.every(x => x[key] === top) ? [] : xs.filter(x => x[key] === top);
   };
-  const cheap = extreme("blend", true), fast = extreme("tps", false);
+  const cheap = extreme("cost", true), fast = extreme("tps", false);
   cheap.forEach(x => x.badges.push("Cheapest"));
   fast.forEach(x => x.badges.push("Fastest"));
   // best value: cheapest row that is as good as the best row on the chosen job. Efforts of one model
-  // share a per-token price, so a tie goes to the lower measured cost per agent task, then the higher rating.
+  // share a per-token price, so a tie there goes to the higher rating.
   let best = null;
   if (A && A.lead && A.rows.length > 1) {
     const bt = c.arena.stype === "bt";
-    const ok = rows.filter(x => x.r && x.blend != null && (x.r.isLead || x.r.tied || (bt && A.lead.score - x.r.score <= CLOSE_PTS)));
-    const beats = (b, a) => b.blend !== a.blend ? b.blend < a.blend
-      : (a.task && b.task && a.task.cost !== b.task.cost) ? b.task.cost < a.task.cost : b.r.score > a.r.score;
+    const ok = rows.filter(x => x.r && x.cost != null && (x.r.isLead || x.r.tied || (bt && A.lead.score - x.r.score <= CLOSE_PTS)));
+    const beats = (b, a) => b.cost !== a.cost ? b.cost < a.cost : b.r.score > a.r.score;
     if (ok.length) best = ok.reduce((a, b) => beats(b, a) ? b : a);
     if (best) best.badges.push("Best value");
   }
   const key = sort && sort.key || "blend", dir = sort && sort.dir || 1;
-  const val = x => key === "name" ? x.fam.toLowerCase() : key === "rate" ? (x.r ? x.r.score : null) : key === "agent" ? (x.task ? x.task.cost : null) : x[key];
+  const val = x => key === "name" ? x.fam.toLowerCase() + "\u0000" + x.m.lvl : key === "rate" ? (x.r ? x.r.score : null) : key === "agent" ? (x.task ? x.task.cost : null) : x[key];
   // ties (efforts of one model share most columns) go to the better-rated effort, then pick order
   const sc_ = x => x.r ? x.r.score : -Infinity;
   const tie = (a, b) => (sc_(b) > sc_(a) ? 1 : sc_(b) < sc_(a) ? -1 : 0) || vsel.indexOf(a.vi) - vsel.indexOf(b.vi);
@@ -781,7 +836,7 @@ function priceTable(SP, S, sel, job, sc, sort) {
     if (va == null) return 1; if (vb == null) return -1;
     return (va < vb ? -1 : va > vb ? 1 : 0) * dir || tie(a, b);
   });
-  return { rows, A, c, cheap, fast, best };
+  return { rows, A, c, cheap, fast, best, perTask };
 }
 
 /* log-scale ticks covering [lo, hi] */
@@ -874,6 +929,14 @@ function presetFlagship(S, sc) {
     if (pick !== null) out.push(pick);
   }
   return out;
+}
+
+/* first visit: a few top models at two effort levels each, so the effort differences show */
+const DEFAULT_PICKS = [["Claude Opus 5.5", "High"], ["Claude Opus 5.5", "Max"], ["Claude Sonnet 5.5", "High"],
+  ["Claude Sonnet 5.5", "xHigh"], ["Gemini 4 Neon", "High"], ["GPT-5.6 Sol", "xHigh"]];
+function presetDefault(E) {
+  const out = DEFAULT_PICKS.map(([f, e]) => E.models.findIndex(m => m.fam === f && m.effort === e)).filter(i => i >= 0);
+  return out.length >= 3 ? out : presetFlagship(E, true);
 }
 
 /* column analysis for one board among the selected models */
@@ -977,43 +1040,47 @@ function niceTicks(lo, hi, want) {
   return { ticks: t, step };
 }
 
-/* hash: #m-<id>-<id>...[-raw][-v]   (-v = effort levels shown separately) */
+/* hash: #e-<id>-<id>...[-raw][-c]   (-c = effort levels combined)
+   Older links used #m-…[-v] with model (family) ids, or variant ids with -v; they open with effort levels separate. */
 function encodeHash(S, st) {
   const ids = st.sel.map(mi => S.models[mi].id);
-  return "m" + (ids.length ? "-" + ids.join("-") : "") + (st.sc ? "" : "-raw") + (st.fam ? "" : "-v");
+  return "e" + (ids.length ? "-" + ids.join("-") : "") + (st.sc ? "" : "-raw") + (st.fam ? "-c" : "");
 }
 function decodeHash(h) {
   h = (h || "").replace(/^#/, "");
-  if (!/^m(-[a-z0-9]+)*$/.test(h)) return null;
+  if (!/^[em](-[a-z0-9]+)*$/.test(h)) return null;
   const parts = h.split("-").slice(1);
-  return { ids: parts.filter(p => p !== "raw" && p !== "v"), sc: !parts.includes("raw"), fam: !parts.includes("v") };
+  return { ids: parts.filter(p => p !== "raw" && p !== "v" && p !== "c"), sc: !parts.includes("raw"), fam: h[0] === "e" && parts.includes("c") };
 }
-/* ids from a hash or storage -> indices in the wanted space. Family ids and variant ids
-   both resolve in either space; unknown ids (models that left the data) are skipped. */
+/* ids from a hash or storage -> indices in the wanted space. Effort, model and old variant ids all
+   resolve in either space: a model id opens all of its effort levels, a variant id its own level.
+   Unknown ids (models that left the data) are skipped. */
 function resolveIds(SP, ids, fam) {
   const out = [];
   const add = i => { if (i != null && !out.includes(i)) out.push(i); };
   for (const id of ids || []) {
     if (typeof id !== "string") continue;
-    const f = SP.F.byId.get(id), v = SP.V.byId.get(id);
-    if (fam) { if (f) add(f.i); else if (v) add(SP.famOf[v.i]); }
-    else { if (v) add(v.i); else if (f) f.members.forEach(add); }
+    const e = SP.E.byId.get(id), f = SP.F.byId.get(id), vi = SP.vById.get(id);
+    if (fam) { if (f) add(f.i); else if (e) add(e.fi); else if (vi != null) add(SP.famOf[vi]); }
+    else { if (e) add(e.i); else if (f) f.effs.forEach(add); else if (vi != null) add(SP.effOf[vi]); }
   }
   return out;
 }
 
 /* ================= UI ================= */
 const STORE_KEY = "arena-matchup-v1";
+const STORE_V = 2;  // 2: selection holds effort-entry ids (or model ids with comb on); older saves hold model ids
 function loadStore() { try { const s = localStorage.getItem(STORE_KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
 function saveStore(obj) { try { localStorage.setItem(STORE_KEY, JSON.stringify(obj)); } catch (e) { /* storage unavailable */ } }
 
 function boot() {
   const SP = decode(DATA);
   HAS_SPEED = SP.hasSpeed;
-  let S = SP.F;
+  let S = SP.E;
   const $ = id => document.getElementById(id);
+  // st.fam = "Combine effort levels" (off by default: every effort level is its own model)
   const st = {
-    sel: [], sc: true, fam: true, cols: new Set(S.cats.filter(c => c.defOn).map(c => c.i)),
+    sel: [], sc: true, fam: false, cols: new Set(S.cats.filter(c => c.defOn).map(c => c.i)),
     sortCol: S.byKey.get("text/overall") ? S.byKey.get("text/overall").i : -1,
     h2h: "text/overall", q: "", org: "all", arena: "any", sort: "rank", group: true, more: false,
     maxp: 0, mins: 0, psort: { key: "blend", dir: 1 }, vjob: "chat",
@@ -1036,22 +1103,23 @@ function boot() {
     st.fam = fromHash.fam; st.sc = fromHash.sc;
     st.sel = resolveIds(SP, fromHash.ids, st.fam);
   } else if (saved && Array.isArray(saved.sel) && saved.sel.length) {
-    st.fam = saved.fam !== false; st.sc = saved.sc !== false;
+    // older saves had effort levels merged by default; they now open with each level separate
+    st.fam = saved.v === STORE_V && saved.comb === true; st.sc = saved.sc !== false;
     st.sel = resolveIds(SP, saved.sel, st.fam);
   }
-  S = st.fam ? SP.F : SP.V;
-  if (!st.sel.length) st.sel = presetFlagship(S, true);
-  $("sep").checked = !st.fam;
+  S = st.fam ? SP.F : SP.E;
+  if (!st.sel.length) st.sel = st.fam ? resolveIds(SP, presetDefault(SP.E).map(ei => SP.E.models[ei].id), true) : presetDefault(SP.E);
+  $("comb").checked = st.fam;
   $("more").open = st.more;
   // no price file at build time: hide every price control and section
   if (!SP.hasPrices) document.querySelectorAll("[data-price]").forEach(el => { el.hidden = true; if (el.tagName === "OPTION") el.remove(); });
   else if (!SP.hasSpeed) {
     document.querySelectorAll("[data-speed]").forEach(el => { el.hidden = true; if (el.tagName === "OPTION") el.remove(); });
     $("pz-h").textContent = "Price";
-    $("pz-sub").textContent = "What your picks cost, next to how well each effort level does on one job. Click a column to sort.";
-    $("lede").textContent = "Pick the models you care about from all 11 LMArena leaderboards and see which one wins each job and what it costs. A model's effort levels (High, Max, Search…) count as one model, using whichever ranks best on each leaderboard. Ranks and ratings come from blind human votes; prices come from models.dev and OpenRouter.";
+    $("pz-sub").textContent = "What your picks cost, next to how well each one does on one job. Click a column to sort.";
+    $("lede").textContent = "Pick the models you care about from all 11 LMArena leaderboards and see which one wins each job and what it costs. Each effort level (Claude Opus 5.5 High, Claude Opus 5.5 Max) counts as its own model, so you can see what the extra effort buys. Ranks and ratings come from blind human votes; prices come from models.dev and OpenRouter.";
   }
-  else $("lede").textContent = "Pick the models you care about from all 11 LMArena leaderboards and see which one wins each job, what it costs and how fast it is. A model's effort levels (High, Max, Search…) count as one model, using whichever ranks best on each leaderboard. Ranks and ratings come from blind human votes; prices and speeds come from models.dev and OpenRouter.";
+  else $("lede").textContent = "Pick the models you care about from all 11 LMArena leaderboards and see which one wins each job, what it costs and how fast it is. Each effort level (Claude Opus 5.5 High, Claude Opus 5.5 Max) counts as its own model, so you can see what the extra effort buys. Ranks and ratings come from blind human votes; prices and speeds come from models.dev and OpenRouter.";
 
   /* ---- header ---- */
   $("dates").innerHTML = S.arenas.map(a => `<span><b>${esc(a.label)}</b> ${fmtDate(a.date)}</span>`).join("");
@@ -1059,8 +1127,8 @@ function boot() {
   let orgCounts = new Map();
   function renderPickerMeta() {
     $("pk-total").textContent = S.fam
-      ? `${S.models.length} models (${SP.V.models.length} entries with effort levels merged) across ${S.arenas.length} arenas`
-      : `${S.models.length} entries across ${S.arenas.length} arenas, each effort level separate`;
+      ? `${S.models.length} models across ${S.arenas.length} arenas, effort levels combined`
+      : `${S.models.length} model and effort pairs (${SP.F.models.length} models) across ${S.arenas.length} arenas`;
     orgCounts = new Map();
     for (const m of S.models) orgCounts.set(m.org, (orgCounts.get(m.org) || 0) + 1);
     const orgsSorted = [...orgCounts.keys()].sort((a, b) => orgLabel(a).localeCompare(orgLabel(b)));
@@ -1084,7 +1152,7 @@ function boot() {
       (!st.mins || (tpsOf(m) != null && tpsOf(m) > st.mins)));
     const rk = m => m.textRank != null ? m.textRank : 10000 + (m.best ? m.best.p * 1000 : 2000);
     const unk = (v, big) => v == null ? big : v;
-    if (st.sort === "name") list.sort((a, b) => a.name.localeCompare(b.name));
+    if (st.sort === "name") list.sort((a, b) => a.fam.localeCompare(b.fam) || a.i - b.i);
     else if (st.sort === "cheap") list.sort((a, b) => unk(blendOf(a), 1e9) - unk(blendOf(b), 1e9) || rk(a) - rk(b));
     else if (st.sort === "fast") list.sort((a, b) => unk(tpsOf(b), -1) - unk(tpsOf(a), -1) || rk(a) - rk(b));
     else list.sort((a, b) => rk(a) - rk(b) || a.i - b.i);
@@ -1102,13 +1170,38 @@ function boot() {
     if (m.best) return `<small>${esc(m.best.cat.arena.label)}</small>#${m.best.rank}`;
     return "";
   }
+  const arenaList = m => S.arenas.filter(a => m.arenas.has(a.id)).map(a => a.label).join(", ");
+  const variantTitle = m => m.members.length > 1 ? ` title="${esc("Arena entries: " + m.members.map(vi => DATA.models[vi][0]).join(", "))}"` : "";
   function itemHTML(m) {
     const on = st.sel.includes(m.i);
     const n = m.arenas.size;
-    return `<button type="button" class="pk-item" role="listitem" data-mi="${m.i}" aria-pressed="${on}"${m.nvar > 1 ? ` title="${esc(m.members.map(vi => SP.V.models[vi].name).join("\n"))}"` : ""}>
+    // effort entries list the arenas they were tested in, so the empty cells make sense
+    const meta = S.fam ? `${n} arena${n > 1 ? "s" : ""}${m.nvar > 1 ? ` · ${m.nvar} variants` : ""}` : (arenaList(m) || "no arenas");
+    return `<button type="button" class="pk-item" role="listitem" data-mi="${m.i}" aria-pressed="${on}"${variantTitle(m)}>
       <span class="box" aria-hidden="true">✓</span>
-      <span><span class="pk-name">${esc(m.name)}</span><br><span class="pk-meta">${esc(orgLabel(m.org))} · ${n} arena${n > 1 ? "s" : ""}${m.nvar > 1 ? ` · ${m.nvar} variants` : ""}</span>${costLine(m) ? `<br><span class="pk-price num">${esc(costLine(m))}</span>` : ""}</span>
+      <span><span class="pk-name">${S.fam ? esc(m.name) : nameHTML(m)}</span><br><span class="pk-meta">${esc(orgLabel(m.org))} · ${esc(meta)}</span>${costLine(m) ? `<br><span class="pk-price num">${esc(costLine(m))}</span>` : ""}</span>
       <span class="pk-rank num">${hintFor(m)}</span></button>`;
+  }
+  function allBtnLabel(f) { return f.effs.every(ei => st.sel.includes(ei)) ? "Clear levels" : "All levels"; }
+  /* one model with several effort levels: the model's name once, then one selectable row per level */
+  function famHTML(fi, ents) {
+    const f = SP.F.models[fi];
+    if (f.effs.length === 1) return itemHTML(ents[0]);
+    const cost = costLine(ents[0]);
+    const head = `<div class="pk-fam-head"><span><span class="pk-name">${esc(f.name)}</span><br><span class="pk-meta">${esc(orgLabel(f.org))} · ${f.effs.length} effort levels</span>${cost ? `<br><span class="pk-price num">${esc(cost)}</span>` : ""}</span>` +
+      `<button type="button" class="pk-all" data-fam="${fi}" aria-label="Select or clear every effort level of ${esc(f.name)}">${allBtnLabel(f)}</button></div>`;
+    const rows = ents.map(m => `<button type="button" class="pk-item pk-eff" role="listitem" data-mi="${m.i}" aria-pressed="${st.sel.includes(m.i)}" aria-label="${esc(m.name)}"${variantTitle(m)}>
+      <span class="box" aria-hidden="true">✓</span>
+      <span class="pk-eff-l">${effPill(m) || `<span class="ef e0">Default</span>`}<span class="pk-arenas">${esc(arenaList(m) || "no arenas")}</span></span>
+      <span class="pk-rank num">${hintFor(m)}</span></button>`).join("");
+    return `<div class="pk-fam" data-fi="${fi}">${head}${rows}</div>`;
+  }
+  /* effort mode: keep each model's levels together, in the order the model first appears in the sorted list */
+  function blocksHTML(list) {
+    if (S.fam) return list.map(itemHTML).join("");
+    const byFam = new Map();
+    for (const m of list) { if (!byFam.has(m.fi)) byFam.set(m.fi, []); byFam.get(m.fi).push(m); }
+    return [...byFam].map(([fi, ents]) => famHTML(fi, ents.sort((a, b) => a.i - b.i))).join("");
   }
   function renderPicker() {
     const list = pickerRows();
@@ -1119,31 +1212,32 @@ function boot() {
       for (const m of list) { if (!groups.has(m.org)) groups.set(m.org, []); groups.get(m.org).push(m); }
       const keys = [...groups.keys()];
       if (st.sort === "name") keys.sort((a, b) => orgLabel(a).localeCompare(orgLabel(b)));
-      $("pk-list").innerHTML = keys.map(o => `<div class="pk-group"><span>${esc(orgLabel(o))}</span><span>${groups.get(o).length}</span></div>` + groups.get(o).map(itemHTML).join("")).join("");
+      $("pk-list").innerHTML = keys.map(o => `<div class="pk-group"><span>${esc(orgLabel(o))}</span><span>${groups.get(o).length}</span></div>` + blocksHTML(groups.get(o))).join("");
     } else {
-      $("pk-list").innerHTML = list.map(itemHTML).join("");
+      $("pk-list").innerHTML = blocksHTML(list);
     }
   }
 
   /* ---- selection chips ---- */
   function renderChips() {
     $("chips").innerHTML = st.sel.length
-      ? st.sel.map(mi => `<span class="chip"><span class="chip-name" title="${esc(S.models[mi].nvar > 1 ? S.models[mi].name + " = " + S.models[mi].members.map(vi => SP.V.models[vi].name).join(", ") : S.models[mi].name)}">${esc(S.models[mi].name)}</span><button type="button" class="x" data-rm="${mi}" aria-label="Remove ${esc(S.models[mi].name)}">×</button></span>`).join("")
+      ? st.sel.map(mi => { const m = S.models[mi]; return `<span class="chip"><span class="chip-name" title="${esc(m.nvar > 1 ? m.name + " = " + m.members.map(vi => DATA.models[vi][0]).join(", ") : m.name)}">${esc(m.fam)}</span>${effPill(m)}<button type="button" class="x" data-rm="${mi}" aria-label="Remove ${esc(m.name)}">×</button></span>`; }).join("")
       : `<span class="empty-chips">No models selected. Use a quick pick or browse the list.</span>`;
     $("sc-on").setAttribute("aria-pressed", st.sc);
     $("sc-off").setAttribute("aria-pressed", !st.sc);
   }
 
   /* ---- cheat sheet + job board ---- */
-  const viaTag = row => (S.fam && viaShort(row.via)) ? `<span class="via">via ${esc(viaShort(row.via))}</span>` : "";
+  const viaTag = row => viaShort(row.via) ? `<span class="via">via ${esc(viaShort(row.via))}</span>` : "";
   function rowTip(c, A, r) {
     const st_ = c.arena.stype;
-    return `${r.vname}\n${c.full}: rank ${r.rank} of ${A.n}\nRating ${fmtScore(st_, r.score, true)} (range ${fmtScore(st_, r.lo, true)} to ${fmtScore(st_, r.hi, true)})\n${r.votes.toLocaleString()} ${c.arena.id === "agent" ? "observations" : "votes"}`;
+    const m = S.models[r.mi];
+    return `${m.name}${r.vname !== m.name ? " (Arena: " + r.vname + ")" : ""}\n${c.full}: rank ${r.rank} of ${A.n}\nRating ${fmtScore(st_, r.score, true)} (range ${fmtScore(st_, r.lo, true)} to ${fmtScore(st_, r.hi, true)})\n${r.votes.toLocaleString()} ${c.arena.id === "agent" ? "observations" : "votes"}`;
   }
   function renderBoards() {
     const jobs = jobBoard(S, st.sel, st.sc);
     const shown = jobs.filter(J => J.kind !== "none");
-    const nm = mi => esc(S.models[mi].name);
+    const nm = mi => nameHTML(S.models[mi]);
     // cheat sheet
     if (!st.sel.length) {
       $("cheat").innerHTML = `<div class="cs-empty">Pick a few models above to see what each one is best at.</div>`;
@@ -1153,7 +1247,7 @@ function boot() {
       $("cheat").innerHTML = C.map(o => {
         const m = S.models[o.mi];
         const nothing = !o.best.length && !o.tied.length && !o.solo.length && !o.behind.length;
-        return `<article class="cs-card"><div class="cs-head"><h3>${esc(m.name)}</h3><span>${esc(orgLabel(m.org))}${m.nvar > 1 ? ` · ${m.nvar} effort levels merged` : ""}</span>${S.hasPrices ? (costLine(m) ? `<span class="cs-cost num">${esc(costLine(m))}</span>` : `<span class="cs-cost na">${SP.hasSpeed ? "Price and speed" : "Price"}: no data</span>`) : ""}</div><dl class="cs-lines">` +
+        return `<article class="cs-card"><div class="cs-head"><h3>${nameHTML(m, true)}</h3><span>${esc(orgLabel(m.org))}${S.fam && m.nvar > 1 ? ` · ${m.nvar} effort levels combined` : ""}</span>${S.hasPrices ? (costLine(m) ? `<span class="cs-cost num">${esc(costLine(m))}</span>` : `<span class="cs-cost na">${SP.hasSpeed ? "Price and speed" : "Price"}: no data</span>`) : ""}</div><dl class="cs-lines">` +
           line("best", "Best pick for", o.best) + line("tied", "Tied for best", o.tied) + line("solo", "Only one tested", o.solo) +
           line("behind", "Behind on", o.behind) + line("none", "Not tested", o.untested) +
           (nothing ? `<div class="cs-line l-none"><span class="key-sw s-none" aria-hidden="true"></span><dt>No job data</dt><dd>Not ranked on any of the job leaderboards.</dd></div>` : "") +
@@ -1175,12 +1269,12 @@ function boot() {
       return Math.max(0.01, Math.ceil(g * 100) / 100);
     };
     const scale = { bt: maxGap("bt"), other: maxGap("ips") };
-    $("jb-sub").textContent = `Who wins each job among your picks. Bars show how far behind the winner each pick is: a full bar is ${scale.bt} rating points${shown.some(J => J.c.arena.stype !== "bt") ? " (Agentic work uses its own score, full bar = " + scale.other.toFixed(2) + ")" : ""}.` + (S.hasPrices ? ` Best value is the cheapest pick that is tied with the winner or within ${CLOSE_PTS} pts.` : "");
+    $("jb-sub").textContent = `Who wins each job among your picks. Bars show how far behind the winner each pick is: a full bar is ${scale.bt} rating points${shown.some(J => J.c.arena.stype !== "bt") ? " (Agentic work uses its own score, full bar = " + scale.other.toFixed(2) + ")" : ""}.` + (S.hasPrices ? ` Best value is the cheapest pick that is tied with the winner or within ${CLOSE_PTS} pts, by price per token, or by cost per agent task on Agentic work.` : "");
     $("jobs").innerHTML = shown.map(J => {
       const A = J.A, L = A.lead, st_ = J.c.arena.stype;
       const full = st_ === "bt" ? scale.bt : scale.other;
       const verdict = J.kind === "clear" ? `<span class="verdict clear">Clear winner</span>`
-        : J.kind === "toss" ? `<span class="verdict toss">Toss-up with ${listNames(J.tiedWith.map(nm), 2)}</span>`
+        : J.kind === "toss" ? `<span class="verdict toss">Toss-up with ${esc(listNames(J.tiedWith.map(mi => S.models[mi].name), 2))}</span>`
         : `<span class="verdict">Only one of your picks tested</span>`;
       const VN = valueNotes(S, J);
       const tags = mi => (VN.value && VN.value.mi === mi ? `<span class="jb-tag">Best value</span>` : "") +
@@ -1194,7 +1288,7 @@ function boot() {
           `<span class="jb-val num">${val}</span></li>`;
       }).join("");
       return `<article class="job"><div class="job-top"><h3>${esc(J.label)}</h3><span class="job-src">${esc(J.c.full)} · ${A.n} ranked</span></div>` +
-        `<div class="job-win"><b>${nm(L.mi)}</b>${verdict}</div><ul class="jb-rows">${rows}</ul>` +
+        `<div class="job-win"><span><b>${esc(S.models[L.mi].fam)}</b>${S.models[L.mi].effort ? " " + effPill(S.models[L.mi], true) : ""}${viaTag(L)}</span>${verdict}</div><ul class="jb-rows">${rows}</ul>` +
         (VN.value ? `<p class="jb-value"><b>Best value: ${nm(VN.value.mi)}</b>, ${esc(VN.value.text)}.</p>` : "") +
         (VN.fast && VN.fast.text && !VN.fast.merged ? `<p class="jb-value"><b>Fastest close pick: ${nm(VN.fast.mi)}</b>, ${esc(VN.fast.text)}.</p>` : "") +
         (J.missing.length ? `<p class="jb-missing">Not tested: ${J.missing.map(nm).join(", ")}</p>` : "") + `</article>`;
@@ -1212,8 +1306,8 @@ function boot() {
     $("pz-job").disabled = !jobs.length;
     $("pz-notes").innerHTML = `<span><b>Prices</b> are list prices in US dollars per million tokens. Most come from <a href="https://models.dev" target="_blank" rel="noopener">models.dev ↗</a>, which lists the maker's own price; the rest come from <a href="https://openrouter.ai/models" target="_blank" rel="noopener">OpenRouter ↗</a>, marked † when that is OpenRouter's listed price, which can be a cheaper third-party host. <b>Blended</b> assumes 3 input tokens for every output token. Free tiers count as no data.</span>
       <span>${SP.hasSpeed ? `<b>Speed</b> (output tokens per second) and <b>first token</b> (seconds until the answer starts) are OpenRouter medians over the last 30 minutes, averaged across hosts, so treat them as a snapshot. ` : `Speed data is not included in this build. `}Prices fetched ${esc(DATA.pricesAt || "?")}.</span>
-      <span><b>One row per effort level</b> (High, Max…) or setup, as Arena lists it. Rating, rank and agent task cost are that entry's own; “not ranked” means Arena has no rating for that effort on this job. Price per token, speed and context belong to the model, so they repeat on each of its rows.</span>
-      <span><b>Effort levels</b> cost the same per token, but higher levels write more tokens, so each task costs more. <b>Agent task</b> is Arena's measured median cost per task on its agent leaderboard for that effort.</span>`;
+      <span><b>One row per model and effort level.</b> Price per token, ${SP.hasSpeed ? "speed " : ""}and context are the same for every effort level of a model, so they repeat on each of its rows. Rating and agent task cost belong to that row's effort level; “not ranked” means Arena has no rating for that level on this job.</span>
+      <span><b>Agent task</b> is Arena's measured median cost per task on its agent leaderboard for that effort level. Higher levels write more tokens, so each task costs more; “–” means Arena didn't measure that level. <b>Cheapest</b> and <b>Best value</b> compare cost per agent task on Agentic work, and price per token on every other job.</span>`;
     if (!st.sel.length) { host.innerHTML = `<div class="empty-state">Pick a few models to compare prices.</div>`; $("scatter").innerHTML = ""; $("sc-legend").innerHTML = ""; return; }
     const T = priceTable(SP, S, st.sel, job, st.sc, st.psort);
     const st_ = T.c ? T.c.arena.stype : "bt";
@@ -1234,10 +1328,10 @@ function boot() {
         const rel = x.r.isLead ? (T.A.rows.length > 1 ? `<b>Best</b>` : "") : x.r.tied ? `<span class="tie">tied</span>` : fmtGap(st_, L.score - x.r.score).replace(" back", " behind");
         rate = `<td class="rate num" title="${esc(x.m.name)}: rank ${x.r.rank} of ${T.A.n} on ${esc(T.c.full)}">${fmtScore(st_, x.r.score, false)}${rel ? `<span class="rel">${rel}</span>` : ""}</td>`;
       }
-      const agent = x.task ? `<td class="num" title="${esc(x.m.name)}: median ${fmtUsd(x.task.cost)} and ${x.task.toks ? x.task.toks.toLocaleString() : "?"} output tokens per task">${fmtUsd(x.task.cost)}</td>` : nd;
+      const agent = x.task ? `<td class="num${T.perTask ? " big" : ""}" title="${esc(x.m.name)}: median ${fmtUsd(x.task.cost)} and ${x.task.toks ? x.task.toks.toLocaleString() : "?"} output tokens per task">${fmtUsd(x.task.cost)}</td>` : `<td class="nd" title="Arena didn't measure ${esc(x.m.name)} on its agent leaderboard">–</td>`;
       const note = ` title="${esc(x.m.name + (p && p.note ? "\n" + p.note : ""))}"`;
-      return `<tr><td class="pz-name pz-l"${note}><div class="pz-nm">${esc(x.fam)} <span class="eff">${esc(x.effort)}</span></div><span class="mname-org">${esc(orgLabel(x.m.org))}</span>${x.badges.length ? `<div class="pz-badges">${x.badges.map(b => `<span class="badge">${b}</span>`).join("")}</div>` : ""}</td>` +
-        money(x.blend, "big", flagOR) + (!SP.hasSpeed ? "" : x.tps != null ? `<td class="num big">${Math.round(x.tps)}</td>` : nd) + rate +
+      return `<tr><td class="pz-name pz-l"${note}><div class="pz-nm">${nameHTML(x.m)}</div><span class="mname-org">${esc(orgLabel(x.m.org))}</span>${x.badges.length ? `<div class="pz-badges">${x.badges.map(b => `<span class="badge">${b}</span>`).join("")}</div>` : ""}</td>` +
+        money(x.blend, T.perTask ? "" : "big", flagOR) + (!SP.hasSpeed ? "" : x.tps != null ? `<td class="num big">${Math.round(x.tps)}</td>` : nd) + rate +
         (!SP.hasSpeed ? "" : x.ttft != null ? `<td class="num">${x.ttft.toFixed(1)} s</td>` : nd) + money(x.inp) + money(x.out) +
         (x.ctx ? `<td class="num">${fmtCtx(x.ctx)}</td>` : nd) + agent + `</tr>`;
     }).join("");
@@ -1302,10 +1396,10 @@ function boot() {
     // place labels for higher-rated dots first so the winners get the clean spot
     [...placed].sort((a, b) => b.x.r.score - a.x.r.score).forEach(p => {
       // "Claude Opus 5.5 · High": shorten the model name, never the effort
-      const maxCh = narrow ? 22 : 32, tail = " · " + p.x.effort;
-      let name = p.x.fam;
-      if (name.length + tail.length > maxCh) name = name.slice(0, Math.max(6, maxCh - tail.length - 1)) + "…";
-      name += tail;
+      const maxCh = narrow ? 22 : 32, tail = p.x.effort ? " · " + p.x.effort : "";
+      let fam = p.x.fam;
+      if (fam.length + tail.length > maxCh) fam = fam.slice(0, Math.max(6, maxCh - tail.length - 1)) + "…";
+      const name = fam + tail;
       const w = name.length * cw, h = fs + 2;
       const cands = [[p.cx + 9, p.cy - h / 2, "start"], [p.cx - 9 - w, p.cy - h / 2, "end"], [p.cx - w / 2, p.cy - 10 - h, "middle"], [p.cx - w / 2, p.cy + 9, "middle"],
         [p.cx + 7, p.cy - 8 - h, "start"], [p.cx + 7, p.cy + 7, "start"], [p.cx - 7 - w, p.cy - 8 - h, "end"], [p.cx - 7 - w, p.cy + 7, "end"]];
@@ -1319,7 +1413,7 @@ function boot() {
       if (!pick) return; // no clean spot: the tooltip and the table still name it
       boxes.push(pick.b);
       const tx = pick.anchor === "start" ? pick.b.x : pick.anchor === "end" ? pick.b.x + w : pick.b.x + w / 2;
-      labels += `<text x="${tx.toFixed(1)}" y="${(pick.b.y + h - 3).toFixed(1)}" text-anchor="${pick.anchor}" font-size="${fs}" fill="${p.x.r.isLead ? "var(--ink)" : "var(--ink-2)"}"${p.x.r.isLead ? ' font-weight="600"' : ""}>${esc(name)}</text>`;
+      labels += `<text x="${tx.toFixed(1)}" y="${(pick.b.y + h - 3).toFixed(1)}" text-anchor="${pick.anchor}" font-size="${fs}" fill="${p.x.r.isLead ? "var(--ink)" : "var(--ink-2)"}"${p.x.r.isLead ? ' font-weight="600"' : ""}>${esc(fam)}${tail ? `<tspan font-weight="700" fill="var(--ink)">${esc(tail)}</tspan>` : ""}</text>`;
       p.labeled = true;
     });
     placed.forEach((p, k) => {
@@ -1332,7 +1426,7 @@ function boot() {
     svg.addEventListener("pointermove", e => {
       const g = e.target.closest(".sc-dot"); if (!g) { tip.hidden = true; return; }
       const p = placed[+g.dataset.k], x = p.x;
-      tip.innerHTML = `<b>${esc(x.label)}</b><br>${esc(job.label)}: ${fmtScore(st_, x.r.score, false)} (rank ${x.r.rank} of ${T.A.n})${x.r.isLead && T.A.rows.length > 1 ? ", best of your picks" : x.r.tied ? ", tied with the best" : ""}<br>${fmtUsd(x.blend)} per M tokens blended${x.task ? `<br>${fmtUsd(x.task.cost)} per agent task` : ""}${x.tps != null ? `<br>${Math.round(x.tps)} tok/s` : ""}`;
+      tip.innerHTML = `<b>${esc(x.label)}</b><br>${esc(job.label)}: ${fmtScore(st_, x.r.score, false)} (rank ${x.r.rank} of ${T.A.n})${x.r.isLead && T.A.rows.length > 1 ? ", best of your picks" : x.r.tied ? ", tied with the best" : ""}<br>${fmtUsd(x.blend)} per M tokens blended (same for every effort level)${x.task ? `<br>${fmtUsd(x.task.cost)} per agent task at ${esc(x.effort || "this level")}` : ""}${x.tps != null ? `<br>${Math.round(x.tps)} tok/s` : ""}`;
       tip.hidden = false;
       const sb = svg.getBoundingClientRect(), scale = sb.width / W, hb = host.getBoundingClientRect();
       let left = 16 + p.cx * scale + 12; const tw = tip.offsetWidth;
@@ -1398,17 +1492,17 @@ function boot() {
     }).join("") + `</tr></thead><tbody>`;
     for (const mi of rows) {
       const m = S.models[mi];
-      h += `<tr><td class="mname"><div class="mname-in"><span class="mname-txt">${esc(m.name)}<span class="mname-org">${esc(orgLabel(m.org))}</span></span><button type="button" class="rm" data-rm="${mi}" aria-label="Remove ${esc(m.name)}">×</button></div></td>`;
+      h += `<tr><td class="mname"><div class="mname-in"><span class="mname-txt">${nameHTML(m)}<span class="mname-org">${esc(orgLabel(m.org))}</span></span><button type="button" class="rm" data-rm="${mi}" aria-label="Remove ${esc(m.name)}">×</button></div></td>`;
       for (const c of shownCats) {
         const A = an.get(c.i);
         const r = A.rows.find(x => x.mi === mi);
         const gcls = firsts.has(c.i) ? "gstart" : "";
-        if (!r) { h += `<td class="cell ${gcls}"><div class="cellbox na" title="${esc(m.name)} has no rank on the ${esc(c.full)} leaderboard: Arena hasn't collected votes for it there${S.fam ? " under any of its effort levels" : ""}.">not tested</div></td>`; continue; }
+        if (!r) { h += `<td class="cell ${gcls}"><div class="cellbox na" title="${esc(m.name)} has no rank on the ${esc(c.full)} leaderboard: Arena hasn't collected votes for it there${S.fam ? " under any of its effort levels" : m.effort ? " at this effort level" : ""}.">not tested</div></td>`; continue; }
         const st_ = c.arena.stype;
         const half = (r.hi - r.lo) / 2;
         const tag = r.isLead && A.rows.length > 1 ? `<span class="tag">Best</span>` : r.tied ? `<span class="tag tie">≈ tied</span>` : "";
-        const tip = `${r.vname} · ${c.full}\nRank ${r.rank} of ${A.n}\nRating ${fmtScore(st_, r.score, true)} (CI ${fmtScore(st_, r.lo, true)} to ${fmtScore(st_, r.hi, true)})\n${r.votes.toLocaleString()} ${c.arena.id === "agent" ? "observations" : "votes"}` + (r.isLead && A.rows.length > 1 ? "\nBest of your picks here" : r.tied ? "\nCI overlaps the best pick: statistically tied" : "");
-        h += `<td class="cell ${gcls}"><div class="cellbox ${heatClass(r.rank, A.n)}${r.isLead && A.rows.length > 1 ? " lead" : ""}" title="${esc(tip)}">${tag}<span class="rk num"><small>#</small>${r.rank}</span><span class="sc num">${fmtScore(st_, r.score, true)} ±${st_ === "bt" ? Math.round(half) : half.toFixed(3)}</span>${S.fam && viaShort(r.via) ? `<span class="cvia">via ${esc(viaShort(r.via))}</span>` : ""}</div></td>`;
+        const tip = `${m.name}${r.vname !== m.name ? " (" + r.vname + ")" : ""} · ${c.full}\nRank ${r.rank} of ${A.n}\nRating ${fmtScore(st_, r.score, true)} (CI ${fmtScore(st_, r.lo, true)} to ${fmtScore(st_, r.hi, true)})\n${r.votes.toLocaleString()} ${c.arena.id === "agent" ? "observations" : "votes"}` + (r.isLead && A.rows.length > 1 ? "\nBest of your picks here" : r.tied ? "\nCI overlaps the best pick: statistically tied" : "");
+        h += `<td class="cell ${gcls}"><div class="cellbox ${heatClass(r.rank, A.n)}${r.isLead && A.rows.length > 1 ? " lead" : ""}" title="${esc(tip)}">${tag}<span class="rk num"><small>#</small>${r.rank}</span><span class="sc num">${fmtScore(st_, r.score, true)} ±${st_ === "bt" ? Math.round(half) : half.toFixed(3)}</span>${viaShort(r.via) ? `<span class="cvia" title="${esc(r.vname)}">via ${esc(viaShort(r.via))}</span>` : ""}</div></td>`;
       }
       h += `</tr>`;
     }
@@ -1420,7 +1514,7 @@ function boot() {
       <span class="sw"><i style="background:var(--heat-4)"></i>Top half</span>
       <span class="sw"><i style="background:var(--heat-5)"></i>Lower half</span>
       <span class="sw"><span class="ring"></span>Best of your picks</span>
-      <span class="sw" style="color:var(--tie)">≈ tied: CI overlaps the best pick</span>${S.fam ? `<span>“via” = the effort level or setup that ranks best there</span>` : ""}</div>
+      <span class="sw" style="color:var(--tie)">≈ tied: CI overlaps the best pick</span><span>${S.fam ? "“via” = the effort level or setup that ranks best there" : "“via” = the setup (Search, Codex Harness…) Arena tested that effort level with there"}</span></div>
       ${emptyCats.length ? `<span>${emptyCats.length} chosen column${emptyCats.length > 1 ? "s" : ""} hidden because none of your picks are ranked there.</span>` : ""}
       ${S.arenas.some(a => a.hasSC) ? `<span>Style control ${st.sc ? "on" : "off"} for Text, Vision, Search and Document.</span>` : ""}</div>`;
     host.innerHTML = h;
@@ -1447,9 +1541,8 @@ function boot() {
     const host = $("chart");
     if (!c) { host.innerHTML = `<p class="note" style="padding:20px 0">Pick models to draw the chart.</p>`; $("chart-legend").innerHTML = ""; return; }
     // one bar per model + effort, each with its own rating (same split as the price table)
-    const ents = effortRows(SP, S, st.sel);
-    const lab = new Map(ents.map(e => [e.vi, `${e.fam} · ${e.effort}`]));
-    const A = analyze(SP.V.byKey.get(c.key), ents.map(e => e.vi), st.sc);
+    const ents = effortEnts(SP, S, st.sel);
+    const A = analyze(SP.E.byKey.get(c.key), ents, st.sc);
     const rows = [...A.rows].sort((x, y) => y.score - x.score);
     const W = Math.max(300, host.clientWidth - 32);
     const narrow = W < 520;
@@ -1480,17 +1573,17 @@ function boot() {
     s += `</g>`;
     rows.forEach((r, k) => {
       const y = top + k * rowH + rowH / 2;
-      const name = lab.get(r.mi);
+      const em = SP.E.models[r.mi];
       const maxChars = Math.floor((labelW - 34) / 6.6);
       // shorten the model name, never the effort
-      const cut = name.lastIndexOf(" · "), tail = name.slice(cut);
-      const shown = name.length > maxChars ? name.slice(0, Math.max(4, maxChars - tail.length - 1)) + "…" + tail : name;
+      const tail = em.effort ? " · " + em.effort : "";
+      const fam = em.fam.length + tail.length > maxChars ? em.fam.slice(0, Math.max(4, maxChars - tail.length - 1)) + "…" : em.fam;
       const isL = r.isLead, tied = r.tied;
       const col = isL ? "var(--accent)" : tied ? "var(--accent)" : "var(--ink-2)";
       s += `<g class="h2h-row" data-k="${k}">`;
       s += `<rect x="0" y="${y - rowH / 2}" width="${W}" height="${rowH}" fill="transparent"/>`;
       s += `<text class="lbl num" x="0" y="${y + 4}" font-size="11.5" fill="var(--ink-3)">#${r.rank}</text>`;
-      s += `<text class="lbl" x="34" y="${y + 4}" font-size="12.5" ${isL ? 'font-weight="600" style="fill:var(--ink)"' : ""}>${esc(shown)}</text>`;
+      s += `<text class="lbl" x="34" y="${y + 4}" font-size="12.5" ${isL ? 'font-weight="600" style="fill:var(--ink)"' : ""}><title>${esc(em.name)}</title>${esc(fam)}${tail ? `<tspan font-weight="700" style="fill:var(--ink)">${esc(tail)}</tspan>` : ""}</text>`;
       s += `<line x1="${X(r.lo)}" x2="${X(r.hi)}" y1="${y}" y2="${y}" stroke="${col}" stroke-width="2" stroke-linecap="round"/>`;
       s += `<line x1="${X(r.lo)}" x2="${X(r.lo)}" y1="${y - 5}" y2="${y + 5}" stroke="${col}" stroke-width="2" stroke-linecap="round"/>`;
       s += `<line x1="${X(r.hi)}" x2="${X(r.hi)}" y1="${y - 5}" y2="${y + 5}" stroke="${col}" stroke-width="2" stroke-linecap="round"/>`;
@@ -1502,7 +1595,8 @@ function boot() {
     const svg = host.querySelector("svg"), tip = host.querySelector("#tip");
     const show = (k, evt) => {
       const r = rows[k];
-      tip.innerHTML = `<b>${esc(r.vname)}</b><br>Rank ${r.rank} of ${A.n} on ${esc(c.full)}<br>Rating ${fmtScore(st_, r.score, true)}<br>CI ${fmtScore(st_, r.lo, true)} to ${fmtScore(st_, r.hi, true)}<br>${r.votes.toLocaleString()} ${c.arena.id === "agent" ? "observations" : "votes"}` + (r.isLead && rows.length > 1 ? "<br>Best of your picks" : r.tied ? "<br>Statistically tied with the best pick" : rows.length > 1 ? "<br>Clearly behind the best pick" : "");
+      const em = SP.E.models[r.mi];
+      tip.innerHTML = `<b>${esc(em.name)}</b>${viaShort(r.via) ? ` <span>via ${esc(viaShort(r.via))}</span>` : ""}<br>Rank ${r.rank} of ${A.n} on ${esc(c.full)}<br>Rating ${fmtScore(st_, r.score, true)}<br>CI ${fmtScore(st_, r.lo, true)} to ${fmtScore(st_, r.hi, true)}<br>${r.votes.toLocaleString()} ${c.arena.id === "agent" ? "observations" : "votes"}` + (r.isLead && rows.length > 1 ? "<br>Best of your picks" : r.tied ? "<br>Statistically tied with the best pick" : rows.length > 1 ? "<br>Clearly behind the best pick" : "");
       tip.hidden = false;
       const hb = host.getBoundingClientRect(), sb = svg.getBoundingClientRect();
       const scale = sb.width / W;
@@ -1526,7 +1620,7 @@ function boot() {
   /* ---- state sync ---- */
   let lastHash = "";
   function persist() {
-    saveStore({ sel: st.sel.map(mi => S.models[mi].id), sc: st.sc, fam: st.fam, cols: [...st.cols].map(i => S.cats[i].key), h2h: st.h2h, more: st.more, vjob: st.vjob, psort: st.psort });
+    saveStore({ v: STORE_V, sel: st.sel.map(mi => S.models[mi].id), sc: st.sc, comb: st.fam, cols: [...st.cols].map(i => S.cats[i].key), h2h: st.h2h, more: st.more, vjob: st.vjob, psort: st.psort });
     const h = encodeHash(S, st);
     if (location.hash.replace(/^#/, "") !== h) {
       lastHash = h;
@@ -1545,9 +1639,20 @@ function boot() {
 
   /* ---- events ---- */
   $("pk-list").addEventListener("click", e => {
+    const all = e.target.closest(".pk-all");
+    if (all) {
+      const f = SP.F.models[+all.dataset.fam];
+      const every = f.effs.every(ei => st.sel.includes(ei));
+      st.sel = every ? st.sel.filter(ei => !f.effs.includes(ei)) : [...st.sel, ...f.effs.filter(ei => !st.sel.includes(ei))];
+      all.closest(".pk-fam").querySelectorAll(".pk-item").forEach(b => b.setAttribute("aria-pressed", st.sel.includes(+b.dataset.mi)));
+      all.textContent = allBtnLabel(f);
+      changed(false); return;
+    }
     const b = e.target.closest(".pk-item"); if (!b) return;
     const mi = +b.dataset.mi; toggle(mi);
     b.setAttribute("aria-pressed", st.sel.includes(mi));
+    const fb = b.closest(".pk-fam");
+    if (fb) fb.querySelector(".pk-all").textContent = allBtnLabel(SP.F.models[+fb.dataset.fi]);
     changed(false);
   });
   document.addEventListener("click", e => {
@@ -1597,14 +1702,14 @@ function boot() {
   $("cols-default").addEventListener("click", () => { st.cols = new Set(S.cats.filter(c => c.defOn).map(c => c.i)); renderCols(); renderMatrix(); persist(); });
   $("cols-all").addEventListener("click", () => { st.cols = new Set(S.cats.map(c => c.i)); renderCols(); renderMatrix(); persist(); });
   function setSpace(fam, sel) {
-    st.fam = fam; S = fam ? SP.F : SP.V; st.sel = sel;
-    $("sep").checked = !fam;
+    st.fam = fam; S = fam ? SP.F : SP.E; st.sel = sel;
+    $("comb").checked = fam;
     renderPickerMeta(); renderOrgChips();
   }
-  $("sep").addEventListener("change", e => {
-    const fam = !e.target.checked;
+  $("comb").addEventListener("change", e => {
+    const fam = e.target.checked;
     if (fam === st.fam) return;
-    // families -> every variant of each picked family; variants -> their families
+    // combine: each picked level -> its model; separate: each picked model -> all of its effort levels
     const ids = st.sel.map(mi => S.models[mi].id);
     setSpace(fam, resolveIds(SP, ids, fam));
     changed(true);
@@ -1631,5 +1736,5 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 function fmtDate(iso) { const [y, m, d] = (iso || "").split("-"); return y ? `${+d} ${MONTHS[+m - 1]} ${y}` : "?"; }
 
 if (typeof document !== "undefined") boot();
-else if (typeof globalThis !== "undefined") globalThis.__arena = { decode, presetTop, presetFlagship, presetBy, priceTable, effortRows, valueNotes, fmtUsd, fmtCtx, costLine, logTicks, JOBS, analyze, jobBoard, cheatSheet, encodeHash, decodeHash, resolveIds, viaShort, heatClass, niceTicks, DATA };
+else if (typeof globalThis !== "undefined") globalThis.__arena = { decode, presetTop, presetFlagship, presetBy, presetDefault, priceTable, effortEnts, valueNotes, taskOf, fmtUsd, fmtCtx, costLine, logTicks, JOBS, analyze, jobBoard, cheatSheet, encodeHash, decodeHash, resolveIds, viaShort, heatClass, niceTicks, DATA };
 </script>
