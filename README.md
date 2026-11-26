@@ -37,6 +37,23 @@ With the key, `scripts/fetch_prices.py` reads per-provider stats from OpenRouter
 
 `--scrape-pages` (or `OPENROUTER_SCRAPE_PAGES=1`) is an opt-in fallback. It reads the same stats from OpenRouter's public model pages. [OpenRouter's terms](https://openrouter.ai/terms) prohibit scraping the site in section 7, so this flag is off by default. Use the API key instead.
 
+## Hand off to an agent
+
+**Export for agents** in the selection bar turns your picks into a routing table that an AI agent or a task router can read. It opens a dialog with two formats:
+
+- **Markdown** has a routing table with one row per job: the model and effort level to use, whether the win is clear or a toss-up, which picks tie with it and the best value pick. Below it are a models table with API ids, prices, agent task cost and what each pick is best at, a rank table, and the exact Arena model names.
+- **JSON** holds the same data as structured fields, with `null` where a value is unknown. Each model has a lowercase `effort` value such as `high`, `xhigh` or `max`, plus a display label.
+
+Copy the text or download it as `arena-routing-YYYY-MM-DD.md` or `.json`. The export follows the current picks, the style control setting and "Combine effort levels". See [docs/example-routing.md](docs/example-routing.md) and [docs/example-routing.json](docs/example-routing.json) for a sample.
+
+To get the same output without a browser, pass the hash from the page URL to `scripts/export.py`:
+
+```sh
+python3 -I scripts/export.py --hash '#e-dg85i-zf008-b7q62-fnp2m-kwow4-z7ptt' --format md
+```
+
+The script runs the page's own code under Node, so it needs `node` on your PATH.
+
 ## Data sources
 
 | Data | Source | License or terms |
@@ -69,8 +86,9 @@ scripts/
   fetch_prices.py          models.dev and OpenRouter to data/prices.json
   build_page.py            SQLite and prices.json to index.html (--fragment for body-only HTML)
   page_template.html       page markup, styles and script; build_page.py fills in the data
+  export.py                print the agent routing table for a page hash (runs the page script in Node)
 data/prices.json           price snapshot, committed so the page builds offline
-docs/                      README screenshots
+docs/                      README screenshots and sample routing exports
 ```
 
 `data/arena.sqlite`, `data/*.csv` and `raw/` are generated and not committed. `fetch_arena.py --backfill` loads the full rating history into the SQLite database.

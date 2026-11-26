@@ -1,5 +1,5 @@
 {
- "fetched_at": "2026-11-26 07:04 UTC",
+ "fetched_at": "2026-11-26 15:02 UTC",
  "records": [
   {
    "family": "Beam 1.0 501B A23B",
@@ -105,7 +105,7 @@
    "family": "Claude Haiku 4.5",
    "org": "anthropic",
    "source": "models.dev",
-   "source_id": "anthropic/claude-haiku-4-5",
+   "source_id": "anthropic/claude-haiku-4-5-20251001",
    "openrouter_id": "anthropic/claude-haiku-4.5",
    "input_per_m": 1,
    "output_per_m": 5,
@@ -173,7 +173,7 @@
    "family": "Claude Opus 4.5",
    "org": "anthropic",
    "source": "models.dev",
-   "source_id": "anthropic/claude-opus-4-5-20251101",
+   "source_id": "anthropic/claude-opus-4-5",
    "openrouter_id": "anthropic/claude-opus-4.5",
    "input_per_m": 5,
    "output_per_m": 25,
@@ -319,7 +319,7 @@
    "family": "Claude Sonnet 4.5",
    "org": "anthropic",
    "source": "models.dev",
-   "source_id": "anthropic/claude-sonnet-4-5-20250929",
+   "source_id": "anthropic/claude-sonnet-4-5",
    "openrouter_id": "anthropic/claude-sonnet-4.5",
    "input_per_m": 3,
    "output_per_m": 15,
@@ -604,7 +604,7 @@
     "DeepSeek-V4-Pro (High, 20260813)"
    ],
    "agent_cost_per_task": [],
-   "notes": "OpenRouter lists $0.8882/$1.5082 per M"
+   "notes": "OpenRouter lists $0.8451/$1.5381 per M"
   },
   {
    "family": "DeepSeek-V4.1-Flash",
@@ -612,9 +612,9 @@
    "source": "openrouter",
    "source_id": "deepseek/deepseek-v4.1-flash",
    "openrouter_id": "deepseek/deepseek-v4.1-flash",
-   "input_per_m": 0.14,
-   "output_per_m": 0.42,
-   "blended_per_m": 0.21,
+   "input_per_m": 0.0507,
+   "output_per_m": 0.2028,
+   "blended_per_m": 0.0887,
    "context_tokens": 1048576,
    "tokens_per_sec": null,
    "ttft_s": null,
@@ -2005,8 +2005,8 @@
    "source_id": "google/gemma-3-27b-it",
    "openrouter_id": "google/gemma-3-27b-it",
    "input_per_m": 0.08,
-   "output_per_m": 0.16,
-   "blended_per_m": 0.1,
+   "output_per_m": 0.45,
+   "blended_per_m": 0.1725,
    "context_tokens": 131072,
    "tokens_per_sec": null,
    "ttft_s": null,

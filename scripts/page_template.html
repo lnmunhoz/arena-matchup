@@ -37,6 +37,7 @@
   --eff-5: #4b2a9e; --eff-ink-5: #ffffff;
   --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --radius: 10px;
   --shadow: 0 1px 2px rgba(19, 23, 34, .06), 0 4px 14px rgba(19, 23, 34, .05);
 }
@@ -449,6 +450,43 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
 .jb-value + .jb-value { margin-top: -2px; }
 .jb-tag { font-size: 11px; font-weight: 600; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: 999px; padding: 0 6px; margin-left: 5px; white-space: nowrap; }
 .pk-price { font-size: 12px; color: var(--ink-2); }
+/* ---------- export dialog ---------- */
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { background: var(--accent); color: var(--accent-ink); filter: brightness(1.08); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.xp {
+  width: min(980px, calc(100% - 24px)); max-width: none; max-height: calc(100dvh - 24px); margin: auto;
+  padding: 0; border: 1px solid var(--line-strong); border-radius: var(--radius);
+  background: var(--surface); color: var(--ink); box-shadow: 0 18px 48px rgba(0, 0, 0, .28);
+}
+.xp[open] { display: flex; flex-direction: column; }
+.xp::backdrop { background: rgba(10, 14, 22, .55); }
+.xp-head { display: flex; gap: 10px 16px; align-items: flex-start; justify-content: space-between; padding: 16px 16px 10px; }
+.xp-head p { margin: 3px 0 0; font-size: 14px; color: var(--ink-3); max-width: 70ch; }
+.xp-close { flex: none; }
+.xp-bar { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; padding: 0 16px 10px; }
+.xp-meta { font-size: 13px; color: var(--ink-3); }
+.xp-meta .ef { margin-left: 2px; }
+.xp-tabs { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 8px; overflow: hidden; }
+.xp-tabs button { border: 0; background: var(--surface); padding: 5px 14px; font-size: 14px; font-weight: 500; }
+.xp-tabs button + button { border-left: 1px solid var(--line-strong); }
+.xp-tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+.xp-out {
+  display: block; width: 100%; flex: 1 1 auto; min-height: 240px; height: 58vh; resize: none; margin: 0;
+  border: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); border-radius: 0;
+  background: var(--surface-2); color: var(--ink); padding: 12px 16px;
+  font-family: var(--font-mono); font-size: 12.5px; line-height: 1.5; white-space: pre; overflow: auto; tab-size: 2;
+}
+.xp-out:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.xp-foot { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; padding: 12px 16px 16px; }
+.xp-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.xp-status { font-size: 13px; color: var(--ink-2); min-height: 1.4em; }
+@media (max-width: 560px) {
+  .xp { width: calc(100% - 16px); max-height: calc(100dvh - 16px); }
+  .xp-out { height: 52vh; font-size: 12px; }
+  .xp-actions { width: 100%; }
+  .xp-actions .btn { flex: 1; padding-block: 8px; }
+}
 @media (prefers-reduced-motion: no-preference) {
   .cellbox, .pk-item, .chip { transition: background-color .12s ease, box-shadow .12s ease; }
 }
@@ -470,6 +508,7 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
   <section class="selbar" aria-label="Selected models">
     <div class="selrow">
       <div class="chips" id="chips"></div>
+      <button class="btn primary" type="button" id="xp-open" aria-haspopup="dialog" title="Copy or download your picks as a Markdown or JSON routing table for an AI agent">Export for agents</button>
     </div>
     <div class="selrow">
       <div class="presets">
@@ -611,6 +650,31 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
   </div>
 </div>
 
+<dialog class="xp" id="xp" aria-labelledby="xp-h" aria-describedby="xp-desc">
+  <div class="xp-head">
+    <div>
+      <h2 id="xp-h">Export for agents</h2>
+      <p id="xp-desc">A routing table for your picks: which model and effort level to use for each job, what each one costs, and what it is good at. Paste it into an agent's setup or save it as a file.</p>
+    </div>
+    <button class="btn ghost xp-close" type="button" id="xp-x" aria-label="Close export">Close</button>
+  </div>
+  <div class="xp-bar">
+    <div class="xp-tabs" role="tablist" aria-label="Export format">
+      <button type="button" role="tab" id="xp-t-md" aria-selected="true" aria-controls="xp-out" data-fmt="md">Markdown</button>
+      <button type="button" role="tab" id="xp-t-json" aria-selected="false" aria-controls="xp-out" data-fmt="json" tabindex="-1">JSON</button>
+    </div>
+    <span class="xp-meta" id="xp-meta"></span>
+  </div>
+  <textarea class="xp-out" id="xp-out" readonly spellcheck="false" aria-label="Export preview" role="tabpanel" aria-labelledby="xp-t-md"></textarea>
+  <div class="xp-foot">
+    <span class="xp-status" id="xp-status" role="status" aria-live="polite"></span>
+    <div class="xp-actions">
+      <button class="btn primary" type="button" id="xp-copy">Copy</button>
+      <button class="btn" type="button" id="xp-dl">Download</button>
+    </div>
+  </div>
+</dialog>
+
 <script>
 "use strict";
 const DATA = /*__ARENA_DATA__*/null;
@@ -663,17 +727,17 @@ function decode(D) {
   E.hasSpeed = F.hasSpeed = hasSpeed;
   // old links and saved state may hold single-variant ids
   const vById = new Map(D.models.map((m, i) => [m[2], i]));
-  return { E, F, famOf, effOf, vById, hasPrices, hasSpeed };
+  return { E, F, famOf, effOf, vById, vnames, hasPrices, hasSpeed };
 }
 
-/* compact price row from build_page.py: [in, out, blend, ctx, tok/s, ttft, flags, agent, note]
+/* compact price row from build_page.py: [in, out, blend, ctx, tok/s, ttft, flags, agent, note, [models.dev id, OpenRouter id]]
    flags 1 = from OpenRouter, 2 = OpenRouter listed price (maybe a third-party host), 4 = free tier (price unknown) */
 function parsePrice(p, keep) {
   if (!p) return null;
-  const [inp, out, blend, ctx, tps, ttft, flags, agent, note] = p;
+  const [inp, out, blend, ctx, tps, ttft, flags, agent, note, ids] = p;
   let ag = (agent || []).map(([effort, cost, toks, avi]) => ({ effort, cost, toks, vi: avi }));
   if (keep) ag = ag.filter(a => keep.has(a.vi));
-  return { inp, out, blend, ctx, tps, ttft, flags: flags || 0, agent: ag, note: note || "" };
+  return { inp, out, blend, ctx, tps, ttft, flags: flags || 0, agent: ag, note: note || "", ids: ids || [null, null] };
 }
 const blendOf = m => (m && m.price && m.price.blend > 0) ? m.price.blend : null;
 const tpsOf = m => (m && m.price && m.price.tps > 0) ? m.price.tps : null;
@@ -1067,6 +1131,160 @@ function resolveIds(SP, ids, fam) {
   return out;
 }
 
+/* ================= export for agents (pure; the dialog and scripts/export.py both call these) =================
+   exportData() builds one plain object from the same functions the page renders with (jobBoard, cheatSheet,
+   valueNotes, taskOf, analyze), so the export always says what the page says. exportJSON() and
+   exportMarkdown() only format that object. */
+const REPO_URL = "https://github.com/lnmunhoz/arena-matchup";
+const SOURCES = {
+  arena: "https://arena.ai/leaderboard",
+  dataset: "https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset",
+  models_dev: "https://models.dev",
+  openrouter: "https://openrouter.ai/models",
+  repo: REPO_URL,
+};
+/* "xHigh" -> "xhigh", "Thinking 32K" -> "thinking-32k", no effort named -> "default" */
+const effKey = label => label ? label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") : "default";
+const CONFIDENCE = { clear: ["clear", "Clear winner"], toss: ["toss-up", "Toss-up"], solo: ["only-one-tested", "Only one tested"] };
+function isoDay(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
+
+/* the effort-level entry behind one board row. With effort levels combined, a row comes from whichever
+   level ranked best there, so the pick names that level. */
+function rowPick(SP, S, mi, row) {
+  const m = S.models[mi];
+  const e = row && row.vi != null ? SP.E.models[SP.effOf[row.vi]] : (S.fam ? null : m);
+  const setup = e && row ? viaShort(e.vias[e.members.indexOf(row.vi)] || "") : "";
+  return { id: m.id, model: m.fam, effort: e ? effKey(e.effort) : "combined", effort_label: e ? (e.effort || "Default") : "Best of each",
+    setup: setup || null, name: (e ? e.name : m.name) + (setup ? ` via ${setup}` : "") };
+}
+
+function exportData(SP, S, sel, sc, opts = {}) {
+  const now = opts.now || new Date();
+  const jobs = jobBoard(S, sel, sc);
+  const sheet = cheatSheet(sel, jobs);  // most wins first; the models table keeps that order
+  const agentBoard = S.byKey.get("agent/overall");
+  const hash = "#" + encodeHash(S, { sel, sc, fam: S.fam });
+  const arenaNames = mi => [...new Set(S.models[mi].members.map(vi => SP.vnames[vi]))];
+  const setups = m => [...new Set(m.members.map(vi => { const e = SP.E.models[SP.effOf[vi]]; return viaShort(e.vias[e.members.indexOf(vi)] || ""); }).filter(Boolean))];
+  const models = sheet.map(o => {
+    const m = S.models[o.mi], p = m.price || null, free = !!(p && p.flags & 4);
+    // agent task cost: this entry's own run on the agent board (combined: the level that ranks there)
+    const arow = agentBoard ? boardOf(agentBoard, sc).get(o.mi) || null : null;
+    const task = arow ? taskOf(m, arow) : (S.fam ? null : taskOf(m, null));
+    const ranks = {};
+    for (const J of jobs) {
+      const r = boardOf(J.c, sc).get(o.mi);
+      ranks[J.id] = r ? { rank: r.rank, rating: r.score, ci: [r.lo, r.hi], board_size: J.A.n, votes: r.votes,
+        ...(S.fam ? { effort: rowPick(SP, S, o.mi, r).effort } : {}) } : null;
+    }
+    return {
+      id: m.id, name: m.name, family: m.fam,
+      effort: S.fam ? "combined" : effKey(m.effort),
+      effort_label: S.fam ? "Best of each" : (m.effort || "Default"),
+      ...(S.fam ? { effort_levels: m.effs.map(ei => effKey(SP.E.models[ei].effort)) } : {}),
+      setup_variants: setups(m),
+      vendor: orgLabel(m.org),
+      arena_names: arenaNames(o.mi),
+      api_ids: { models_dev: p && p.ids[0] || null, openrouter: p && p.ids[1] || null },
+      price: { input_per_m: p && !free ? p.inp ?? null : null, output_per_m: p && !free ? p.out ?? null : null,
+        blended_per_m: blendOf(m) },
+      speed_tps: tpsOf(m), ttft_s: p && p.ttft || null, context_tokens: p && p.ctx || null,
+      agent_cost_per_task: task ? task.cost : null,
+      agent_cost_effort: task ? (S.fam ? rowPick(SP, S, o.mi, arow).effort : effKey(m.effort)) : null,
+      best_for: o.best, only_one_tested: o.solo, tied_for_best: o.tied, weak_at: o.behind, not_tested: o.untested,
+      ranks,
+    };
+  });
+  const routing = jobs.filter(J => J.kind !== "none").map(J => {
+    const VN = valueNotes(S, J), L = J.A.lead, st_ = J.c.arena.stype;
+    const pick = r => rowPick(SP, S, r.mi, r);
+    const tied = J.A.rows.filter(r => r.tied);
+    const gap = v => st_ !== "bt" ? fmtDiff(st_, v) : Math.round(v) < 1 ? "under 1 pt" : Math.round(v) === 1 ? "1 pt" : Math.round(v) + " pts";
+    const lead = J.kind === "solo" ? "only pick ranked on this board"
+      : J.kind === "clear" ? `leads the next pick by ${gap(L.score - J.A.rows[1].score)}`
+      : `top rating, ${gap(L.score - tied[0].score)} ahead of ${tied.length === 1 ? "the tied pick" : `the closest of ${tied.length} tied picks`}`;
+    return {
+      job: J.id, job_label: J.label, board: J.c.key, board_label: J.c.full, board_size: J.A.n, score_type: st_,
+      winner: pick(L), confidence: CONFIDENCE[J.kind][0], confidence_label: CONFIDENCE[J.kind][1],
+      tied: tied.map(pick),
+      best_value: VN.value ? { ...pick(VN.value.row), why: VN.value.text } : null,
+      fastest_close: VN.fast ? { ...pick(VN.fast.row), why: VN.fast.text } : null,
+      why: lead + (VN.value ? `; best value is ${VN.value.text}` : ""),
+      not_tested: J.missing.map(mi => S.models[mi].name),
+    };
+  });
+  return {
+    generated: isoDay(now),
+    snapshots: Object.fromEntries(S.arenas.map(a => [a.id, a.date])),
+    prices_fetched: (DATA && DATA.pricesAt) || null,
+    style_control: !!sc,
+    effort_mode: S.fam ? "combined" : "separate",
+    speed_included: !!S.hasSpeed,
+    source: SOURCES,
+    view_hash: hash,
+    view_url: opts.pageUrl ? opts.pageUrl.replace(/#.*$/, "") + hash : "index.html" + hash,
+    models,
+    routing,
+    jobs_without_data: jobs.filter(J => J.kind === "none").map(J => J.label),
+  };
+}
+
+function exportJSON(X) { return JSON.stringify(X, null, 2) + "\n"; }
+
+function exportMarkdown(X) {
+  const cell = v => String(v == null || v === "" ? "–" : v).replace(/\|/g, "\\|").replace(/\n/g, " ");
+  const row = xs => "| " + xs.map(cell).join(" | ") + " |";
+  const table = (head, rows) => [row(head), "| " + head.map(() => "---").join(" | ") + " |", ...rows.map(row)].join("\n");
+  const list = xs => xs && xs.length ? xs.join(", ") : "–";
+  const usd = v => v == null ? "–" : fmtUsd(v);
+  const pickTxt = p => p ? `${p.model} · ${p.effort_label}${p.setup ? ` (via ${p.setup})` : ""}` : "–";
+  const rating = v => v == null ? "–" : Math.abs(v) >= 10 ? String(Math.round(v)) : v.toFixed(3);
+  const short = m => X.effort_mode === "combined" ? m.family : `${m.family} · ${m.effort_label}`;
+  const out = [];
+  out.push("# Model routing table", "");
+  out.push(`Generated ${X.generated} by Arena Matchup from ${X.models.length} picked ${X.effort_mode === "combined" ? "models (effort levels combined: each job uses the model's best-ranked level)" : "model and effort pairs"}.`);
+  out.push(`- Style control: ${X.style_control ? "on (ratings discount answer length and formatting)" : "off (raw ratings)"}`);
+  out.push(`- Arena snapshots: ${Object.entries(X.snapshots).map(([a, d]) => `${a} ${d}`).join(", ")}`);
+  out.push(`- Prices fetched: ${X.prices_fetched || "–"}${X.speed_included ? "" : ". This build has no speed data."}`);
+  out.push(`- Sources: [arena.ai](${X.source.arena}), [LMArena dataset](${X.source.dataset}) (CC BY 4.0), [models.dev](${X.source.models_dev}), [OpenRouter](${X.source.openrouter})`);
+  out.push(`- View this selection: open \`index.html\` from ${X.source.repo} with the hash \`${X.view_hash}\`${/^https?:/.test(X.view_url) ? ` (${X.view_url})` : ""}`);
+  out.push("", "## Routing", "");
+  if (X.routing.length) {
+    out.push(table(["Job", "Use (model · effort)", "Confidence", "Also tied", "Best value pick", "Why"],
+      X.routing.map(r => [r.job_label, pickTxt(r.winner), r.confidence_label, list(r.tied.map(pickTxt)),
+        r.best_value ? pickTxt(r.best_value) : "–", r.why])));
+  } else out.push("None of the picks are ranked on the job leaderboards.");
+  if (X.jobs_without_data.length) out.push("", `No pick is ranked for: ${X.jobs_without_data.join(", ")}.`);
+  out.push("", "## Models", "");
+  const head = ["Model", "Effort", "Vendor", "API ids", "$ in / out per M", "Blended $/M", ...(X.speed_included ? ["Speed"] : []), "Context",
+    "Agent task cost", "Best for", "Tied for best", "Weak at", "Not tested"];
+  out.push(table(head, X.models.map(m => {
+    const ids = [m.api_ids.models_dev && `models.dev \`${m.api_ids.models_dev}\``, m.api_ids.openrouter && `OpenRouter \`${m.api_ids.openrouter}\``].filter(Boolean).join(", ");
+    const best = [...m.best_for, ...m.only_one_tested.map(j => `${j} (only one tested)`)];
+    const effort = X.effort_mode === "combined" ? `best of ${m.effort_levels.join(", ")}` : m.effort_label;
+    return [m.family, effort, m.vendor, ids || "–",
+      m.price.input_per_m == null && m.price.output_per_m == null ? "–" : `${usd(m.price.input_per_m)} / ${usd(m.price.output_per_m)}`,
+      usd(m.price.blended_per_m), ...(X.speed_included ? [m.speed_tps == null ? "–" : `${Math.round(m.speed_tps)} tok/s`] : []),
+      m.context_tokens ? fmtCtx(m.context_tokens) : "–",
+      m.agent_cost_per_task == null ? "–" : usd(m.agent_cost_per_task) + (X.effort_mode === "combined" ? ` (${m.agent_cost_effort})` : ""),
+      list(best), list(m.tied_for_best), list(m.weak_at), list(m.not_tested)];
+  })));
+  if (X.routing.length) {
+    out.push("", "## Ranks", "", `Rank on each job's leaderboard (rating). "–" means not tested.${X.effort_mode === "combined" ? " The effort level after the rating is the one that ranks there." : ""}`, "");
+    out.push(table(["Job (leaderboard)", ...X.models.map(short)], X.routing.map(r => [`${r.job_label} (${r.board}, ${r.board_size} ranked)`,
+      ...X.models.map(m => { const k = m.ranks[r.job]; return k ? `#${k.rank} (${rating(k.rating)}${k.effort ? ", " + k.effort : ""})` : "–"; })])));
+  }
+  out.push("", "## Arena names", "", "The exact LMArena model names behind each entry, to trace a row back to the leaderboard.", "");
+  for (const m of X.models) out.push(`- ${short(m)}: ${m.arena_names.map(n => "`" + n + "`").join(", ")}`);
+  out.push("", "## How to read this", "");
+  out.push("- Ratings come from blind human-preference votes on LMArena. Ranks, Best for and Weak at compare these picks with each other, not with the whole leaderboard.");
+  out.push("- A tie means the confidence intervals overlap, so more votes could flip the order. Treat tied picks as equal and choose on price or speed.");
+  out.push("- Best value is the cheapest pick that is tied with the winner or within 15 rating points. On Agentic work it compares Arena's measured cost per agent task. Every other job compares blended price per token.");
+  out.push("- Every effort level of a model has the same price per token. Higher effort writes more output tokens, so the agent task cost rises with effort.");
+  out.push(`- Prices are list prices in US dollars per million tokens, before caching or batch discounts. Blended assumes 3 input tokens per output token.${X.speed_included ? " Speed is an OpenRouter median over 30 minutes and moves with load." : ""}`);
+  return out.join("\n") + "\n";
+}
+
 /* ================= UI ================= */
 const STORE_KEY = "arena-matchup-v1";
 const STORE_V = 2;  // 2: selection holds effort-entry ids (or model ids with comb on); older saves hold model ids
@@ -1225,6 +1443,7 @@ function boot() {
       : `<span class="empty-chips">No models selected. Use a quick pick or browse the list.</span>`;
     $("sc-on").setAttribute("aria-pressed", st.sc);
     $("sc-off").setAttribute("aria-pressed", !st.sc);
+    $("xp-open").disabled = !st.sel.length;
   }
 
   /* ---- cheat sheet + job board ---- */
@@ -1728,6 +1947,60 @@ function boot() {
     new ResizeObserver(entries => { const w = Math.round(entries[0].contentRect.width); if (w !== sw) { sw = w; renderPrices(); } }).observe($("scatter"));
   } else { window.addEventListener("resize", renderChart); window.addEventListener("resize", renderPrices); }
 
+  /* ---- export for agents ---- */
+  const xp = { fmt: "md", text: "", file: "" };
+  function renderExport() {
+    const X = exportData(SP, S, st.sel, st.sc, { pageUrl: /^https?:/.test(location.protocol) ? location.href : "" });
+    const md = xp.fmt === "md";
+    xp.text = md ? exportMarkdown(X) : exportJSON(X);
+    xp.file = `arena-routing-${X.generated}.${md ? "md" : "json"}`;
+    $("xp-out").value = xp.text;
+    $("xp-out").setAttribute("aria-labelledby", md ? "xp-t-md" : "xp-t-json");
+    $("xp-out").scrollTop = 0;
+    for (const t of document.querySelectorAll(".xp-tabs [role=tab]")) {
+      const on = t.dataset.fmt === xp.fmt;
+      t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1;
+    }
+    $("xp-meta").textContent = `${X.models.length} ${X.effort_mode === "combined" ? "models, effort levels combined" : "model and effort pairs"} · ${X.routing.length} jobs · style control ${X.style_control ? "on" : "off"}`;
+    $("xp-status").textContent = "";
+  }
+  $("xp-open").addEventListener("click", () => {
+    renderExport();
+    if (typeof $("xp").showModal === "function") $("xp").showModal(); else $("xp").setAttribute("open", "");
+    $("xp-copy").focus();
+  });
+  $("xp-x").addEventListener("click", () => $("xp").close());
+  $("xp").addEventListener("click", e => { if (e.target === $("xp")) $("xp").close(); });  // backdrop
+  document.querySelector(".xp-tabs").addEventListener("click", e => {
+    const t = e.target.closest("[role=tab]"); if (!t || t.dataset.fmt === xp.fmt) return;
+    xp.fmt = t.dataset.fmt; renderExport();
+  });
+  document.querySelector(".xp-tabs").addEventListener("keydown", e => {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    xp.fmt = xp.fmt === "md" ? "json" : "md"; renderExport();
+    document.querySelector(`.xp-tabs [data-fmt="${xp.fmt}"]`).focus(); e.preventDefault();
+  });
+  function copyFallback() {
+    const ta = $("xp-out"); ta.focus(); ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    $("xp-status").textContent = ok ? "Copied." : "Text selected. Press Ctrl+C or Cmd+C to copy.";
+  }
+  $("xp-copy").addEventListener("click", () => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(xp.text).then(() => { $("xp-status").textContent = "Copied."; }, copyFallback);
+    } else copyFallback();
+  });
+  $("xp-dl").addEventListener("click", () => {
+    try {
+      const url = URL.createObjectURL(new Blob([xp.text], { type: xp.fmt === "md" ? "text/markdown" : "application/json" }));
+      const a = document.createElement("a");
+      a.href = url; a.download = xp.file; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      $("xp-status").textContent = `Saved ${xp.file}.`;
+    } catch (e) { $("xp-status").textContent = "This browser blocked the download. Use Copy instead."; }
+  });
+
   renderAll();
   persist();
 }
@@ -1736,5 +2009,5 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 function fmtDate(iso) { const [y, m, d] = (iso || "").split("-"); return y ? `${+d} ${MONTHS[+m - 1]} ${y}` : "?"; }
 
 if (typeof document !== "undefined") boot();
-else if (typeof globalThis !== "undefined") globalThis.__arena = { decode, presetTop, presetFlagship, presetBy, presetDefault, priceTable, effortEnts, valueNotes, taskOf, fmtUsd, fmtCtx, costLine, logTicks, JOBS, analyze, jobBoard, cheatSheet, encodeHash, decodeHash, resolveIds, viaShort, heatClass, niceTicks, DATA };
+else if (typeof globalThis !== "undefined") globalThis.__arena = { decode, presetTop, presetFlagship, presetBy, presetDefault, priceTable, effortEnts, valueNotes, taskOf, fmtUsd, fmtCtx, costLine, logTicks, JOBS, analyze, jobBoard, cheatSheet, encodeHash, decodeHash, resolveIds, viaShort, heatClass, niceTicks, exportData, exportJSON, exportMarkdown, DATA };
 </script>

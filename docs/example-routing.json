@@ -1,0 +1,1303 @@
+{
+  "generated": "2026-11-26",
+  "snapshots": {
+    "text": "2026-11-22",
+    "webdev": "2026-11-23",
+    "vision": "2026-11-25",
+    "search": "2026-11-19",
+    "document": "2026-11-09",
+    "text_to_image": "2026-11-20",
+    "image_edit": "2026-11-17",
+    "text_to_video": "2026-11-09",
+    "image_to_video": "2026-11-09",
+    "video_edit": "2026-11-10",
+    "agent": "2026-11-22"
+  },
+  "prices_fetched": "2026-11-26 15:02 UTC",
+  "style_control": true,
+  "effort_mode": "separate",
+  "speed_included": false,
+  "source": {
+    "arena": "https://arena.ai/leaderboard",
+    "dataset": "https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset",
+    "models_dev": "https://models.dev",
+    "openrouter": "https://openrouter.ai/models",
+    "repo": "https://github.com/lnmunhoz/arena-matchup"
+  },
+  "view_hash": "#e-dg85i-zf008-b7q62-fnp2m-kwow4-z7ptt",
+  "view_url": "index.html#e-dg85i-zf008-b7q62-fnp2m-kwow4-z7ptt",
+  "models": [
+    {
+      "id": "zf008",
+      "name": "Claude Opus 5.5 · Max",
+      "family": "Claude Opus 5.5",
+      "effort": "max",
+      "effort_label": "Max",
+      "setup_variants": [],
+      "vendor": "Anthropic",
+      "arena_names": [
+        "Claude Opus 5.5 (Max)"
+      ],
+      "api_ids": {
+        "models_dev": "anthropic/claude-opus-5-5",
+        "openrouter": "anthropic/claude-opus-5.5"
+      },
+      "price": {
+        "input_per_m": 4,
+        "output_per_m": 20,
+        "blended_per_m": 8
+      },
+      "speed_tps": null,
+      "ttft_s": null,
+      "context_tokens": 1000000,
+      "agent_cost_per_task": 5.794,
+      "agent_cost_effort": "max",
+      "best_for": [
+        "Web/app building"
+      ],
+      "only_one_tested": [],
+      "tied_for_best": [
+        "Agentic work"
+      ],
+      "weak_at": [],
+      "not_tested": [
+        "General chat",
+        "Coding",
+        "Hard reasoning",
+        "Math",
+        "Writing",
+        "Long documents",
+        "Instruction following",
+        "Multi-turn",
+        "Vision",
+        "Search",
+        "Documents"
+      ],
+      "ranks": {
+        "chat": null,
+        "code": null,
+        "web": {
+          "rank": 2,
+          "rating": 1820.4,
+          "ci": [
+            1809.6,
+            1831.1
+          ],
+          "board_size": 162,
+          "votes": 5121
+        },
+        "reason": null,
+        "math": null,
+        "write": null,
+        "long": null,
+        "instr": null,
+        "multi": null,
+        "vision": null,
+        "search": null,
+        "docs": null,
+        "agent": {
+          "rank": 2,
+          "rating": 0.1912,
+          "ci": [
+            0.1705,
+            0.2118
+          ],
+          "board_size": 69,
+          "votes": 2733427
+        }
+      }
+    },
+    {
+      "id": "kwow4",
+      "name": "Gemini 4 Neon · High",
+      "family": "Gemini 4 Neon",
+      "effort": "high",
+      "effort_label": "High",
+      "setup_variants": [],
+      "vendor": "Google",
+      "arena_names": [
+        "Gemini 4 Neon (High)"
+      ],
+      "api_ids": {
+        "models_dev": "google/gemini-4-neon",
+        "openrouter": "google/gemini-4-neon"
+      },
+      "price": {
+        "input_per_m": 3,
+        "output_per_m": 15,
+        "blended_per_m": 6
+      },
+      "speed_tps": null,
+      "ttft_s": null,
+      "context_tokens": 1048576,
+      "agent_cost_per_task": 2.484,
+      "agent_cost_effort": "high",
+      "best_for": [],
+      "only_one_tested": [],
+      "tied_for_best": [
+        "General chat",
+        "Coding",
+        "Hard reasoning",
+        "Math",
+        "Writing",
+        "Long documents",
+        "Instruction following",
+        "Multi-turn",
+        "Agentic work"
+      ],
+      "weak_at": [],
+      "not_tested": [
+        "Web/app building",
+        "Vision",
+        "Search",
+        "Documents"
+      ],
+      "ranks": {
+        "chat": {
+          "rank": 3,
+          "rating": 1512.2,
+          "ci": [
+            1503.8,
+            1520.7
+          ],
+          "board_size": 427,
+          "votes": 5611
+        },
+        "code": {
+          "rank": 2,
+          "rating": 1558.3,
+          "ci": [
+            1541.2,
+            1575.5
+          ],
+          "board_size": 422,
+          "votes": 1320
+        },
+        "web": null,
+        "reason": {
+          "rank": 3,
+          "rating": 1541.1,
+          "ci": [
+            1530.5,
+            1551.7
+          ],
+          "board_size": 427,
+          "votes": 3545
+        },
+        "math": {
+          "rank": 3,
+          "rating": 1530.2,
+          "ci": [
+            1490.3,
+            1570.1
+          ],
+          "board_size": 410,
+          "votes": 216
+        },
+        "write": {
+          "rank": 5,
+          "rating": 1503.5,
+          "ci": [
+            1485,
+            1522.1
+          ],
+          "board_size": 425,
+          "votes": 1226
+        },
+        "long": {
+          "rank": 4,
+          "rating": 1521.8,
+          "ci": [
+            1508.7,
+            1534.9
+          ],
+          "board_size": 405,
+          "votes": 2397
+        },
+        "instr": {
+          "rank": 3,
+          "rating": 1517.4,
+          "ci": [
+            1503.4,
+            1531.5
+          ],
+          "board_size": 427,
+          "votes": 1945
+        },
+        "multi": {
+          "rank": 4,
+          "rating": 1518.8,
+          "ci": [
+            1497.5,
+            1540.1
+          ],
+          "board_size": 425,
+          "votes": 856
+        },
+        "vision": null,
+        "search": null,
+        "docs": null,
+        "agent": {
+          "rank": 3,
+          "rating": 0.1829,
+          "ci": [
+            0.1578,
+            0.2079
+          ],
+          "board_size": 69,
+          "votes": 898906
+        }
+      }
+    },
+    {
+      "id": "dg85i",
+      "name": "Claude Opus 5.5 · High",
+      "family": "Claude Opus 5.5",
+      "effort": "high",
+      "effort_label": "High",
+      "setup_variants": [],
+      "vendor": "Anthropic",
+      "arena_names": [
+        "Claude Opus 5.5 (High)"
+      ],
+      "api_ids": {
+        "models_dev": "anthropic/claude-opus-5-5",
+        "openrouter": "anthropic/claude-opus-5.5"
+      },
+      "price": {
+        "input_per_m": 4,
+        "output_per_m": 20,
+        "blended_per_m": 8
+      },
+      "speed_tps": null,
+      "ttft_s": null,
+      "context_tokens": 1000000,
+      "agent_cost_per_task": 1.933,
+      "agent_cost_effort": "high",
+      "best_for": [],
+      "only_one_tested": [],
+      "tied_for_best": [
+        "General chat",
+        "Coding",
+        "Hard reasoning",
+        "Math",
+        "Writing",
+        "Long documents",
+        "Instruction following",
+        "Multi-turn",
+        "Vision"
+      ],
+      "weak_at": [
+        "Agentic work"
+      ],
+      "not_tested": [
+        "Web/app building",
+        "Search",
+        "Documents"
+      ],
+      "ranks": {
+        "chat": {
+          "rank": 5,
+          "rating": 1507,
+          "ci": [
+            1501.4,
+            1512.7
+          ],
+          "board_size": 427,
+          "votes": 18959
+        },
+        "code": {
+          "rank": 9,
+          "rating": 1547.1,
+          "ci": [
+            1536.8,
+            1557.3
+          ],
+          "board_size": 422,
+          "votes": 4152
+        },
+        "web": null,
+        "reason": {
+          "rank": 5,
+          "rating": 1530.4,
+          "ci": [
+            1523.6,
+            1537.2
+          ],
+          "board_size": 427,
+          "votes": 11906
+        },
+        "math": {
+          "rank": 6,
+          "rating": 1518.5,
+          "ci": [
+            1498.7,
+            1538.2
+          ],
+          "board_size": 410,
+          "votes": 936
+        },
+        "write": {
+          "rank": 3,
+          "rating": 1517.9,
+          "ci": [
+            1507.4,
+            1528.4
+          ],
+          "board_size": 425,
+          "votes": 4561
+        },
+        "long": {
+          "rank": 6,
+          "rating": 1520.9,
+          "ci": [
+            1512.8,
+            1529
+          ],
+          "board_size": 405,
+          "votes": 8252
+        },
+        "instr": {
+          "rank": 4,
+          "rating": 1516.6,
+          "ci": [
+            1508,
+            1525.2
+          ],
+          "board_size": 427,
+          "votes": 6613
+        },
+        "multi": {
+          "rank": 11,
+          "rating": 1502.6,
+          "ci": [
+            1490,
+            1515.2
+          ],
+          "board_size": 425,
+          "votes": 2627
+        },
+        "vision": {
+          "rank": 11,
+          "rating": 1292.2,
+          "ci": [
+            1283.3,
+            1301.1
+          ],
+          "board_size": 170,
+          "votes": 6457
+        },
+        "search": null,
+        "docs": null,
+        "agent": {
+          "rank": 8,
+          "rating": 0.1386,
+          "ci": [
+            0.1279,
+            0.1493
+          ],
+          "board_size": 69,
+          "votes": 6482858
+        }
+      }
+    },
+    {
+      "id": "z7ptt",
+      "name": "GPT-5.6 Sol · xHigh",
+      "family": "GPT-5.6 Sol",
+      "effort": "xhigh",
+      "effort_label": "xHigh",
+      "setup_variants": [
+        "Codex Harness"
+      ],
+      "vendor": "OpenAI",
+      "arena_names": [
+        "GPT-5.6 Sol (xHigh)",
+        "GPT-5.6 Sol (xHigh, Codex Harness)"
+      ],
+      "api_ids": {
+        "models_dev": "openai/gpt-5.6-sol",
+        "openrouter": "openai/gpt-5.6-sol"
+      },
+      "price": {
+        "input_per_m": 4,
+        "output_per_m": 20,
+        "blended_per_m": 8
+      },
+      "speed_tps": null,
+      "ttft_s": null,
+      "context_tokens": 1050000,
+      "agent_cost_per_task": 1.308,
+      "agent_cost_effort": "xhigh",
+      "best_for": [],
+      "only_one_tested": [
+        "Search",
+        "Documents"
+      ],
+      "tied_for_best": [
+        "Math",
+        "Multi-turn",
+        "Vision"
+      ],
+      "weak_at": [
+        "General chat",
+        "Coding",
+        "Web/app building",
+        "Hard reasoning",
+        "Writing",
+        "Long documents",
+        "Instruction following",
+        "Agentic work"
+      ],
+      "not_tested": [],
+      "ranks": {
+        "chat": {
+          "rank": 25,
+          "rating": 1485.2,
+          "ci": [
+            1480.9,
+            1489.4
+          ],
+          "board_size": 427,
+          "votes": 43730
+        },
+        "code": {
+          "rank": 22,
+          "rating": 1533,
+          "ci": [
+            1526.4,
+            1539.6
+          ],
+          "board_size": 422,
+          "votes": 11542
+        },
+        "web": {
+          "rank": 39,
+          "rating": 1615.8,
+          "ci": [
+            1610,
+            1621.5
+          ],
+          "board_size": 162,
+          "votes": 18750
+        },
+        "reason": {
+          "rank": 22,
+          "rating": 1511,
+          "ci": [
+            1506,
+            1515.9
+          ],
+          "board_size": 427,
+          "votes": 28290
+        },
+        "math": {
+          "rank": 28,
+          "rating": 1494,
+          "ci": [
+            1480.9,
+            1507.1
+          ],
+          "board_size": 410,
+          "votes": 2094
+        },
+        "write": {
+          "rank": 23,
+          "rating": 1470.8,
+          "ci": [
+            1463.4,
+            1478.2
+          ],
+          "board_size": 425,
+          "votes": 9257
+        },
+        "long": {
+          "rank": 23,
+          "rating": 1497.6,
+          "ci": [
+            1492,
+            1503.3
+          ],
+          "board_size": 405,
+          "votes": 19929
+        },
+        "instr": {
+          "rank": 18,
+          "rating": 1490,
+          "ci": [
+            1484,
+            1496
+          ],
+          "board_size": 427,
+          "votes": 15220
+        },
+        "multi": {
+          "rank": 24,
+          "rating": 1491,
+          "ci": [
+            1483.1,
+            1498.9
+          ],
+          "board_size": 425,
+          "votes": 7190
+        },
+        "vision": {
+          "rank": 17,
+          "rating": 1287.6,
+          "ci": [
+            1280.5,
+            1294.8
+          ],
+          "board_size": 170,
+          "votes": 12237
+        },
+        "search": {
+          "rank": 1,
+          "rating": 1253.6,
+          "ci": [
+            1247,
+            1260.3
+          ],
+          "board_size": 45,
+          "votes": 68265
+        },
+        "docs": {
+          "rank": 7,
+          "rating": 1486.5,
+          "ci": [
+            1479.6,
+            1493.4
+          ],
+          "board_size": 46,
+          "votes": 9649
+        },
+        "agent": {
+          "rank": 25,
+          "rating": 0.0345,
+          "ci": [
+            0.0235,
+            0.0455
+          ],
+          "board_size": 69,
+          "votes": 6758463
+        }
+      }
+    },
+    {
+      "id": "fnp2m",
+      "name": "Claude Sonnet 5.5 · xHigh",
+      "family": "Claude Sonnet 5.5",
+      "effort": "xhigh",
+      "effort_label": "xHigh",
+      "setup_variants": [],
+      "vendor": "Anthropic",
+      "arena_names": [
+        "Claude Sonnet 5.5 (xHigh)"
+      ],
+      "api_ids": {
+        "models_dev": "anthropic/claude-sonnet-5-5",
+        "openrouter": "anthropic/claude-sonnet-5.5"
+      },
+      "price": {
+        "input_per_m": 2,
+        "output_per_m": 10,
+        "blended_per_m": 4
+      },
+      "speed_tps": null,
+      "ttft_s": null,
+      "context_tokens": 1000000,
+      "agent_cost_per_task": null,
+      "agent_cost_effort": null,
+      "best_for": [],
+      "only_one_tested": [],
+      "tied_for_best": [
+        "Math"
+      ],
+      "weak_at": [
+        "General chat",
+        "Coding",
+        "Web/app building",
+        "Hard reasoning",
+        "Writing",
+        "Long documents",
+        "Instruction following",
+        "Multi-turn",
+        "Vision"
+      ],
+      "not_tested": [
+        "Search",
+        "Documents",
+        "Agentic work"
+      ],
+      "ranks": {
+        "chat": {
+          "rank": 49,
+          "rating": 1473,
+          "ci": [
+            1467.3,
+            1478.6
+          ],
+          "board_size": 427,
+          "votes": 17616
+        },
+        "code": {
+          "rank": 50,
+          "rating": 1516,
+          "ci": [
+            1505.7,
+            1526.3
+          ],
+          "board_size": 422,
+          "votes": 3993
+        },
+        "web": {
+          "rank": 3,
+          "rating": 1772.6,
+          "ci": [
+            1763.5,
+            1781.8
+          ],
+          "board_size": 162,
+          "votes": 6973
+        },
+        "reason": {
+          "rank": 47,
+          "rating": 1496.1,
+          "ci": [
+            1489.3,
+            1502.9
+          ],
+          "board_size": 427,
+          "votes": 11014
+        },
+        "math": {
+          "rank": 26,
+          "rating": 1498,
+          "ci": [
+            1476.8,
+            1519.2
+          ],
+          "board_size": 410,
+          "votes": 810
+        },
+        "write": {
+          "rank": 32,
+          "rating": 1461.3,
+          "ci": [
+            1450.6,
+            1472
+          ],
+          "board_size": 425,
+          "votes": 4128
+        },
+        "long": {
+          "rank": 36,
+          "rating": 1486.5,
+          "ci": [
+            1478.4,
+            1494.6
+          ],
+          "board_size": 405,
+          "votes": 7609
+        },
+        "instr": {
+          "rank": 30,
+          "rating": 1476.9,
+          "ci": [
+            1468.3,
+            1485.6
+          ],
+          "board_size": 427,
+          "votes": 6018
+        },
+        "multi": {
+          "rank": 67,
+          "rating": 1470,
+          "ci": [
+            1457.6,
+            1482.4
+          ],
+          "board_size": 425,
+          "votes": 2641
+        },
+        "vision": {
+          "rank": 44,
+          "rating": 1263.5,
+          "ci": [
+            1254.4,
+            1272.6
+          ],
+          "board_size": 170,
+          "votes": 5903
+        },
+        "search": null,
+        "docs": null,
+        "agent": null
+      }
+    },
+    {
+      "id": "b7q62",
+      "name": "Claude Sonnet 5.5 · High",
+      "family": "Claude Sonnet 5.5",
+      "effort": "high",
+      "effort_label": "High",
+      "setup_variants": [],
+      "vendor": "Anthropic",
+      "arena_names": [
+        "Claude Sonnet 5.5 (High)"
+      ],
+      "api_ids": {
+        "models_dev": "anthropic/claude-sonnet-5-5",
+        "openrouter": "anthropic/claude-sonnet-5.5"
+      },
+      "price": {
+        "input_per_m": 2,
+        "output_per_m": 10,
+        "blended_per_m": 4
+      },
+      "speed_tps": null,
+      "ttft_s": null,
+      "context_tokens": 1000000,
+      "agent_cost_per_task": 0.753,
+      "agent_cost_effort": "high",
+      "best_for": [],
+      "only_one_tested": [],
+      "tied_for_best": [],
+      "weak_at": [
+        "Web/app building",
+        "Agentic work"
+      ],
+      "not_tested": [
+        "General chat",
+        "Coding",
+        "Hard reasoning",
+        "Math",
+        "Writing",
+        "Long documents",
+        "Instruction following",
+        "Multi-turn",
+        "Vision",
+        "Search",
+        "Documents"
+      ],
+      "ranks": {
+        "chat": null,
+        "code": null,
+        "web": {
+          "rank": 13,
+          "rating": 1715.4,
+          "ci": [
+            1707.6,
+            1723.3
+          ],
+          "board_size": 162,
+          "votes": 9129
+        },
+        "reason": null,
+        "math": null,
+        "write": null,
+        "long": null,
+        "instr": null,
+        "multi": null,
+        "vision": null,
+        "search": null,
+        "docs": null,
+        "agent": {
+          "rank": 17,
+          "rating": 0.0787,
+          "ci": [
+            0.0591,
+            0.0984
+          ],
+          "board_size": 69,
+          "votes": 1810508
+        }
+      }
+    }
+  ],
+  "routing": [
+    {
+      "job": "chat",
+      "job_label": "General chat",
+      "board": "text/overall",
+      "board_label": "Text",
+      "board_size": 427,
+      "score_type": "bt",
+      "winner": {
+        "id": "kwow4",
+        "model": "Gemini 4 Neon",
+        "effort": "high",
+        "effort_label": "High",
+        "setup": null,
+        "name": "Gemini 4 Neon · High"
+      },
+      "confidence": "toss-up",
+      "confidence_label": "Toss-up",
+      "tied": [
+        {
+          "id": "dg85i",
+          "model": "Claude Opus 5.5",
+          "effort": "high",
+          "effort_label": "High",
+          "setup": null,
+          "name": "Claude Opus 5.5 · High"
+        }
+      ],
+      "best_value": null,
+      "fastest_close": null,
+      "why": "top rating, 5 pts ahead of the tied pick",
+      "not_tested": [
+        "Claude Opus 5.5 · Max",
+        "Claude Sonnet 5.5 · High"
+      ]
+    },
+    {
+      "job": "code",
+      "job_label": "Coding",
+      "board": "text/coding",
+      "board_label": "Text · Coding",
+      "board_size": 422,
+      "score_type": "bt",
+      "winner": {
+        "id": "kwow4",
+        "model": "Gemini 4 Neon",
+        "effort": "high",
+        "effort_label": "High",
+        "setup": null,
+        "name": "Gemini 4 Neon · High"
+      },
+      "confidence": "toss-up",
+      "confidence_label": "Toss-up",
+      "tied": [
+        {
+          "id": "dg85i",
+          "model": "Claude Opus 5.5",
+          "effort": "high",
+          "effort_label": "High",
+          "setup": null,
+          "name": "Claude Opus 5.5 · High"
+        }
+      ],
+      "best_value": null,
+      "fastest_close": null,
+      "why": "top rating, 11 pts ahead of the tied pick",
+      "not_tested": [
+        "Claude Opus 5.5 · Max",
+        "Claude Sonnet 5.5 · High"
+      ]
+    },
+    {
+      "job": "web",
+      "job_label": "Web/app building",
+      "board": "webdev/overall",
+      "board_label": "WebDev",
+      "board_size": 162,
+      "score_type": "bt",
+      "winner": {
+        "id": "zf008",
+        "model": "Claude Opus 5.5",
+        "effort": "max",
+        "effort_label": "Max",
+        "setup": null,
+        "name": "Claude Opus 5.5 · Max"
+      },
+      "confidence": "clear",
+      "confidence_label": "Clear winner",
+      "tied": [],
+      "best_value": null,
+      "fastest_close": null,
+      "why": "leads the next pick by 48 pts",
+      "not_tested": [
+        "Claude Opus 5.5 · High",
+        "Gemini 4 Neon · High"
+      ]
+    },
+    {
+      "job": "reason",
+      "job_label": "Hard reasoning",
+      "board": "text/hard_prompts",
+      "board_label": "Text · Hard prompts",
+      "board_size": 427,
+      "score_type": "bt",
+      "winner": {
+        "id": "kwow4",
+        "model": "Gemini 4 Neon",
+        "effort": "high",
+        "effort_label": "High",
+        "setup": null,
+        "name": "Gemini 4 Neon · High"
+      },
+      "confidence": "toss-up",
+      "confidence_label": "Toss-up",
+      "tied": [
+        {
+          "id": "dg85i",
+          "model": "Claude Opus 5.5",
+          "effort": "high",
+          "effort_label": "High",
+          "setup": null,
+          "name": "Claude Opus 5.5 · High"
+        }
+      ],
+      "best_value": null,
+      "fastest_close": null,
+      "why": "top rating, 11 pts ahead of the tied pick",
+      "not_tested": [
+        "Claude Opus 5.5 · Max",
+        "Claude Sonnet 5.5 · High"
+      ]
+    },
+    {
+      "job": "math",
+      "job_label": "Math",
+      "board": "text/math",
+      "board_label": "Text · Math",
+      "board_size": 410,
+      "score_type": "bt",
+      "winner": {
+        "id": "kwow4",
+        "model": "Gemini 4 Neon",
+        "effort": "high",
+        "effort_label": "High",
+        "setup": null,
+        "name": "Gemini 4 Neon · High"
+      },
+      "confidence": "toss-up",
+      "confidence_label": "Toss-up",
+      "tied": [
+        {
+          "id": "dg85i",
+          "model": "Claude Opus 5.5",
+          "effort": "high",
+          "effort_label": "High",
+          "setup": null,
+          "name": "Claude Opus 5.5 · High"
+        },
+        {
+          "id": "fnp2m",
+          "model": "Claude Sonnet 5.5",
+          "effort": "xhigh",
+          "effort_label": "xHigh",
+          "setup": null,
+          "name": "Claude Sonnet 5.5 · xHigh"
+        },
+        {
+          "id": "z7ptt",
+          "model": "GPT-5.6 Sol",
+          "effort": "xhigh",
+          "effort_label": "xHigh",
+          "setup": null,
+          "name": "GPT-5.6 Sol · xHigh"
+        }
+      ],
+      "best_value": {
+        "id": "fnp2m",
+        "model": "Claude Sonnet 5.5",
+        "effort": "xhigh",
+        "effort_label": "xHigh",
+        "setup": null,
+        "name": "Claude Sonnet 5.5 · xHigh",
+        "why": "tied with the winner and 33% cheaper ($4 vs $6 per M)"
+      },
+      "fastest_close": null,
+      "why": "top rating, 12 pts ahead of the closest of 3 tied picks; best value is tied with the winner and 33% cheaper ($4 vs $6 per M)",
+      "not_tested": [
+        "Claude Opus 5.5 · Max",
+        "Claude Sonnet 5.5 · High"
+      ]
+    },
+    {
+      "job": "write",
+      "job_label": "Writing",
+      "board": "text/creative_writing",
+      "board_label": "Text · Creative writing",
+      "board_size": 425,
+      "score_type": "bt",
+      "winner": {
+        "id": "dg85i",
+        "model": "Claude Opus 5.5",
+        "effort": "high",
+        "effort_label": "High",
+        "setup": null,
+        "name": "Claude Opus 5.5 · High"
+      },
+      "confidence": "toss-up",
+      "confidence_label": "Toss-up",
+      "tied": [
+        {
+          "id": "kwow4",
+          "model": "Gemini 4 Neon",
+          "effort": "high",
+          "effort_label": "High",
+          "setup": null,
+          "name": "Gemini 4 Neon · High"
+        }
+      ],
+      "best_value": {
+        "id": "kwow4",
+        "model": "Gemini 4 Neon",
+        "effort": "high",
+        "effort_label": "High",
+        "setup": null,
+        "name": "Gemini 4 Neon · High",
+        "why": "tied with the winner and 25% cheaper ($6 vs $8 per M)"
+      },
+      "fastest_close": null,
+      "why": "top rating, 14 pts ahead of the tied pick; best value is tied with the winner and 25% cheaper ($6 vs $8 per M)",
+      "not_tested": [
+        "Claude Opus 5.5 · Max",
+        "Claude Sonnet 5.5 · High"
+      ]
+    },
+    {
+      "job": "long",
+      "job_label": "Long documents",
+      "board": "text/longer_query",
+      "board_label": "Text · Longer query",
+      "board_size": 405,
+      "score_type": "bt",
+      "winner": {
+        "id": "kwow4",
+        "model": "Gemini 4 Neon",
+        "effort": "high",
+        "effort_label": "High",
+        "setup": null,
+        "name": "Gemini 4 Neon · High"
+      },
+      "confidence": "toss-up",
+      "confidence_label": "Toss-up",
+      "tied": [
+        {
+          "id": "dg85i",
+          "model": "Claude Opus 5.5",
+          "effort": "high",
+          "effort_label": "High",
+          "setup": null,
+          "name": "Claude Opus 5.5 · High"
+        }
+      ],
+      "best_value": null,
+      "fastest_close": null,
+      "why": "top rating, 1 pt ahead of the tied pick",
+      "not_tested": [
+        "Claude Opus 5.5 · Max",
+        "Claude Sonnet 5.5 · High"
+      ]
+    },
+    {
+      "job": "instr",
+      "job_label": "Instruction following",
+      "board": "text/instruction_following",
+      "board_label": "Text · Instruction following",
+      "board_size": 427,
+      "score_type": "bt",
+      "winner": {
+        "id": "kwow4",
+        "model": "Gemini 4 Neon",
+        "effort": "high",
+        "effort_label": "High",
+        "setup": null,
+        "name": "Gemini 4 Neon · High"
+      },
+      "confidence": "toss-up",
+      "confidence_label": "Toss-up",
+      "tied": [
+        {
+          "id": "dg85i",
+          "model": "Claude Opus 5.5",
+          "effort": "high",
+          "effort_label": "High",
+          "setup": null,
+          "name": "Claude Opus 5.5 · High"
+        }
+      ],
+      "best_value": null,
+      "fastest_close": null,
+      "why": "top rating, 1 pt ahead of the tied pick",
+      "not_tested": [
+        "Claude Opus 5.5 · Max",
+        "Claude Sonnet 5.5 · High"
+      ]
+    },
+    {
+      "job": "multi",
+      "job_label": "Multi-turn",
+      "board": "text/multi_turn",
+      "board_label": "Text · Multi-turn",
+      "board_size": 425,
+      "score_type": "bt",
+      "winner": {
+        "id": "kwow4",
+        "model": "Gemini 4 Neon",
+        "effort": "high",
+        "effort_label": "High",
+        "setup": null,
+        "name": "Gemini 4 Neon · High"
+      },
+      "confidence": "toss-up",
+      "confidence_label": "Toss-up",
+      "tied": [
+        {
+          "id": "dg85i",
+          "model": "Claude Opus 5.5",
+          "effort": "high",
+          "effort_label": "High",
+          "setup": null,
+          "name": "Claude Opus 5.5 · High"
+        },
+        {
+          "id": "z7ptt",
+          "model": "GPT-5.6 Sol",
+          "effort": "xhigh",
+          "effort_label": "xHigh",
+          "setup": null,
+          "name": "GPT-5.6 Sol · xHigh"
+        }
+      ],
+      "best_value": null,
+      "fastest_close": null,
+      "why": "top rating, 16 pts ahead of the closest of 2 tied picks",
+      "not_tested": [
+        "Claude Opus 5.5 · Max",
+        "Claude Sonnet 5.5 · High"
+      ]
+    },
+    {
+      "job": "vision",
+      "job_label": "Vision",
+      "board": "vision/overall",
+      "board_label": "Vision",
+      "board_size": 170,
+      "score_type": "bt",
+      "winner": {
+        "id": "dg85i",
+        "model": "Claude Opus 5.5",
+        "effort": "high",
+        "effort_label": "High",
+        "setup": null,
+        "name": "Claude Opus 5.5 · High"
+      },
+      "confidence": "toss-up",
+      "confidence_label": "Toss-up",
+      "tied": [
+        {
+          "id": "z7ptt",
+          "model": "GPT-5.6 Sol",
+          "effort": "xhigh",
+          "effort_label": "xHigh",
+          "setup": null,
+          "name": "GPT-5.6 Sol · xHigh"
+        }
+      ],
+      "best_value": null,
+      "fastest_close": null,
+      "why": "top rating, 5 pts ahead of the tied pick",
+      "not_tested": [
+        "Claude Opus 5.5 · Max",
+        "Claude Sonnet 5.5 · High",
+        "Gemini 4 Neon · High"
+      ]
+    },
+    {
+      "job": "search",
+      "job_label": "Search",
+      "board": "search/overall",
+      "board_label": "Search",
+      "board_size": 45,
+      "score_type": "bt",
+      "winner": {
+        "id": "z7ptt",
+        "model": "GPT-5.6 Sol",
+        "effort": "xhigh",
+        "effort_label": "xHigh",
+        "setup": null,
+        "name": "GPT-5.6 Sol · xHigh"
+      },
+      "confidence": "only-one-tested",
+      "confidence_label": "Only one tested",
+      "tied": [],
+      "best_value": null,
+      "fastest_close": null,
+      "why": "only pick ranked on this board",
+      "not_tested": [
+        "Claude Opus 5.5 · High",
+        "Claude Opus 5.5 · Max",
+        "Claude Sonnet 5.5 · High",
+        "Claude Sonnet 5.5 · xHigh",
+        "Gemini 4 Neon · High"
+      ]
+    },
+    {
+      "job": "docs",
+      "job_label": "Documents",
+      "board": "document/overall",
+      "board_label": "Document",
+      "board_size": 46,
+      "score_type": "bt",
+      "winner": {
+        "id": "z7ptt",
+        "model": "GPT-5.6 Sol",
+        "effort": "xhigh",
+        "effort_label": "xHigh",
+        "setup": null,
+        "name": "GPT-5.6 Sol · xHigh"
+      },
+      "confidence": "only-one-tested",
+      "confidence_label": "Only one tested",
+      "tied": [],
+      "best_value": null,
+      "fastest_close": null,
+      "why": "only pick ranked on this board",
+      "not_tested": [
+        "Claude Opus 5.5 · High",
+        "Claude Opus 5.5 · Max",
+        "Claude Sonnet 5.5 · High",
+        "Claude Sonnet 5.5 · xHigh",
+        "Gemini 4 Neon · High"
+      ]
+    },
+    {
+      "job": "agent",
+      "job_label": "Agentic work",
+      "board": "agent/overall",
+      "board_label": "Agent",
+      "board_size": 69,
+      "score_type": "ips",
+      "winner": {
+        "id": "zf008",
+        "model": "Claude Opus 5.5",
+        "effort": "max",
+        "effort_label": "Max",
+        "setup": null,
+        "name": "Claude Opus 5.5 · Max"
+      },
+      "confidence": "toss-up",
+      "confidence_label": "Toss-up",
+      "tied": [
+        {
+          "id": "kwow4",
+          "model": "Gemini 4 Neon",
+          "effort": "high",
+          "effort_label": "High",
+          "setup": null,
+          "name": "Gemini 4 Neon · High"
+        }
+      ],
+      "best_value": {
+        "id": "kwow4",
+        "model": "Gemini 4 Neon",
+        "effort": "high",
+        "effort_label": "High",
+        "setup": null,
+        "name": "Gemini 4 Neon · High",
+        "why": "tied with the winner and 2.3× cheaper ($2.48 vs $5.79 per agent task)"
+      },
+      "fastest_close": null,
+      "why": "top rating, 0.008 ahead of the tied pick; best value is tied with the winner and 2.3× cheaper ($2.48 vs $5.79 per agent task)",
+      "not_tested": [
+        "Claude Sonnet 5.5 · xHigh"
+      ]
+    }
+  ],
+  "jobs_without_data": []
+}
