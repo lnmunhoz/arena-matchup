@@ -1,0 +1,1586 @@
+<title>Arena Matchup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+[hidden] { display: none !important; }
+/* Layout: scoreboard tool. Picker rail on the left (stacks on phones), results on the right:
+   verdicts first, then the rank matrix, then one head-to-head chart. */
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --surface-2: #f8f9fb;
+  --ink: #131722;
+  --ink-2: #485064;
+  --ink-3: #5f677a;
+  --line: #dce1e9;
+  --line-strong: #c3cad6;
+  --accent: #1e4fd0;
+  --accent-ink: #ffffff;
+  --accent-soft: #e5ecfc;
+  --accent-line: #9db5f0;
+  /* rank heat: one hue, darkest = top of that leaderboard */
+  --heat-1: #0f3c8f; --heat-ink-1: #ffffff;
+  --heat-2: #2e6bd8; --heat-ink-2: #ffffff;
+  --heat-3: #8fb4f0; --heat-ink-3: #0a1d44;
+  --heat-4: #d2e1fa; --heat-ink-4: #0f2556;
+  --heat-5: #eef1f6; --heat-ink-5: #485064;
+  --tie: #8a5a00;
+  --tie-fill: #d9971c;
+  --behind-fill: #a7afbf;
+  --win-soft: #e5ecfc;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(19, 23, 34, .06), 0 4px 14px rgba(19, 23, 34, .05);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1117; --surface: #161a22; --surface-2: #1b2029;
+    --ink: #e8ebf2; --ink-2: #aab2c3; --ink-3: #8a93a8;
+    --line: #283040; --line-strong: #3a4356;
+    --accent: #79a2ff; --accent-ink: #08142f; --accent-soft: #1b2a4d; --accent-line: #3d5ea8;
+    --heat-1: #5b93ff; --heat-ink-1: #06122b;
+    --heat-2: #2f62c9; --heat-ink-2: #ffffff;
+    --heat-3: #22407e; --heat-ink-3: #e3ebff;
+    --heat-4: #1a2742; --heat-ink-4: #c3cee6;
+    --heat-5: #171c26; --heat-ink-5: #8f98ad;
+    --tie: #f0b54a;
+    --tie-fill: #d9a13a;
+    --behind-fill: #4c566b;
+    --win-soft: #1b2a4d;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 14px rgba(0, 0, 0, .25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117; --surface: #161a22; --surface-2: #1b2029;
+  --ink: #e8ebf2; --ink-2: #aab2c3; --ink-3: #8a93a8;
+  --line: #283040; --line-strong: #3a4356;
+  --accent: #79a2ff; --accent-ink: #08142f; --accent-soft: #1b2a4d; --accent-line: #3d5ea8;
+  --heat-1: #5b93ff; --heat-ink-1: #06122b;
+  --heat-2: #2f62c9; --heat-ink-2: #ffffff;
+  --heat-3: #22407e; --heat-ink-3: #e3ebff;
+  --heat-4: #1a2742; --heat-ink-4: #c3cee6;
+  --heat-5: #171c26; --heat-ink-5: #8f98ad;
+  --tie: #f0b54a;
+  --tie-fill: #d9a13a;
+  --behind-fill: #4c566b;
+  --win-soft: #1b2a4d;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 14px rgba(0, 0, 0, .25);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 1480px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+  display: flex; flex-direction: column; gap: 18px;
+}
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+a { color: var(--accent); text-underline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--ink-3); }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter-spacing: .01em; line-height: 1.15; }
+
+/* ---------- header ---------- */
+.masthead { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 12px 24px; align-items: end; }
+.brand h1 {
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(34px, 6vw, 52px);
+  line-height: .95; letter-spacing: -.005em; text-transform: uppercase;
+}
+.brand h1 span { color: var(--accent); }
+.brand p { margin: 8px 0 0; color: var(--ink-2); max-width: 62ch; font-size: 17px; }
+.sources { font-size: 14px; color: var(--ink-2); display: flex; flex-direction: column; gap: 4px; align-items: flex-end; text-align: right; }
+.dates { display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: flex-end; font-size: 13px; color: var(--ink-3); }
+.dates b { color: var(--ink-2); font-weight: 500; }
+@media (max-width: 760px) {
+  .masthead { grid-template-columns: minmax(0, 1fr); }
+  .sources { align-items: flex-start; text-align: left; }
+  .dates { justify-content: flex-start; }
+}
+
+/* ---------- selection bar ---------- */
+.selbar {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 12px 14px; display: flex; flex-direction: column; gap: 10px;
+}
+.selrow { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; max-width: 100%;
+  border: 1px solid var(--accent-line); background: var(--accent-soft); color: var(--ink);
+  border-radius: 999px; padding: 3px 4px 3px 10px; font-size: 14px; line-height: 1.3;
+}
+.chip .x {
+  border: 0; background: transparent; width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center; color: var(--ink-2); font-size: 15px; line-height: 1;
+}
+.chip .x:hover { background: var(--surface); color: var(--ink); }
+.chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.empty-chips { color: var(--ink-3); font-size: 14px; }
+.presets { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.btn {
+  border: 1px solid var(--line-strong); background: var(--surface); border-radius: 8px;
+  padding: 5px 11px; font-size: 14px; font-weight: 500; line-height: 1.3;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.ghost { border-color: transparent; color: var(--ink-3); }
+.btn.ghost:hover { color: var(--ink); border-color: var(--line-strong); }
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; background: var(--surface); padding: 5px 11px; font-size: 14px; font-weight: 500; }
+.seg button + button { border-left: 1px solid var(--line-strong); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.sc-wrap { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 14px; color: var(--ink-2); }
+
+/* ---------- main grid ---------- */
+.layout { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 980px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+.panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); min-width: 0;
+}
+.panel-head { padding: 14px 16px 10px; display: flex; gap: 10px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+.panel-head p { margin: 2px 0 0; color: var(--ink-3); font-size: 14px; }
+.results { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+
+/* ---------- picker ---------- */
+.picker { position: sticky; top: 12px; display: flex; flex-direction: column; max-height: calc(100vh - 24px); }
+@media (max-width: 980px) { .picker { position: static; max-height: none; } }
+.picker-toggle { display: none; }
+@media (max-width: 980px) {
+  .picker-toggle { display: inline-flex; }
+  .picker.collapsed .picker-body { display: none; }
+}
+.picker-body { display: flex; flex-direction: column; min-height: 0; flex: 1; }
+.pk-controls { padding: 0 16px 10px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--line); }
+.search {
+  width: 100%; border: 1px solid var(--line-strong); background: var(--surface-2); border-radius: 8px;
+  padding: 8px 10px; font-size: 15px;
+}
+.search:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+.orgchips { display: flex; flex-wrap: wrap; gap: 4px; }
+.ochip {
+  border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 2px 9px;
+  font-size: 13px; color: var(--ink-2);
+}
+.ochip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.pk-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--ink-2); }
+.pk-row select { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 6px; padding: 3px 6px; font-size: 13px; max-width: 100%; }
+.pk-row label { display: inline-flex; gap: 5px; align-items: center; }
+.pk-list { overflow-y: auto; min-height: 0; flex: 1; padding: 4px 6px 10px; }
+@media (max-width: 980px) { .pk-list { max-height: 60vh; } }
+.pk-group { padding: 10px 10px 4px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); display: flex; justify-content: space-between; position: sticky; top: 0; background: var(--surface); z-index: 1; }
+.pk-item {
+  width: 100%; display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 9px; align-items: center;
+  border: 0; background: transparent; text-align: left; padding: 6px 10px; border-radius: 7px;
+}
+.pk-item:hover { background: var(--surface-2); }
+.pk-item .box {
+  width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--line-strong); display: grid; place-items: center;
+  font-size: 11px; color: transparent; line-height: 1;
+}
+.pk-item[aria-pressed="true"] .box { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.pk-item[aria-pressed="true"] .pk-name { font-weight: 600; }
+.pk-name { font-size: 14.5px; line-height: 1.3; overflow-wrap: anywhere; }
+.pk-meta { font-size: 12px; color: var(--ink-3); }
+.pk-rank { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--ink-2); text-align: right; white-space: nowrap; }
+.pk-rank small { font-family: var(--font-body); font-size: 11px; font-weight: 500; color: var(--ink-3); margin-right: 3px; }
+.pk-empty { padding: 20px 12px; color: var(--ink-3); font-size: 14px; }
+.pk-count { font-size: 13px; color: var(--ink-3); }
+
+/* ---------- shared state swatches (winner / tied / behind / not tested) ---------- */
+.key-sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; flex: none; vertical-align: -1px; }
+.key-sw.s-win { background: var(--accent); }
+.key-sw.s-tie { background: var(--tie-fill); }
+.key-sw.s-behind { background: var(--behind-fill); }
+.key-sw.s-none { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line-strong); }
+.via { font-size: 12px; font-weight: 400; color: var(--ink-3); white-space: nowrap; }
+
+/* ---------- cheat sheet ---------- */
+.cs-grid, .jb-grid { display: grid; gap: 0; overflow: hidden; border-top: 1px solid var(--line); margin-bottom: -1px; }
+.cs-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
+.cs-card, .job { border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-left: -1px; }
+.cs-card { background: var(--surface); padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.cs-head { display: flex; flex-direction: column; gap: 1px; }
+.cs-head h3 { font-family: var(--font-display); font-size: 23px; font-weight: 700; line-height: 1.05; letter-spacing: .005em; overflow-wrap: anywhere; }
+.cs-head span { font-size: 13px; color: var(--ink-3); }
+.cs-lines { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.cs-line { display: grid; grid-template-columns: 12px minmax(0, 1fr); gap: 4px 9px; align-items: start; }
+.cs-line .key-sw { margin-top: 4px; }
+.cs-line dt { font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); line-height: 1.3; }
+.cs-line dd { grid-column: 2; margin: 0; font-size: 15px; line-height: 1.4; color: var(--ink); }
+.cs-line.l-behind dd, .cs-line.l-none dd, .cs-line.l-solo dd { color: var(--ink-2); }
+.cs-empty { padding: 20px 16px; color: var(--ink-3); font-size: 15px; background: var(--surface); }
+.tie-note { margin: 0; border-top: 1px solid var(--line); padding: 12px 16px 14px; display: flex; gap: 9px; align-items: flex-start; font-size: 14px; color: var(--ink-2); max-width: 90ch; }
+.tie-note .key-sw { margin-top: 4px; }
+.tie-note b { color: var(--ink); font-weight: 600; }
+
+/* ---------- job board ---------- */
+.jb-key { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--ink-2); }
+.jb-key span { display: inline-flex; align-items: center; gap: 6px; }
+.jb-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 430px), 1fr)); border-radius: 0 0 var(--radius) var(--radius); }
+.job { background: var(--surface); padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.job-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.job-top h3 { font-size: 12.5px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); }
+.job-src { font-size: 12px; color: var(--ink-3); }
+.job-win { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.job-win b { font-family: var(--font-display); font-size: 22px; font-weight: 700; line-height: 1.1; overflow-wrap: anywhere; }
+.verdict { font-size: 13px; font-weight: 600; border-radius: 999px; padding: 1px 9px; border: 1px solid var(--line-strong); color: var(--ink-2); }
+.verdict.clear { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.verdict.toss { color: var(--tie); border-color: currentColor; }
+.jb-rows { list-style: none; margin: 2px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.jb-row { display: grid; grid-template-columns: minmax(0, 14em) minmax(0, 1fr) minmax(5.5em, max-content); gap: 2px 10px; align-items: center; font-size: 14px; }
+.jb-name { min-width: 0; line-height: 1.25; overflow-wrap: anywhere; color: var(--ink-2); }
+.jb-row.s-win .jb-name { color: var(--ink); font-weight: 600; }
+.jb-name .via { margin-left: 4px; }
+.jb-track { position: relative; height: 12px; border-left: 2px solid var(--line-strong); }
+.jb-track::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px dashed var(--line); }
+.jb-bar { position: absolute; left: 0; top: 1px; bottom: 1px; min-width: 3px; border-radius: 0 4px 4px 0; z-index: 1; }
+.jb-row.s-tie .jb-bar { background: var(--tie-fill); }
+.jb-row.s-behind .jb-bar { background: var(--behind-fill); }
+.jb-row.s-win .jb-track::before { content: ""; position: absolute; left: -2px; top: 0; width: 12px; height: 12px; border-radius: 0 4px 4px 0; background: var(--accent); z-index: 1; }
+.jb-bar.over { border-radius: 0; background-image: linear-gradient(90deg, transparent 0 calc(100% - 6px), var(--surface) calc(100% - 6px) calc(100% - 4px), transparent calc(100% - 4px)); }
+.jb-val { font-size: 13px; color: var(--ink-2); white-space: nowrap; text-align: right; }
+.jb-row.s-win .jb-val { color: var(--ink); font-weight: 600; }
+.jb-row.s-tie .jb-val { color: var(--tie); font-weight: 600; }
+.jb-missing { margin: 2px 0 0; font-size: 13px; color: var(--ink-3); }
+.jb-foot { padding: 10px 16px 14px; font-size: 13px; color: var(--ink-3); border-top: 1px solid var(--line); background: var(--surface); grid-column: 1 / -1; }
+@media (max-width: 560px) {
+  .jb-row { grid-template-columns: minmax(0, 1fr) minmax(5.5em, max-content); }
+  .jb-name { grid-column: 1 / -1; }
+}
+
+/* ---------- detailed numbers ---------- */
+.more { display: flex; flex-direction: column; gap: 18px; }
+.more > summary { list-style: none; }
+.more > summary::-webkit-details-marker { display: none; }
+.more-sum {
+  cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 12px 16px;
+}
+.more-sum:hover { border-color: var(--accent-line); }
+.more-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.more-title { font-family: var(--font-display); font-weight: 600; font-size: 22px; line-height: 1.15; }
+.more-desc { font-size: 14px; color: var(--ink-3); }
+.more-cue { flex: none; font-size: 14px; font-weight: 500; color: var(--accent); border: 1px solid var(--accent-line); border-radius: 8px; padding: 4px 11px; }
+.more-cue::before { content: "Show"; }
+.more[open] .more-cue::before { content: "Hide"; }
+.more-body { display: flex; flex-direction: column; gap: 18px; margin-top: 18px; }
+.sep-toggle { display: inline-flex; gap: 6px; align-items: center; margin-right: 8px; cursor: pointer; }
+.sep-toggle input { width: 16px; height: 16px; accent-color: var(--accent); margin: 0; }
+
+/* ---------- matrix ---------- */
+.cols-ctl { padding: 0 16px 12px; }
+.cols-ctl summary { cursor: pointer; font-size: 14px; color: var(--ink-2); font-weight: 500; width: fit-content; }
+.cols-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.cg { display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
+.cg-label { border: 0; background: transparent; padding: 2px 6px 2px 0; font-size: 13px; font-weight: 600; color: var(--ink); min-width: 9.5em; text-align: left; display: inline-flex; gap: 6px; align-items: center; }
+.cg-label .tick { width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid var(--line-strong); display: inline-grid; place-items: center; font-size: 10px; color: transparent; }
+.cg-label[data-state="all"] .tick { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.cg-label[data-state="some"] .tick { background: var(--line-strong); border-color: var(--line-strong); color: var(--surface); }
+.cchip { border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 1px 8px; font-size: 12.5px; color: var(--ink-3); }
+.cchip[aria-pressed="true"] { border-color: var(--accent-line); background: var(--accent-soft); color: var(--ink); }
+.cols-quick { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+
+.mx-scroll { overflow-x: auto; border-top: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
+table.mx { border-collapse: separate; border-spacing: 0; font-size: 13px; min-width: 100%; }
+.mx th, .mx td { padding: 0; }
+.mx thead th { background: var(--surface); font-weight: 500; color: var(--ink-2); vertical-align: bottom; }
+.mx .gh th { font-size: 11.5px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); text-align: left; padding: 10px 8px 2px; border-left: 1px solid var(--line); white-space: nowrap; }
+.mx .ch th { padding: 0; border-bottom: 1px solid var(--line-strong); }
+.mx .ch .colbtn {
+  border: 0; background: transparent; display: block; width: 100%; padding: 4px 8px 8px; text-align: left;
+  font-size: 12.5px; line-height: 1.25; color: var(--ink-2); min-width: 84px; max-width: 120px;
+}
+.mx .ch .colbtn:hover { color: var(--accent); }
+.mx .ch .colbtn[aria-sort] { color: var(--ink); font-weight: 600; }
+.mx .ch .colbtn[aria-sort]::after { content: " \2191"; color: var(--accent); }
+.mx .gstart { border-left: 1px solid var(--line); }
+.mx th.corner, .mx td.mname {
+  position: sticky; left: 0; z-index: 2; background: var(--surface);
+  border-right: 1px solid var(--line-strong); text-align: left;
+}
+.mx th.corner { padding: 10px 12px 8px; font-size: 12px; color: var(--ink-3); font-weight: 500; vertical-align: bottom; }
+.mx td.mname { padding: 6px 8px 6px 12px; min-width: 150px; max-width: 220px; }
+@media (max-width: 600px) { .mx td.mname { min-width: 118px; max-width: 140px; } .mx th.corner { min-width: 118px; } }
+.mname-in { display: flex; align-items: center; gap: 6px; justify-content: space-between; }
+.mname-txt { font-weight: 600; font-size: 13.5px; line-height: 1.25; overflow-wrap: anywhere; }
+.mname-org { display: block; font-weight: 400; font-size: 11.5px; color: var(--ink-3); }
+.rm { border: 0; background: transparent; color: var(--ink-3); width: 22px; height: 22px; border-radius: 50%; flex: none; font-size: 14px; }
+.rm:hover { background: var(--surface-2); color: var(--ink); }
+.mx tbody tr + tr td { border-top: 1px solid var(--surface); }
+.mx td.cell { padding: 2px; vertical-align: middle; }
+.cellbox {
+  border-radius: 6px; padding: 5px 7px 4px; min-height: 46px; display: flex; flex-direction: column; justify-content: center;
+  position: relative; box-shadow: inset 0 0 0 0 transparent;
+}
+.cellbox .rk { font-family: var(--font-display); font-weight: 600; font-size: 21px; line-height: 1; letter-spacing: .01em; }
+.cellbox .rk small { font-size: 12px; font-weight: 500; opacity: .8; margin-right: 1px; }
+.cellbox .sc { font-size: 11.5px; line-height: 1.2; opacity: .85; margin-top: 2px; white-space: nowrap; }
+.cellbox.h1 { background: var(--heat-1); color: var(--heat-ink-1); }
+.cellbox.h2 { background: var(--heat-2); color: var(--heat-ink-2); }
+.cellbox.h3 { background: var(--heat-3); color: var(--heat-ink-3); }
+.cellbox.h4 { background: var(--heat-4); color: var(--heat-ink-4); }
+.cellbox.h5 { background: var(--heat-5); color: var(--heat-ink-5); }
+.cellbox.lead { box-shadow: inset 0 0 0 2px var(--ink); }
+.cellbox .tag { position: absolute; top: 4px; right: 5px; font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; line-height: 1; }
+.cellbox .tag.tie { font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 11px; }
+.cellbox.na { background: transparent; color: var(--ink-3); align-items: center; font-size: 11.5px; font-style: italic; text-align: center; box-shadow: inset 0 0 0 1px var(--line); }
+.cellbox .cvia { font-size: 10.5px; line-height: 1.2; opacity: .8; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 104px; }
+.mx-foot { padding: 10px 16px 14px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; font-size: 12.5px; color: var(--ink-3); border-top: 1px solid var(--line); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; }
+.legend .sw { display: inline-flex; align-items: center; gap: 5px; }
+.legend .sw i { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid var(--line); }
+.legend .ring { width: 14px; height: 14px; border-radius: 3px; display: inline-block; box-shadow: inset 0 0 0 2px var(--ink); }
+.empty-state { padding: 28px 16px; color: var(--ink-3); font-size: 15px; border-top: 1px solid var(--line); }
+
+/* ---------- head-to-head ---------- */
+.h2h-ctl { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 14px; color: var(--ink-2); }
+.h2h-ctl select { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 8px; padding: 5px 8px; font-size: 14px; max-width: 100%; }
+.chart-wrap { position: relative; padding: 4px 16px 8px; border-top: 1px solid var(--line); }
+.chart-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart-wrap .axis text, .chart-wrap .lbl { fill: var(--ink-2); font-family: var(--font-body); }
+.tip {
+  position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); border-radius: 8px;
+  padding: 8px 10px; font-size: 12.5px; line-height: 1.4; max-width: 260px; box-shadow: var(--shadow); z-index: 5;
+}
+.tip b { font-weight: 600; }
+.chart-legend { padding: 0 16px 14px; display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12.5px; color: var(--ink-3); align-items: center; }
+.chart-legend svg { vertical-align: middle; margin-right: 4px; }
+.note { font-size: 13px; color: var(--ink-3); margin: 0; }
+
+/* ---------- price & speed ---------- */
+.cs-cost { font-size: 13px; color: var(--ink-2); margin-top: 3px; }
+.cs-cost.na { color: var(--ink-3); font-style: italic; }
+.pz-scroll { overflow-x: auto; border-top: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
+table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 14px; }
+.pz th, .pz td { padding: 8px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.pz thead th { font-size: 12px; font-weight: 600; color: var(--ink-3); vertical-align: bottom; padding: 0; background: var(--surface); }
+.pz thead th .pz-sort { border: 0; background: transparent; padding: 10px 10px 8px; width: 100%; text-align: inherit; font-size: 12px; font-weight: 600; letter-spacing: .03em; color: var(--ink-3); line-height: 1.25; white-space: normal; min-width: 64px; }
+.pz thead th .pz-sort:hover { color: var(--accent); }
+.pz thead th .pz-sort[aria-sort] { color: var(--ink); }
+.pz thead th .pz-sort[aria-sort="ascending"]::after { content: " \2191"; color: var(--accent); }
+.pz thead th .pz-sort[aria-sort="descending"]::after { content: " \2193"; color: var(--accent); }
+.pz thead th .pz-sort small { display: block; font-weight: 500; letter-spacing: 0; color: var(--ink-3); }
+.pz th.pz-l, .pz td.pz-l { text-align: left; }
+.pz td.pz-name { position: sticky; left: 0; z-index: 1; background: var(--surface); border-right: 1px solid var(--line); white-space: normal; min-width: 150px; max-width: 230px; }
+.pz thead th.pz-name { position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--line); }
+.pz-nm { font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+.pz-badges { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
+.badge { font-size: 11px; font-weight: 600; line-height: 1.4; border-radius: 999px; padding: 0 7px; border: 1px solid var(--accent-line); background: var(--accent-soft); color: var(--ink); white-space: nowrap; }
+.pz td.big { font-family: var(--font-display); font-size: 19px; font-weight: 600; color: var(--ink); }
+.pz td.nd { color: var(--ink-3); font-style: italic; font-size: 13px; }
+.pz td.agent { text-align: left; font-size: 13px; color: var(--ink-2); }
+.pz td.rate { font-size: 13px; color: var(--ink-2); }
+.pz td.rate b { font-weight: 600; color: var(--ink); }
+.pz td.rate .rel { display: block; font-size: 12px; color: var(--ink-3); line-height: 1.3; }
+@media (max-width: 600px) { .pz td.pz-name { min-width: 128px; max-width: 150px; } .pz th, .pz td { padding-left: 8px; padding-right: 8px; } }
+.pz td.rate .tie { color: var(--tie); font-weight: 600; }
+.pz tbody tr:last-child td { border-bottom: 0; }
+.pz .flag { color: var(--ink-3); cursor: help; margin-left: 1px; }
+.pz-ctl { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 14px; color: var(--ink-2); }
+.pz-ctl select { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 8px; padding: 5px 8px; font-size: 14px; max-width: 100%; }
+.pz-notes { margin: 0; padding: 12px 16px 14px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--ink-3); max-width: 100ch; }
+.pz-notes b { color: var(--ink-2); font-weight: 600; }
+.sc-title { padding: 14px 16px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 2px; }
+.sc-title h3 { font-size: 15px; font-weight: 600; }
+.sc-title p { margin: 0; font-size: 13.5px; color: var(--ink-3); }
+.scatter-wrap { position: relative; padding: 6px 16px 4px; }
+.scatter-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+.scatter-wrap text { font-family: var(--font-body); }
+.sc-legend { padding: 0 16px 12px; display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12.5px; color: var(--ink-3); align-items: center; }
+.sc-legend svg { vertical-align: middle; margin-right: 4px; }
+
+/* value one-liners on the job board */
+.jb-value { margin: 2px 0 0; font-size: 13.5px; line-height: 1.4; color: var(--ink-2); background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; }
+.jb-value b { color: var(--ink); font-weight: 600; }
+.jb-value + .jb-value { margin-top: -2px; }
+.jb-tag { font-size: 11px; font-weight: 600; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: 999px; padding: 0 6px; margin-left: 5px; white-space: nowrap; }
+.pk-price { font-size: 12px; color: var(--ink-2); }
+@media (prefers-reduced-motion: no-preference) {
+  .cellbox, .pk-item, .chip { transition: background-color .12s ease, box-shadow .12s ease; }
+}
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="brand">
+      <h1>Arena <span>Matchup</span></h1>
+      <p id="lede">Pick the models you care about from all 11 LMArena leaderboards and see which one wins each job. A model's effort levels (High, Max, Search…) count as one model, using whichever ranks best on each leaderboard. Ranks and ratings come from blind human votes; they say nothing about price or context window, which this dataset doesn't include.</p>
+    </div>
+    <div class="sources">
+      <div>Source: <a href="https://arena.ai/leaderboard" target="_blank" rel="noopener">arena.ai ↗</a> · <a href="https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset" target="_blank" rel="noopener">HF dataset lmarena-ai/leaderboard-dataset ↗</a></div>
+      <div class="dates" id="dates"></div>
+      <div class="muted" style="font-size:12px" id="buildinfo"></div>
+    </div>
+  </header>
+
+  <section class="selbar" aria-label="Selected models">
+    <div class="selrow">
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="selrow">
+      <div class="presets">
+        <span class="eyebrow" style="margin-right:2px">Quick picks</span>
+        <button class="btn" type="button" id="p-text">Top 10 text</button>
+        <button class="btn" type="button" id="p-webdev">Top 10 WebDev</button>
+        <button class="btn" type="button" id="p-flag" title="Each vendor's highest-ranked Text model: Anthropic, OpenAI, Google, xAI, DeepSeek, Alibaba, Moonshot, Z.ai">Flagship per vendor</button>
+        <button class="btn" type="button" id="p-cheap" data-price title="Takes the 20 best-ranked models on the Text leaderboard, keeps those with a known price, and picks the 6 with the lowest blended price per million tokens">Cheapest good models</button>
+        <button class="btn" type="button" id="p-fast" data-price data-speed title="Takes the 20 best-ranked models on the Text leaderboard, keeps those with speed data, and picks the 6 with the most tokens per second">Fastest good models</button>
+        <button class="btn ghost" type="button" id="p-clear">Clear</button>
+      </div>
+      <div class="sc-wrap">
+        <label class="sep-toggle" title="Off: each model's effort levels and setups (High, Max, Search…) are merged and the best-ranked one counts on each leaderboard."><input type="checkbox" id="sep"> Show each effort level separately</label>
+        <span title="Style control adjusts ratings for answer length and markdown formatting. It's the default view on arena.ai and applies to Text, Vision, Search and Document.">Style control</span>
+        <div class="seg" role="group" aria-label="Style control">
+          <button type="button" id="sc-on" aria-pressed="true">On</button>
+          <button type="button" id="sc-off" aria-pressed="false">Off</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="panel picker collapsed" id="picker" aria-label="Model picker">
+      <div class="panel-head">
+        <div>
+          <h2>Models</h2>
+          <p id="pk-total"></p>
+        </div>
+        <button class="btn picker-toggle" type="button" id="pk-toggle" aria-expanded="false">Browse models</button>
+      </div>
+      <div class="picker-body">
+        <div class="pk-controls">
+          <input class="search" id="pk-q" type="search" placeholder="Search models or vendors" autocomplete="off" aria-label="Search models">
+          <div class="orgchips" id="pk-orgs"></div>
+          <div class="pk-row">
+            <label>Vendor <select id="pk-org"></select></label>
+            <label>Arena <select id="pk-arena"></select></label>
+          </div>
+          <div class="pk-row" data-price>
+            <label title="Blended price: 3 parts input to 1 part output, per million tokens">Max price <select id="pk-maxp"><option value="0">Any</option><option value="1">Under $1/M</option><option value="3">Under $3/M</option><option value="10">Under $10/M</option></select></label>
+            <label data-speed title="Output tokens per second, OpenRouter 30-minute median">Min speed <select id="pk-mins"><option value="0">Any</option><option value="50">Over 50 tok/s</option><option value="100">Over 100 tok/s</option></select></label>
+          </div>
+          <div class="pk-row">
+            <label>Sort <select id="pk-sort"><option value="rank">Best rank</option><option value="cheap" data-price>Cheapest</option><option value="fast" data-price data-speed>Fastest</option><option value="name">Name</option></select></label>
+            <label><input type="checkbox" id="pk-group" checked> Group by vendor</label>
+            <span class="pk-count" id="pk-count"></span>
+          </div>
+        </div>
+        <div class="pk-list" id="pk-list" role="list"></div>
+      </div>
+    </aside>
+
+    <main class="results">
+      <section class="panel" aria-labelledby="cs-h">
+        <div class="panel-head">
+          <div>
+            <h2 id="cs-h">Cheat sheet</h2>
+            <p>What each of your picks is good at, compared only with each other. Picks that win the most jobs come first.</p>
+          </div>
+        </div>
+        <div class="cs-grid" id="cheat"></div>
+        <p class="tie-note" id="tie-note"><span class="key-sw s-tie" aria-hidden="true"></span><span><b>Tied</b> means too close to call based on the votes so far: the gap is smaller than the uncertainty in both ratings, so more votes could flip the order.</span></p>
+      </section>
+
+      <section class="panel" aria-labelledby="pz-h" id="pz-panel" data-price>
+        <div class="panel-head">
+          <div>
+            <h2 id="pz-h">Price and speed</h2>
+            <p id="pz-sub">What your picks cost and how fast they answer, next to how well they do on one job. Click a column to sort.</p>
+          </div>
+          <div class="pz-ctl"><label for="pz-job">Judge value on</label><select id="pz-job"></select></div>
+        </div>
+        <div id="pz-host"></div>
+        <div class="sc-title">
+          <h3 id="sc-h">Rating vs price</h3>
+          <p>Each dot is one of your picks. Further left is cheaper, higher up is rated better, so dots toward the top left are the best value.</p>
+        </div>
+        <div class="scatter-wrap" id="scatter"></div>
+        <div class="sc-legend" id="sc-legend"></div>
+        <div class="pz-notes" id="pz-notes"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="jb-h">
+        <div class="panel-head">
+          <div>
+            <h2 id="jb-h">Job board</h2>
+            <p id="jb-sub">Who wins each job, and how far behind the others are.</p>
+          </div>
+          <div class="jb-key" aria-label="Bar styles">
+            <span><i class="key-sw s-win"></i>Winner</span>
+            <span><i class="key-sw s-tie"></i>Tied with winner</span>
+            <span><i class="key-sw s-behind"></i>Behind</span>
+          </div>
+        </div>
+        <div class="jb-grid" id="jobs"></div>
+      </section>
+
+      <details class="more" id="more">
+        <summary class="more-sum">
+          <span class="more-txt"><span class="more-title">Detailed numbers</span><span class="more-desc">Rank matrix for every leaderboard and a head-to-head chart with confidence intervals.</span></span>
+          <span class="more-cue" aria-hidden="true"></span>
+        </summary>
+        <div class="more-body">
+      <section class="panel" aria-labelledby="mx-h">
+        <div class="panel-head">
+          <div>
+            <h2 id="mx-h">Rank matrix</h2>
+            <p>Big number: rank on that leaderboard. Small: rating ± half the confidence interval. Click a column to sort.</p>
+          </div>
+        </div>
+        <div class="cols-ctl">
+          <details id="cols-details">
+            <summary id="cols-summary">Choose columns</summary>
+            <div class="cols-grid" id="cols-grid"></div>
+            <div class="cols-quick">
+              <button class="btn" type="button" id="cols-default">Reset to default</button>
+              <button class="btn" type="button" id="cols-all">Show every category</button>
+            </div>
+          </details>
+        </div>
+        <div id="mx-host"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="h2h-h">
+        <div class="panel-head">
+          <div>
+            <h2 id="h2h-h">Head to head</h2>
+            <p>Rating with its confidence interval. Where a whisker reaches the shaded band, that model can't be told apart from the leader yet.</p>
+          </div>
+          <div class="h2h-ctl"><label for="h2h-cat">Leaderboard</label><select id="h2h-cat"></select></div>
+        </div>
+        <div class="chart-wrap" id="chart"></div>
+        <div class="chart-legend" id="chart-legend"></div>
+      </section>
+        </div>
+      </details>
+    </main>
+  </div>
+</div>
+
+<script>
+"use strict";
+const DATA = /*__ARENA_DATA__*/null;
+
+/* ================= data model (pure, testable in node) ================= */
+const ORG_LABELS = { anthropic: "Anthropic", openai: "OpenAI", google: "Google", xai: "xAI", deepseek: "DeepSeek", alibaba: "Alibaba", moonshot: "Moonshot", zai: "Z.ai", meta: "Meta", mistral: "Mistral", bfl: "Black Forest Labs", bytedance: "ByteDance", minimax: "MiniMax", tencent: "Tencent", nvidia: "NVIDIA", microsoft: "Microsoft", "microsoft-ai": "Microsoft AI", amazon: "Amazon", cohere: "Cohere", "luma-ai": "Luma AI", "ant-group": "Ant Group", stepfun: "StepFun", xiaomi: "Xiaomi", allenai: "Ai2", "": "Unlisted" };
+function orgLabel(slug) {
+  if (slug in ORG_LABELS) return ORG_LABELS[slug];
+  return slug.split("-").map(w => w ? w[0].toUpperCase() + w.slice(1) : w).join(" ");
+}
+
+function decode(D) {
+  const arenas = D.arenas.map(([id, label, stype, hasSC, date], i) => ({ i, id, label, stype, hasSC: !!hasSC, date }));
+  const groups = D.groups.map(([id, label, ai], i) => ({ i, id, label, arena: arenas[ai] }));
+  const unpack = flat => {
+    const m = new Map();
+    for (let j = 0; j < flat.length; j += 6) m.set(flat[j], { rank: flat[j + 1], score: flat[j + 2], lo: flat[j + 3], hi: flat[j + 4], votes: flat[j + 5] });
+    return m;
+  };
+  const base = D.cats.map(([ai, cat, label, gi, date, on], i) => ({
+    i, arena: arenas[ai], cat, label, group: groups[gi], date, defOn: !!on,
+    d: unpack(D.rows[i][0]), r: D.rows[i][1].length ? unpack(D.rows[i][1]) : null }));
+  const vnames = D.models.map(m => m[0]);
+  // variant space: every leaderboard entry on its own
+  const vEnts = D.models.map(([name, oi, id], i) => ({ name, org: D.orgs[oi], id, members: [i], vias: [""] }));
+  // family space: effort levels / setups / dates of one model folded together
+  const fEnts = (D.fams && D.fams.length ? D.fams : D.models.map(([name, oi, id], i) => [name, oi, id, [i], [""]]))
+    .map(([name, oi, id, members, vias]) => ({ name, org: D.orgs[oi], id, members, vias }));
+  const famOf = new Array(D.models.length);
+  fEnts.forEach((f, fi) => f.members.forEach(vi => { famOf[vi] = fi; }));
+  // prices are per family; a single variant shows its family's price and only its own agent cost
+  const hasPrices = Array.isArray(D.prices) && D.prices.length === fEnts.length;
+  if (hasPrices) {
+    fEnts.forEach((f, fi) => { f.price = parsePrice(D.prices[fi], null); });
+    vEnts.forEach((v, vi) => { v.price = famOf[vi] != null ? parsePrice(D.prices[famOf[vi]], vi) : null; });
+  }
+  const V = makeSpace(arenas, groups, base, vEnts, vnames, false);
+  const F = makeSpace(arenas, groups, base, fEnts, vnames, true);
+  V.flagshipOrgs = F.flagshipOrgs = D.flagshipOrgs;
+  // speed is optional (needs an OpenRouter API key at build time)
+  const hasSpeed = hasPrices && fEnts.some(f => f.price && f.price.tps > 0);
+  V.hasPrices = F.hasPrices = hasPrices;
+  V.hasSpeed = F.hasSpeed = hasSpeed;
+  return { V, F, famOf, hasPrices, hasSpeed };
+}
+
+/* compact price row from build_page.py: [in, out, blend, ctx, tok/s, ttft, flags, agent, note]
+   flags 1 = from OpenRouter, 2 = OpenRouter listed price (maybe a third-party host), 4 = free tier (price unknown) */
+function parsePrice(p, vi) {
+  if (!p) return null;
+  const [inp, out, blend, ctx, tps, ttft, flags, agent, note] = p;
+  let ag = (agent || []).map(([effort, cost, toks, avi]) => ({ effort, cost, toks, vi: avi }));
+  if (vi != null) ag = ag.filter(a => a.vi === vi);
+  return { inp, out, blend, ctx, tps, ttft, flags: flags || 0, agent: ag, note: note || "" };
+}
+const blendOf = m => (m && m.price && m.price.blend > 0) ? m.price.blend : null;
+const tpsOf = m => (m && m.price && m.price.tps > 0) ? m.price.tps : null;
+
+function fmtUsd(v) {
+  if (v == null) return "no data";
+  const r2 = Math.round(v * 100) / 100;
+  if (v >= 0.1 && Number.isInteger(r2)) return "$" + r2;
+  if (v >= 0.1) return "$" + v.toFixed(2);
+  return "$" + v.toFixed(3).replace(/0$/, "");
+}
+function fmtAxisUsd(v) { return v >= 1 ? "$" + v : "$" + String(v).replace(/^0/, "0"); }
+function fmtCtx(v) {
+  if (!v) return "no data";
+  if (v >= 1e6) { const x = v / 1e6; return (x < 1.1 ? "1" : x.toFixed(1).replace(/\.0$/, "")) + "M"; }
+  return Math.round(v / 1000) + "K";
+}
+let HAS_SPEED = true;  // set in boot(); false when the build had no speed data
+function costLine(m) {
+  const b = blendOf(m), t = tpsOf(m);
+  if (!HAS_SPEED) return b != null ? fmtUsd(b) + " / M tokens" : "";
+  if (b == null && t == null) return "";
+  return `${b != null ? fmtUsd(b) + " / M tokens" : "price: no data"} · ${t != null ? Math.round(t) + " tok/s" : "speed: no data"}`;
+}
+/* "half the price", "38× cheaper", "25% cheaper" */
+function cheaperPhrase(cand, lead) {
+  const k = lead / cand;
+  if (k >= 1.9 && k < 2.15) return "at half the price";
+  if (k >= 2.15) return `and ${k < 10 ? k.toFixed(1).replace(/\.0$/, "") : Math.round(k)}× cheaper`;
+  return `and ${Math.round((1 - cand / lead) * 100)}% cheaper`;
+}
+
+const CLOSE_PTS = 15;
+/* picks that are as good as the winner for this job: CI-tied, or (rating boards) within CLOSE_PTS */
+function closeRows(J) {
+  const bt = J.c.arena.stype === "bt";
+  return J.A.rows.filter(r => r.isLead || r.tied || (bt && J.A.lead.score - r.score <= CLOSE_PTS));
+}
+
+/* value one-liners for one job: cheaper close pick, and the fastest close pick */
+function valueNotes(S, J) {
+  const out = { value: null, fast: null, fastTag: null };
+  if (!S.hasPrices || J.A.rows.length < 2) return out;
+  const L = J.A.lead, lm = S.models[L.mi], bt = J.c.arena.stype === "bt";
+  const close = closeRows(J);
+  const relation = r => r.tied ? "tied with the winner" : `${Math.round(L.score - r.score)} pts behind the winner`;
+  const lb = blendOf(lm);
+  if (lb != null) {
+    const cheaper = close.filter(r => !r.isLead && blendOf(S.models[r.mi]) != null && blendOf(S.models[r.mi]) <= lb * 0.85)
+      .sort((a, b) => blendOf(S.models[a.mi]) - blendOf(S.models[b.mi]) || a.rank - b.rank);
+    if (cheaper.length) {
+      const r = cheaper[0], cb = blendOf(S.models[r.mi]);
+      out.value = { mi: r.mi, row: r, text: `${relation(r)} ${cheaperPhrase(cb, lb)} (${fmtUsd(cb)} vs ${fmtUsd(lb)} per M)` };
+      // agent board: effort levels write very different token counts, so add the measured cost per task
+      if (J.c.arena.id === "agent") {
+        const task = (m, row) => (m.price && m.price.agent || []).find(a => a.vi === row.vi) || null;
+        const ct = task(S.models[r.mi], r), lt = task(lm, L);
+        if (ct && lt) out.value.tail = `. Per agent task it costs ${fmtUsd(ct.cost)} (${ct.effort}) vs ${fmtUsd(lt.cost)} (${lt.effort})` + (ct.cost > lt.cost ? ", because it writes more tokens" : "");
+      }
+    }
+  }
+  const sped = close.filter(r => tpsOf(S.models[r.mi]) != null).sort((a, b) => tpsOf(S.models[b.mi]) - tpsOf(S.models[a.mi]));
+  if (sped.length > 1) {
+    const r = sped[0], t = tpsOf(S.models[r.mi]), lt = tpsOf(lm);
+    out.fastTag = r.mi;
+    if (!r.isLead && (lt == null || t >= lt * 1.25)) {
+      const fb = blendOf(S.models[r.mi]);
+      out.fast = { mi: r.mi, row: r, text: `${relation(r)}, ${Math.round(t)} tok/s` + (lt != null ? ` vs ${Math.round(lt)} for the winner` : "") +
+        (fb != null && lb != null && fb > lb * 1.15 ? `, but pricier (${fmtUsd(fb)} vs ${fmtUsd(lb)} per M)` : "") };
+      if (out.value && out.value.mi === r.mi) { out.value.text += lt != null ? `, and faster (${Math.round(t)} vs ${Math.round(lt)} tok/s)` : `, ${Math.round(t)} tok/s`; out.fast.merged = true; }
+    }
+  }
+  if (out.value && out.value.tail) out.value.text += out.value.tail;
+  return out;
+}
+
+/* presets: of the top N on the Text leaderboard, the k cheapest or fastest */
+function presetBy(S, sc, by, n = 20, k = 6) {
+  const top = presetTop(S, "text/overall", n, sc);
+  const val = by === "fast" ? tpsOf : blendOf;
+  return top.filter(mi => val(S.models[mi]) != null)
+    .sort((a, b) => by === "fast" ? val(S.models[b]) - val(S.models[a]) : val(S.models[a]) - val(S.models[b]))
+    .slice(0, k);
+}
+
+/* price table rows for the selected models, with badges and the chosen job's rating */
+const PZ_COLS = [
+  ["name", "Model", 1], ["blend", "Blended", 1], ["tps", "Speed", -1], ["rate", "Rating", -1], ["ttft", "First token", 1],
+  ["inp", "Input", 1], ["out", "Output", 1], ["ctx", "Context", -1], ["agent", "Agent task", 1],
+];
+function priceTable(S, sel, job, sc, sort) {
+  const c = job ? S.byKey.get(job.key) : null;
+  const A = c ? analyze(c, sel, sc) : null;
+  const rowOf = mi => A && A.rows.find(r => r.mi === mi) || null;
+  const rows = sel.map(mi => {
+    const m = S.models[mi], p = m.price || {};
+    const ag = (p.agent || []).slice().sort((a, b) => a.cost - b.cost);
+    return { mi, m, r: rowOf(mi), blend: blendOf(m), inp: p.flags & 4 ? null : (p.inp ?? null), out: p.flags & 4 ? null : (p.out ?? null),
+      tps: tpsOf(m), ttft: p.ttft || null, ctx: p.ctx || null, agent: ag, agentMin: ag.length ? ag[0].cost : null, badges: [] };
+  });
+  const pickMin = (key) => { const xs = rows.filter(x => x[key] != null); return xs.length > 1 ? xs.reduce((a, b) => b[key] < a[key] ? b : a) : null; };
+  const pickMax = (key) => { const xs = rows.filter(x => x[key] != null); return xs.length > 1 ? xs.reduce((a, b) => b[key] > a[key] ? b : a) : null; };
+  const cheap = pickMin("blend"), fast = pickMax("tps");
+  if (cheap) cheap.badges.push("Cheapest");
+  if (fast) fast.badges.push("Fastest");
+  // best value: cheapest pick that is as good as the best pick on the chosen job
+  let best = null;
+  if (A && A.lead && A.rows.length > 1) {
+    const bt = c.arena.stype === "bt";
+    const ok = rows.filter(x => x.r && x.blend != null && (x.r.isLead || x.r.tied || (bt && A.lead.score - x.r.score <= CLOSE_PTS)));
+    if (ok.length) best = ok.reduce((a, b) => b.blend < a.blend ? b : a);
+    if (best) best.badges.push("Best value");
+  }
+  const key = sort && sort.key || "blend", dir = sort && sort.dir || 1;
+  const val = x => key === "name" ? x.m.name.toLowerCase() : key === "rate" ? (x.r ? x.r.score : null) : key === "agent" ? x.agentMin : x[key];
+  rows.sort((a, b) => {
+    const va = val(a), vb = val(b);
+    if (va == null && vb == null) return sel.indexOf(a.mi) - sel.indexOf(b.mi);
+    if (va == null) return 1; if (vb == null) return -1;
+    return (va < vb ? -1 : va > vb ? 1 : 0) * dir || sel.indexOf(a.mi) - sel.indexOf(b.mi);
+  });
+  return { rows, A, c, cheap, fast, best };
+}
+
+/* log-scale ticks covering [lo, hi] */
+function logTicks(lo, hi) {
+  const base = [];
+  for (let e = -3; e <= 3; e++) for (const f of [1, 3]) base.push(+(f * Math.pow(10, e)).toFixed(6));
+  let t = base.filter(v => v >= lo && v <= hi);
+  if (t.length < 3) {
+    const more = [];
+    for (let e = -3; e <= 3; e++) for (const f of [1, 2, 5]) more.push(+(f * Math.pow(10, e)).toFixed(6));
+    t = [...new Set([...t, ...more.filter(v => v >= lo && v <= hi)])].sort((a, b) => a - b);
+  }
+  return t;
+}
+
+/* One "space" = a list of selectable entities plus every leaderboard re-keyed by entity.
+   For a family, each board keeps its best-ranked variant and remembers which one (via). */
+function makeSpace(arenas, groups, base, ents, vnames, fam) {
+  const entOf = new Map();
+  ents.forEach((e, ei) => e.members.forEach((vi, k) => entOf.set(vi, [ei, e.vias[k] || ""])));
+  const better = (a, b) => a.rank < b.rank || (a.rank === b.rank && a.score > b.score);
+  const rekey = src => {
+    if (!src) return null;
+    const out = new Map();
+    for (const [vi, row] of src) {
+      const hit = entOf.get(vi);
+      if (!hit) continue;
+      const cur = out.get(hit[0]);
+      const cand = { ...row, vi, via: hit[1], vname: vnames[vi] };
+      if (!cur || better(cand, cur)) out.set(hit[0], cand);
+    }
+    return out;
+  };
+  const cats = base.map(b => ({ i: b.i, arena: b.arena, cat: b.cat, label: b.label, group: b.group, date: b.date, defOn: b.defOn,
+    key: b.arena.id + "/" + b.cat, d: rekey(b.d), r: rekey(b.r), n: b.d.size, nr: b.r ? b.r.size : 0,
+    full: (b.cat === "overall" ? b.arena.label : b.arena.label + " · " + b.label) }));
+  const models = ents.map((e, i) => ({ ...e, i, nvar: e.members.length, norm: normTxt(e.name + " " + orgLabel(e.org) + " " + e.members.map(vi => vnames[vi]).join(" ")) }));
+  const byKey = new Map(cats.map(c => [c.key, c]));
+  const byId = new Map(models.map(m => [m.id, m]));
+  const textOverall = byKey.get("text/overall");
+  for (const m of models) {
+    m.arenas = new Set();
+    m.textRank = textOverall && textOverall.d.has(m.i) ? textOverall.d.get(m.i).rank : null;
+    m.best = null; // best overall-board percentile, for a hint
+    for (const c of cats) {
+      const row = c.d.get(m.i);
+      if (!row) continue;
+      m.arenas.add(c.arena.id);
+      if (c.cat === "overall") {
+        const p = (row.rank - 1) / Math.max(1, c.n - 1);
+        if (!m.best || p < m.best.p) m.best = { p, rank: row.rank, cat: c };
+      }
+    }
+  }
+  return { fam, arenas, groups, models, cats, byKey, byId };
+}
+
+/* short "via" label: drop pure date stamps, they rarely help a reader */
+function viaShort(via) {
+  if (!via) return "";
+  return via.split(", ").filter(t => !/^(\d[\d-]*|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]* \d{4})$/i.test(t)).join(", ");
+}
+
+function normTxt(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, ""); }
+
+function boardOf(c, sc) { return (!sc && c.r) ? c.r : c.d; }
+
+function rankedIn(c, sc) {
+  // models on this board sorted by rank, then score
+  const b = boardOf(c, sc);
+  return [...b.entries()].sort((x, y) => x[1].rank - y[1].rank || y[1].score - x[1].score).map(e => e[0]);
+}
+
+function presetTop(S, key, n, sc) {
+  const c = S.byKey.get(key);
+  return c ? rankedIn(c, sc).slice(0, n) : [];
+}
+
+function presetFlagship(S, sc) {
+  const order = ["text/overall", "webdev/overall", "vision/overall", "agent/overall"];
+  const out = [];
+  for (const org of S.flagshipOrgs) {
+    let pick = null;
+    for (const key of order) {
+      const c = S.byKey.get(key);
+      if (!c) continue;
+      const hit = rankedIn(c, sc).find(mi => S.models[mi].org === org);
+      if (hit !== undefined) { pick = hit; break; }
+    }
+    if (pick !== null) out.push(pick);
+  }
+  return out;
+}
+
+/* column analysis for one board among the selected models */
+function analyze(c, sel, sc) {
+  const b = boardOf(c, sc);
+  const rows = sel.filter(mi => b.has(mi)).map(mi => ({ mi, ...b.get(mi) }));
+  rows.sort((x, y) => x.rank - y.rank || y.score - x.score);
+  const lead = rows[0] || null;
+  for (const r of rows) {
+    r.isLead = r === lead;
+    r.tied = !r.isLead && lead && r.hi >= lead.lo;
+  }
+  return { rows, lead, n: (!sc && c.r) ? c.nr : c.n };
+}
+
+function fmtScore(stype, v, signed) {
+  if (v == null) return "–";
+  if (stype === "bt") return String(Math.round(v));
+  const s = v.toFixed(3);
+  return signed && v > 0 ? "+" + s : s;
+}
+function fmtDiff(stype, v) { return stype === "bt" ? Math.round(v) + " pts" : v.toFixed(3); }
+
+const JOBS = [
+  ["chat", "General chat", "text/overall"],
+  ["code", "Coding", "text/coding"],
+  ["web", "Web/app building", "webdev/overall"],
+  ["reason", "Hard reasoning", "text/hard_prompts"],
+  ["math", "Math", "text/math"],
+  ["write", "Writing", "text/creative_writing"],
+  ["long", "Long documents", "text/longer_query"],
+  ["instr", "Instruction following", "text/instruction_following"],
+  ["multi", "Multi-turn", "text/multi_turn"],
+  ["vision", "Vision", "vision/overall"],
+  ["search", "Search", "search/overall"],
+  ["docs", "Documents", "document/overall"],
+  ["agent", "Agentic work", "agent/overall"],
+].map(([id, label, key]) => ({ id, label, key }));
+
+/* one entry per job that has a leaderboard; kind: clear | toss | solo | none */
+function jobBoard(S, sel, sc) {
+  const out = [];
+  for (const j of JOBS) {
+    const c = S.byKey.get(j.key);
+    if (!c) continue;
+    const A = analyze(c, sel, sc);
+    const ranked = new Set(A.rows.map(r => r.mi));
+    for (const r of A.rows) {
+      r.gap = A.lead.score - r.score;
+      r.state = r.isLead ? "win" : r.tied ? "tie" : "behind";
+    }
+    const tiedWith = A.rows.filter(r => r.tied).map(r => r.mi);
+    const kind = !A.rows.length ? "none" : A.rows.length === 1 ? "solo" : tiedWith.length ? "toss" : "clear";
+    out.push({ ...j, c, A, kind, tiedWith, missing: sel.filter(mi => !ranked.has(mi)) });
+  }
+  return out;
+}
+
+/* per pick: which jobs it wins, ties for, trails in, or wasn't tested on */
+function cheatSheet(sel, jobs) {
+  const by = new Map(sel.map(mi => [mi, { mi, best: [], tied: [], solo: [], behind: [], untested: [] }]));
+  for (const J of jobs) {
+    if (J.kind === "none") continue;
+    for (const mi of J.missing) by.get(mi).untested.push(J.label);
+    for (const r of J.A.rows) {
+      const o = by.get(r.mi);
+      if (J.kind === "solo") o.solo.push(J.label);
+      else if (r.isLead) (J.kind === "clear" ? o.best : o.tied).push(J.label);
+      else if (r.tied) o.tied.push(J.label);
+      else o.behind.push(J.label);
+    }
+  }
+  return [...by.values()].sort((a, b) => b.best.length - a.best.length || b.tied.length - a.tied.length ||
+    a.behind.length - b.behind.length || sel.indexOf(a.mi) - sel.indexOf(b.mi));
+}
+
+function listNames(names, max) {
+  if (names.length <= max) return names.length > 1 ? names.slice(0, -1).join(", ") + " and " + names[names.length - 1] : names.join("");
+  return names.slice(0, max).join(", ") + ` and ${names.length - max} more`;
+}
+
+function fmtGap(stype, gap) {
+  if (stype === "bt") { const g = Math.round(gap); return g < 1 ? "<1 pt back" : `${g} pts back`; }
+  return gap < 0.0005 ? "<0.001 back" : `${gap.toFixed(3)} back`;
+}
+
+function esc(s) { return String(s).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch])); }
+
+function heatClass(rank, n) {
+  const p = (rank - 1) / Math.max(1, n - 1);
+  return p <= 0.02 ? "h1" : p <= 0.10 ? "h2" : p <= 0.25 ? "h3" : p <= 0.50 ? "h4" : "h5";
+}
+
+function niceTicks(lo, hi, want) {
+  const span = hi - lo || 1;
+  const raw = span / want;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1, 2, 2.5, 5, 10].map(f => f * mag).find(s => span / s <= want) || 10 * mag;
+  const t = [];
+  for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) t.push(+v.toFixed(6));
+  return { ticks: t, step };
+}
+
+/* hash: #m-<id>-<id>...[-raw][-v]   (-v = effort levels shown separately) */
+function encodeHash(S, st) {
+  const ids = st.sel.map(mi => S.models[mi].id);
+  return "m" + (ids.length ? "-" + ids.join("-") : "") + (st.sc ? "" : "-raw") + (st.fam ? "" : "-v");
+}
+function decodeHash(h) {
+  h = (h || "").replace(/^#/, "");
+  if (!/^m(-[a-z0-9]+)*$/.test(h)) return null;
+  const parts = h.split("-").slice(1);
+  return { ids: parts.filter(p => p !== "raw" && p !== "v"), sc: !parts.includes("raw"), fam: !parts.includes("v") };
+}
+/* ids from a hash or storage -> indices in the wanted space. Family ids and variant ids
+   both resolve in either space; unknown ids (models that left the data) are skipped. */
+function resolveIds(SP, ids, fam) {
+  const out = [];
+  const add = i => { if (i != null && !out.includes(i)) out.push(i); };
+  for (const id of ids || []) {
+    if (typeof id !== "string") continue;
+    const f = SP.F.byId.get(id), v = SP.V.byId.get(id);
+    if (fam) { if (f) add(f.i); else if (v) add(SP.famOf[v.i]); }
+    else { if (v) add(v.i); else if (f) f.members.forEach(add); }
+  }
+  return out;
+}
+
+/* ================= UI ================= */
+const STORE_KEY = "arena-matchup-v1";
+function loadStore() { try { const s = localStorage.getItem(STORE_KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
+function saveStore(obj) { try { localStorage.setItem(STORE_KEY, JSON.stringify(obj)); } catch (e) { /* storage unavailable */ } }
+
+function boot() {
+  const SP = decode(DATA);
+  HAS_SPEED = SP.hasSpeed;
+  let S = SP.F;
+  const $ = id => document.getElementById(id);
+  const st = {
+    sel: [], sc: true, fam: true, cols: new Set(S.cats.filter(c => c.defOn).map(c => c.i)),
+    sortCol: S.byKey.get("text/overall") ? S.byKey.get("text/overall").i : -1,
+    h2h: "text/overall", q: "", org: "all", arena: "any", sort: "rank", group: true, more: false,
+    maxp: 0, mins: 0, psort: { key: "blend", dir: 1 }, vjob: "chat",
+  };
+
+  // restore: hash wins, then local storage, then a sensible example selection
+  const saved = loadStore();
+  if (saved) {
+    if (Array.isArray(saved.cols)) {
+      const want = new Set(saved.cols);
+      st.cols = new Set(S.cats.filter(c => want.has(c.key)).map(c => c.i));
+    }
+    if (typeof saved.h2h === "string") st.h2h = saved.h2h;
+    if (saved.more === true) st.more = true;
+    if (typeof saved.vjob === "string") st.vjob = saved.vjob;
+    if (saved.psort && typeof saved.psort.key === "string" && PZ_COLS.some(c => c[0] === saved.psort.key)) st.psort = { key: saved.psort.key, dir: saved.psort.dir === -1 ? -1 : 1 };
+  }
+  const fromHash = decodeHash(location.hash);
+  if (fromHash && fromHash.ids.length) {
+    st.fam = fromHash.fam; st.sc = fromHash.sc;
+    st.sel = resolveIds(SP, fromHash.ids, st.fam);
+  } else if (saved && Array.isArray(saved.sel) && saved.sel.length) {
+    st.fam = saved.fam !== false; st.sc = saved.sc !== false;
+    st.sel = resolveIds(SP, saved.sel, st.fam);
+  }
+  S = st.fam ? SP.F : SP.V;
+  if (!st.sel.length) st.sel = presetFlagship(S, true);
+  $("sep").checked = !st.fam;
+  $("more").open = st.more;
+  // no price file at build time: hide every price control and section
+  if (!SP.hasPrices) document.querySelectorAll("[data-price]").forEach(el => { el.hidden = true; if (el.tagName === "OPTION") el.remove(); });
+  else if (!SP.hasSpeed) {
+    document.querySelectorAll("[data-speed]").forEach(el => { el.hidden = true; if (el.tagName === "OPTION") el.remove(); });
+    $("pz-h").textContent = "Price";
+    $("pz-sub").textContent = "What your picks cost, next to how well they do on one job. Click a column to sort.";
+    $("lede").textContent = "Pick the models you care about from all 11 LMArena leaderboards and see which one wins each job and what it costs. A model's effort levels (High, Max, Search…) count as one model, using whichever ranks best on each leaderboard. Ranks and ratings come from blind human votes; prices come from models.dev and OpenRouter.";
+  }
+  else $("lede").textContent = "Pick the models you care about from all 11 LMArena leaderboards and see which one wins each job, what it costs and how fast it is. A model's effort levels (High, Max, Search…) count as one model, using whichever ranks best on each leaderboard. Ranks and ratings come from blind human votes; prices and speeds come from models.dev and OpenRouter.";
+
+  /* ---- header ---- */
+  $("dates").innerHTML = S.arenas.map(a => `<span><b>${esc(a.label)}</b> ${fmtDate(a.date)}</span>`).join("");
+  $("buildinfo").textContent = `Snapshot dates per arena. Fetched ${DATA.fetched || "?"}, dataset revision ${DATA.rev || "?"}.`;
+  let orgCounts = new Map();
+  function renderPickerMeta() {
+    $("pk-total").textContent = S.fam
+      ? `${S.models.length} models (${SP.V.models.length} entries with effort levels merged) across ${S.arenas.length} arenas`
+      : `${S.models.length} entries across ${S.arenas.length} arenas, each effort level separate`;
+    orgCounts = new Map();
+    for (const m of S.models) orgCounts.set(m.org, (orgCounts.get(m.org) || 0) + 1);
+    const orgsSorted = [...orgCounts.keys()].sort((a, b) => orgLabel(a).localeCompare(orgLabel(b)));
+    $("pk-org").innerHTML = `<option value="all">All vendors</option>` + orgsSorted.map(o => `<option value="${esc(o)}">${esc(orgLabel(o))} (${orgCounts.get(o)})</option>`).join("");
+  }
+  renderPickerMeta();
+  $("pk-arena").innerHTML = `<option value="any">Any arena</option>` + S.arenas.map(a => `<option value="${a.id}">${esc(a.label)}</option>`).join("");
+  const chipOrgs = ["all", ...S.flagshipOrgs, "meta", "mistral"].filter(o => o === "all" || orgCounts.has(o));
+  function renderOrgChips() {
+    $("pk-orgs").innerHTML = chipOrgs.map(o => `<button type="button" class="ochip" data-org="${esc(o)}" aria-pressed="${st.org === o}">${o === "all" ? "All" : esc(orgLabel(o))}</button>`).join("");
+    $("pk-org").value = orgCounts.has(st.org) || st.org === "all" ? st.org : "all";
+  }
+
+  function pickerRows() {
+    const q = normTxt(st.q);
+    let list = S.models.filter(m =>
+      (st.org === "all" || m.org === st.org) &&
+      (st.arena === "any" || m.arenas.has(st.arena)) &&
+      (!q || m.norm.includes(q)) &&
+      (!st.maxp || (blendOf(m) != null && blendOf(m) < st.maxp)) &&
+      (!st.mins || (tpsOf(m) != null && tpsOf(m) > st.mins)));
+    const rk = m => m.textRank != null ? m.textRank : 10000 + (m.best ? m.best.p * 1000 : 2000);
+    const unk = (v, big) => v == null ? big : v;
+    if (st.sort === "name") list.sort((a, b) => a.name.localeCompare(b.name));
+    else if (st.sort === "cheap") list.sort((a, b) => unk(blendOf(a), 1e9) - unk(blendOf(b), 1e9) || rk(a) - rk(b));
+    else if (st.sort === "fast") list.sort((a, b) => unk(tpsOf(b), -1) - unk(tpsOf(a), -1) || rk(a) - rk(b));
+    else list.sort((a, b) => rk(a) - rk(b) || a.i - b.i);
+    return list;
+  }
+  function hintFor(m) {
+    if (st.arena !== "any" && st.arena !== "text") {
+      const c = S.byKey.get(st.arena + "/overall");
+      const r = c && boardOf(c, st.sc).get(m.i);
+      if (r) return `<small>${esc(c.arena.label)}</small>#${r.rank}`;
+    }
+    const t = S.byKey.get("text/overall");
+    const tr = t && boardOf(t, st.sc).get(m.i);
+    if (tr) return `<small>Text</small>#${tr.rank}`;
+    if (m.best) return `<small>${esc(m.best.cat.arena.label)}</small>#${m.best.rank}`;
+    return "";
+  }
+  function itemHTML(m) {
+    const on = st.sel.includes(m.i);
+    const n = m.arenas.size;
+    return `<button type="button" class="pk-item" role="listitem" data-mi="${m.i}" aria-pressed="${on}"${m.nvar > 1 ? ` title="${esc(m.members.map(vi => SP.V.models[vi].name).join("\n"))}"` : ""}>
+      <span class="box" aria-hidden="true">✓</span>
+      <span><span class="pk-name">${esc(m.name)}</span><br><span class="pk-meta">${esc(orgLabel(m.org))} · ${n} arena${n > 1 ? "s" : ""}${m.nvar > 1 ? ` · ${m.nvar} variants` : ""}</span>${costLine(m) ? `<br><span class="pk-price num">${esc(costLine(m))}</span>` : ""}</span>
+      <span class="pk-rank num">${hintFor(m)}</span></button>`;
+  }
+  function renderPicker() {
+    const list = pickerRows();
+    $("pk-count").textContent = `${list.length} shown`;
+    if (!list.length) { $("pk-list").innerHTML = `<div class="pk-empty">No models match. Try a shorter search, pick “All” vendors${st.maxp || st.mins ? ", or loosen the price and speed filters (models with no price or speed data are hidden while they're on)" : ""}.</div>`; return; }
+    if (st.group) {
+      const groups = new Map();
+      for (const m of list) { if (!groups.has(m.org)) groups.set(m.org, []); groups.get(m.org).push(m); }
+      const keys = [...groups.keys()];
+      if (st.sort === "name") keys.sort((a, b) => orgLabel(a).localeCompare(orgLabel(b)));
+      $("pk-list").innerHTML = keys.map(o => `<div class="pk-group"><span>${esc(orgLabel(o))}</span><span>${groups.get(o).length}</span></div>` + groups.get(o).map(itemHTML).join("")).join("");
+    } else {
+      $("pk-list").innerHTML = list.map(itemHTML).join("");
+    }
+  }
+
+  /* ---- selection chips ---- */
+  function renderChips() {
+    $("chips").innerHTML = st.sel.length
+      ? st.sel.map(mi => `<span class="chip"><span class="chip-name" title="${esc(S.models[mi].nvar > 1 ? S.models[mi].name + " = " + S.models[mi].members.map(vi => SP.V.models[vi].name).join(", ") : S.models[mi].name)}">${esc(S.models[mi].name)}</span><button type="button" class="x" data-rm="${mi}" aria-label="Remove ${esc(S.models[mi].name)}">×</button></span>`).join("")
+      : `<span class="empty-chips">No models selected. Use a quick pick or browse the list.</span>`;
+    $("sc-on").setAttribute("aria-pressed", st.sc);
+    $("sc-off").setAttribute("aria-pressed", !st.sc);
+  }
+
+  /* ---- cheat sheet + job board ---- */
+  const viaTag = row => (S.fam && viaShort(row.via)) ? `<span class="via">via ${esc(viaShort(row.via))}</span>` : "";
+  function rowTip(c, A, r) {
+    const st_ = c.arena.stype;
+    return `${r.vname}\n${c.full}: rank ${r.rank} of ${A.n}\nRating ${fmtScore(st_, r.score, true)} (range ${fmtScore(st_, r.lo, true)} to ${fmtScore(st_, r.hi, true)})\n${r.votes.toLocaleString()} ${c.arena.id === "agent" ? "observations" : "votes"}`;
+  }
+  function renderBoards() {
+    const jobs = jobBoard(S, st.sel, st.sc);
+    const shown = jobs.filter(J => J.kind !== "none");
+    const nm = mi => esc(S.models[mi].name);
+    // cheat sheet
+    if (!st.sel.length) {
+      $("cheat").innerHTML = `<div class="cs-empty">Pick a few models above to see what each one is best at.</div>`;
+    } else {
+      const C = cheatSheet(st.sel, jobs);
+      const line = (cls, label, items) => items.length ? `<div class="cs-line l-${cls}"><span class="key-sw s-${cls === "best" ? "win" : cls === "tied" ? "tie" : cls === "solo" ? "win" : cls}" aria-hidden="true"></span><dt>${label}</dt><dd>${esc(items.join(", "))}</dd></div>` : "";
+      $("cheat").innerHTML = C.map(o => {
+        const m = S.models[o.mi];
+        const nothing = !o.best.length && !o.tied.length && !o.solo.length && !o.behind.length;
+        return `<article class="cs-card"><div class="cs-head"><h3>${esc(m.name)}</h3><span>${esc(orgLabel(m.org))}${m.nvar > 1 ? ` · ${m.nvar} effort levels merged` : ""}</span>${S.hasPrices ? (costLine(m) ? `<span class="cs-cost num">${esc(costLine(m))}</span>` : `<span class="cs-cost na">${SP.hasSpeed ? "Price and speed" : "Price"}: no data</span>`) : ""}</div><dl class="cs-lines">` +
+          line("best", "Best pick for", o.best) + line("tied", "Tied for best", o.tied) + line("solo", "Only one tested", o.solo) +
+          line("behind", "Behind on", o.behind) + line("none", "Not tested", o.untested) +
+          (nothing ? `<div class="cs-line l-none"><span class="key-sw s-none" aria-hidden="true"></span><dt>No job data</dt><dd>Not ranked on any of the job leaderboards.</dd></div>` : "") +
+          `</dl></article>`;
+      }).join("");
+    }
+    $("tie-note").hidden = !st.sel.length;
+    // job board
+    if (!shown.length) {
+      $("jobs").innerHTML = `<div class="cs-empty">${st.sel.length ? "None of your picks are ranked on the job leaderboards." : "Pick a few models to fill the job board."}</div>`;
+      $("jb-sub").textContent = "Who wins each job, and how far behind the others are.";
+      return;
+    }
+    // one scale for every rating-based job so bar lengths compare across rows; agent uses its own
+    const CAP_BT = 60;
+    const maxGap = stype => {
+      const g = Math.max(0, ...shown.filter(J => (J.c.arena.stype === "bt") === (stype === "bt")).flatMap(J => J.A.rows.map(r => r.gap)));
+      if (stype === "bt") return Math.min(CAP_BT, Math.max(10, Math.ceil(g / 10) * 10));
+      return Math.max(0.01, Math.ceil(g * 100) / 100);
+    };
+    const scale = { bt: maxGap("bt"), other: maxGap("ips") };
+    $("jb-sub").textContent = `Who wins each job among your picks. Bars show how far behind the winner each pick is: a full bar is ${scale.bt} rating points${shown.some(J => J.c.arena.stype !== "bt") ? " (Agentic work uses its own score, full bar = " + scale.other.toFixed(2) + ")" : ""}.` + (S.hasPrices ? ` Best value is the cheapest pick that is tied with the winner or within ${CLOSE_PTS} pts.` : "");
+    $("jobs").innerHTML = shown.map(J => {
+      const A = J.A, L = A.lead, st_ = J.c.arena.stype;
+      const full = st_ === "bt" ? scale.bt : scale.other;
+      const verdict = J.kind === "clear" ? `<span class="verdict clear">Clear winner</span>`
+        : J.kind === "toss" ? `<span class="verdict toss">Toss-up with ${listNames(J.tiedWith.map(nm), 2)}</span>`
+        : `<span class="verdict">Only one of your picks tested</span>`;
+      const VN = valueNotes(S, J);
+      const tags = mi => (VN.value && VN.value.mi === mi ? `<span class="jb-tag">Best value</span>` : "") +
+        (VN.fastTag === mi ? `<span class="jb-tag">Fastest</span>` : "");
+      const rows = A.rows.map(r => {
+        const pct = Math.min(100, r.gap / full * 100);
+        const val = r.isLead ? (A.rows.length > 1 ? "Winner" : "Tested") : r.tied ? fmtGap(st_, r.gap).replace(" back", "") + " · tied" : fmtGap(st_, r.gap);
+        return `<li class="jb-row s-${r.state}" title="${esc(rowTip(J.c, A, r) + (r.isLead ? "" : "\n" + fmtGap(st_, r.gap) + " behind " + S.models[L.mi].name + (r.tied ? ", too close to call" : "")))}">` +
+          `<span class="jb-name">${nm(r.mi)}${viaTag(r)}${tags(r.mi)}</span>` +
+          `<span class="jb-track">${r.isLead ? "" : `<span class="jb-bar${r.gap > full ? " over" : ""}" style="width:${pct.toFixed(1)}%"></span>`}</span>` +
+          `<span class="jb-val num">${val}</span></li>`;
+      }).join("");
+      return `<article class="job"><div class="job-top"><h3>${esc(J.label)}</h3><span class="job-src">${esc(J.c.full)} · ${A.n} ranked</span></div>` +
+        `<div class="job-win"><b>${nm(L.mi)}</b>${verdict}</div><ul class="jb-rows">${rows}</ul>` +
+        (VN.value ? `<p class="jb-value"><b>Best value: ${nm(VN.value.mi)}</b>, ${esc(VN.value.text)}.</p>` : "") +
+        (VN.fast && VN.fast.text && !VN.fast.merged ? `<p class="jb-value"><b>Fastest close pick: ${nm(VN.fast.mi)}</b>, ${esc(VN.fast.text)}.</p>` : "") +
+        (J.missing.length ? `<p class="jb-missing">Not tested: ${J.missing.map(nm).join(", ")}</p>` : "") + `</article>`;
+    }).join("");
+  }
+
+  /* ---- price & speed panel ---- */
+  function pzJobs() { return JOBS.filter(j => { const c = S.byKey.get(j.key); return c && st.sel.some(mi => boardOf(c, st.sc).has(mi)); }); }
+  function renderPrices() {
+    if (!SP.hasPrices) return;
+    const host = $("pz-host");
+    const jobs = pzJobs();
+    const job = jobs.find(j => j.id === st.vjob) || jobs.find(j => j.id === "chat") || jobs[0] || null;
+    $("pz-job").innerHTML = jobs.length ? jobs.map(j => `<option value="${j.id}" ${job && j.id === job.id ? "selected" : ""}>${esc(j.label)}</option>`).join("") : `<option>No data</option>`;
+    $("pz-job").disabled = !jobs.length;
+    $("pz-notes").innerHTML = `<span><b>Prices</b> are list prices in US dollars per million tokens. Most come from <a href="https://models.dev" target="_blank" rel="noopener">models.dev ↗</a>, which lists the maker's own price; the rest come from <a href="https://openrouter.ai/models" target="_blank" rel="noopener">OpenRouter ↗</a>, marked † when that is OpenRouter's listed price, which can be a cheaper third-party host. <b>Blended</b> assumes 3 input tokens for every output token. Free tiers count as no data.</span>
+      <span>${SP.hasSpeed ? `<b>Speed</b> (output tokens per second) and <b>first token</b> (seconds until the answer starts) are OpenRouter medians over the last 30 minutes, averaged across hosts, so treat them as a snapshot. ` : `Speed data is not included in this build. `}Prices fetched ${esc(DATA.pricesAt || "?")}.</span>
+      <span><b>Effort levels</b> (High, Max…) cost the same per token, but higher levels write more tokens, so each task costs more. <b>Agent task</b> is Arena's measured median cost per task on its agent leaderboard, per effort level.</span>`;
+    if (!st.sel.length) { host.innerHTML = `<div class="empty-state">Pick a few models to compare prices.</div>`; $("scatter").innerHTML = ""; $("sc-legend").innerHTML = ""; return; }
+    const T = priceTable(S, st.sel, job, st.sc, st.psort);
+    const st_ = T.c ? T.c.arena.stype : "bt";
+    const nd = `<td class="nd">no data</td>`;
+    const money = (v, cls, flag) => v == null ? nd : `<td class="num ${cls || ""}">${fmtUsd(v)}${flag ? `<span class="flag" title="OpenRouter's listed price; it can be a cheaper third-party host than the maker">†</span>` : ""}</td>`;
+    const cols = SP.hasSpeed ? PZ_COLS : PZ_COLS.filter(([key]) => key !== "tps" && key !== "ttft");
+    const head = cols.map(([key, label, def]) => {
+      const sub = { name: "", rate: job ? job.label : "", blend: "$ / M tokens", inp: "$ / M", out: "$ / M", tps: "tok / s", ttft: "seconds", ctx: "tokens", agent: "Arena, per effort" }[key];
+      const sorted = st.psort.key === key;
+      return `<th class="${key === "name" ? "pz-name pz-l" : key === "agent" ? "pz-l" : ""}"><button type="button" class="pz-sort" data-psort="${key}" data-def="${def}"${sorted ? ` aria-sort="${st.psort.dir === 1 ? "ascending" : "descending"}"` : ""}>${label}${sub ? `<small>${esc(sub)}</small>` : ""}</button></th>`;
+    }).join("");
+    const body = T.rows.map(x => {
+      const p = x.m.price;
+      const flagOR = p && (p.flags & 2);
+      let rate = nd;
+      if (x.r) {
+        const L = T.A.lead;
+        const rel = x.r.isLead ? (T.A.rows.length > 1 ? `<b>Best</b>` : "") : x.r.tied ? `<span class="tie">tied</span>` : fmtGap(st_, L.score - x.r.score).replace(" back", " behind");
+        rate = `<td class="rate num" title="Rank ${x.r.rank} of ${T.A.n} on ${esc(T.c.full)}">${fmtScore(st_, x.r.score, false)}${rel ? `<span class="rel">${rel}</span>` : ""}</td>`;
+      }
+      const agent = x.agent.length ? `<td class="agent num">${x.agent.map(a => `<span title="${esc(a.effort)}: median ${fmtUsd(a.cost)} and ${a.toks ? a.toks.toLocaleString() : "?"} output tokens per task">${esc(a.effort)} ${fmtUsd(a.cost)}</span>`).join(" · ")}</td>` : `<td class="nd" style="text-align:left">no data</td>`;
+      const note = p && p.note ? ` title="${esc(p.note)}"` : "";
+      return `<tr><td class="pz-name pz-l"${note}><div class="pz-nm">${esc(x.m.name)}</div><span class="mname-org">${esc(orgLabel(x.m.org))}</span>${x.badges.length ? `<div class="pz-badges">${x.badges.map(b => `<span class="badge">${b}</span>`).join("")}</div>` : ""}</td>` +
+        money(x.blend, "big", flagOR) + (!SP.hasSpeed ? "" : x.tps != null ? `<td class="num big">${Math.round(x.tps)}</td>` : nd) + rate +
+        (!SP.hasSpeed ? "" : x.ttft != null ? `<td class="num">${x.ttft.toFixed(1)} s</td>` : nd) + money(x.inp) + money(x.out) +
+        (x.ctx ? `<td class="num">${fmtCtx(x.ctx)}</td>` : nd) + agent + `</tr>`;
+    }).join("");
+    host.innerHTML = `<div class="pz-scroll"><table class="pz"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+    renderScatter(T, job);
+  }
+
+  function renderScatter(T, job) {
+    const host = $("scatter"), lg = $("sc-legend");
+    $("sc-h").textContent = job ? `${job.label} rating vs price` : "Rating vs price";
+    if (!T.A || !T.A.rows.length) { host.innerHTML = `<p class="note" style="padding:12px 0">None of your picks are ranked on this job.</p>`; lg.innerHTML = ""; return; }
+    const st_ = T.c.arena.stype, bt = st_ === "bt";
+    const pts = T.rows.filter(x => x.r && x.blend != null);
+    const noPrice = T.rows.filter(x => x.r && x.blend == null).map(x => x.m.name);
+    const noRate = T.rows.filter(x => !x.r).map(x => x.m.name);
+    const extra = [noPrice.length ? `No price: ${noPrice.map(esc).join(", ")}` : "", noRate.length ? `Not ranked on ${esc(job.label)}: ${noRate.map(esc).join(", ")}` : ""].filter(Boolean);
+    if (!pts.length) { host.innerHTML = `<p class="note" style="padding:12px 0">None of your picks ranked here have a price.</p>`; lg.innerHTML = extra.map(t => `<span>${t}</span>`).join(""); return; }
+    const W = Math.max(300, host.clientWidth - 32);
+    const narrow = W < 520;
+    const H = narrow ? 300 : 360;
+    const fs = narrow ? 11 : 12;
+    const m = { l: bt ? 58 : 66, r: 12, t: 14, b: 42 };
+    const x0 = m.l, x1 = W - m.r, y0 = H - m.b, y1 = m.t;
+    let pmin = Math.min(...pts.map(x => x.blend)), pmax = Math.max(...pts.map(x => x.blend));
+    let lo = Math.log10(pmin) - 0.25, hi = Math.log10(pmax) + 0.25;
+    if (hi - lo < 1) { const mid = (hi + lo) / 2; lo = mid - 0.5; hi = mid + 0.5; }
+    const X = v => x0 + (Math.log10(v) - lo) / (hi - lo) * (x1 - x0);
+    let smin = Math.min(...pts.map(x => x.r.score)), smax = Math.max(...pts.map(x => x.r.score));
+    const span = (smax - smin) || (bt ? 20 : 0.05);
+    let ylo = smin - span * 0.12, yhi = smax + span * 0.12;
+    const { ticks: yt } = niceTicks(ylo, yhi, narrow ? 4 : 5);
+    ylo = Math.min(ylo, yt[0]); yhi = Math.max(yhi, yt[yt.length - 1]);
+    const Y = v => y0 - (v - ylo) / (yhi - ylo) * (y0 - y1);
+    const L = T.A.lead;
+    const isClose = r => r.isLead || r.tied || (bt && L.score - r.score <= CLOSE_PTS);
+    let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(job.label)} rating against blended price for ${pts.length} picks">`;
+    s += `<g>`;
+    for (const t of yt) { const y = Y(t); if (y < y1 - 1 || y > y0 + 1) continue;
+      s += `<line x1="${x0}" x2="${x1}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`;
+      s += `<text x="${x0 - 6}" y="${y + 4}" text-anchor="end" font-size="${fs}" fill="var(--ink-3)" class="num">${fmtScore(st_, t, false)}</text>`; }
+    for (const t of logTicks(Math.pow(10, lo), Math.pow(10, hi))) { const x = X(t);
+      s += `<line x1="${x}" x2="${x}" y1="${y1}" y2="${y0}" stroke="var(--line)" stroke-width="1"/>`;
+      s += `<text x="${x}" y="${y0 + 16}" text-anchor="middle" font-size="${fs}" fill="var(--ink-3)" class="num">${fmtAxisUsd(t)}</text>`; }
+    s += `<line x1="${x0}" x2="${x1}" y1="${y0}" y2="${y0}" stroke="var(--line-strong)" stroke-width="1"/>`;
+    s += `<text x="${(x0 + x1) / 2}" y="${H - 6}" text-anchor="middle" font-size="${fs}" fill="var(--ink-2)">Blended price per million tokens (log scale) →</text>`;
+    s += `<text transform="translate(${fs} ${(y0 + y1) / 2}) rotate(-90)" text-anchor="middle" font-size="${fs}" fill="var(--ink-2)">Rating →</text>`;
+    s += `</g>`;
+    // dots, then labels placed greedily around each dot without overlapping
+    const placed = pts.map(x => ({ x, cx: X(x.blend), cy: Y(x.r.score) }));
+    const boxes = placed.map(p => ({ x: p.cx - 7, y: p.cy - 7, w: 14, h: 14 }));
+    const hit = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+    const cw = fs * 0.58;
+    let labels = "";
+    // place labels for higher-rated dots first so the winners get the clean spot
+    [...placed].sort((a, b) => b.x.r.score - a.x.r.score).forEach(p => {
+      let name = p.x.m.name;
+      const maxCh = narrow ? 18 : 26;
+      if (name.length > maxCh) name = name.slice(0, maxCh - 1) + "…";
+      const w = name.length * cw, h = fs + 2;
+      const cands = [[p.cx + 9, p.cy - h / 2, "start"], [p.cx - 9 - w, p.cy - h / 2, "end"], [p.cx - w / 2, p.cy - 10 - h, "middle"], [p.cx - w / 2, p.cy + 9, "middle"],
+        [p.cx + 7, p.cy - 8 - h, "start"], [p.cx + 7, p.cy + 7, "start"], [p.cx - 7 - w, p.cy - 8 - h, "end"], [p.cx - 7 - w, p.cy + 7, "end"]];
+      let pick = null;
+      for (const [bx, by, anchor] of cands) {
+        const b = { x: bx, y: by, w, h };
+        if (b.x < x0 - 2 || b.x + b.w > W || b.y < 0 || b.y + b.h > y0) continue;
+        if (boxes.some(o => hit(o, b))) continue;
+        pick = { b, anchor }; break;
+      }
+      if (!pick) return; // no clean spot: the tooltip and the table still name it
+      boxes.push(pick.b);
+      const tx = pick.anchor === "start" ? pick.b.x : pick.anchor === "end" ? pick.b.x + w : pick.b.x + w / 2;
+      labels += `<text x="${tx.toFixed(1)}" y="${(pick.b.y + h - 3).toFixed(1)}" text-anchor="${pick.anchor}" font-size="${fs}" fill="${p.x.r.isLead ? "var(--ink)" : "var(--ink-2)"}"${p.x.r.isLead ? ' font-weight="600"' : ""}>${esc(name)}</text>`;
+      p.labeled = true;
+    });
+    placed.forEach((p, k) => {
+      const close = isClose(p.x.r);
+      s += `<g class="sc-dot" data-k="${k}"><circle cx="${p.cx}" cy="${p.cy}" r="14" fill="transparent"/><circle cx="${p.cx}" cy="${p.cy}" r="${p.x.r.isLead ? 6.5 : 5.5}" fill="${close ? "var(--accent)" : "var(--behind-fill)"}" stroke="var(--surface)" stroke-width="2"/></g>`;
+    });
+    s += labels + `</svg><div class="tip" id="sc-tip" hidden></div>`;
+    host.innerHTML = s;
+    const svg = host.querySelector("svg"), tip = host.querySelector("#sc-tip");
+    svg.addEventListener("pointermove", e => {
+      const g = e.target.closest(".sc-dot"); if (!g) { tip.hidden = true; return; }
+      const p = placed[+g.dataset.k], x = p.x;
+      tip.innerHTML = `<b>${esc(x.m.name)}</b><br>${esc(job.label)}: ${fmtScore(st_, x.r.score, false)} (rank ${x.r.rank} of ${T.A.n})${x.r.isLead && T.A.rows.length > 1 ? ", best of your picks" : x.r.tied ? ", tied with the best" : ""}<br>${fmtUsd(x.blend)} per M tokens blended${x.tps != null ? `<br>${Math.round(x.tps)} tok/s` : ""}`;
+      tip.hidden = false;
+      const sb = svg.getBoundingClientRect(), scale = sb.width / W, hb = host.getBoundingClientRect();
+      let left = 16 + p.cx * scale + 12; const tw = tip.offsetWidth;
+      if (left + tw > hb.width - 8) left = Math.max(8, 16 + p.cx * scale - tw - 12);
+      tip.style.left = left + "px"; tip.style.top = (6 + p.cy * scale + 12) + "px";
+    });
+    svg.addEventListener("pointerleave", () => { tip.hidden = true; });
+    const unl = placed.filter(p => !p.labeled).map(p => p.x.m.name);
+    lg.innerHTML = `<span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--accent)"/></svg>As good as the best pick (tied${bt ? ` or within ${CLOSE_PTS} pts` : ""})</span>
+      <span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--behind-fill)"/></svg>Further behind</span>` +
+      (unl.length ? `<span>Unlabeled (hover the dot): ${unl.map(esc).join(", ")}</span>` : "") + extra.map(t => `<span>${t}</span>`).join("");
+  }
+
+  /* ---- column chooser ---- */
+  function renderCols() {
+    const html = S.groups.map(g => {
+      const cs = S.cats.filter(c => c.group === g);
+      const n = cs.filter(c => st.cols.has(c.i)).length;
+      const state = n === cs.length ? "all" : n ? "some" : "none";
+      return `<div class="cg"><button type="button" class="cg-label" data-g="${g.i}" data-state="${state}" aria-label="Toggle all ${esc(g.label)} columns"><span class="tick" aria-hidden="true">${state === "all" ? "✓" : state === "some" ? "–" : ""}</span>${esc(g.label)}</button>` +
+        cs.map(c => `<button type="button" class="cchip" data-c="${c.i}" aria-pressed="${st.cols.has(c.i)}">${esc(c.label)}</button>`).join("") + `</div>`;
+    }).join("");
+    $("cols-grid").innerHTML = html;
+    $("cols-summary").textContent = `Choose columns (${st.cols.size} of ${S.cats.length} on)`;
+  }
+
+  /* ---- matrix ---- */
+  function renderMatrix() {
+    const host = $("mx-host");
+    if (!st.sel.length) { host.innerHTML = `<div class="empty-state">Pick a few models to fill the matrix.</div>`; return; }
+    const shownCats = [], emptyCats = [];
+    for (const c of S.cats) {
+      if (!st.cols.has(c.i)) continue;
+      const b = boardOf(c, st.sc);
+      (st.sel.some(mi => b.has(mi)) ? shownCats : emptyCats).push(c);
+    }
+    if (!shownCats.length) { host.innerHTML = `<div class="empty-state">None of your picks are ranked in the columns you've chosen. Open “Choose columns” to add more.</div>`; return; }
+    const an = new Map(shownCats.map(c => [c.i, analyze(c, st.sel, st.sc)]));
+    // row order
+    let rows = [...st.sel];
+    const sc = S.cats[st.sortCol];
+    if (sc && an.has(st.sortCol)) {
+      const b = boardOf(sc, st.sc);
+      rows.sort((x, y) => {
+        const rx = b.get(x), ry = b.get(y);
+        if (!rx && !ry) return st.sel.indexOf(x) - st.sel.indexOf(y);
+        if (!rx) return 1; if (!ry) return -1;
+        return rx.rank - ry.rank || ry.score - rx.score;
+      });
+    }
+    // group header spans
+    const spans = [];
+    for (const c of shownCats) {
+      const last = spans[spans.length - 1];
+      if (last && last.g === c.group) last.n++; else spans.push({ g: c.group, n: 1, first: c.i });
+    }
+    const firsts = new Set(spans.map(s => s.first));
+    let h = `<div class="mx-scroll"><table class="mx"><thead><tr class="gh"><th class="corner" rowspan="2">${st.sel.length} model${st.sel.length > 1 ? "s" : ""}</th>`;
+    h += spans.map(s => `<th colspan="${s.n}">${esc(s.g.label)}</th>`).join("") + `</tr><tr class="ch">`;
+    h += shownCats.map(c => {
+      const sorted = c.i === st.sortCol;
+      return `<th class="${firsts.has(c.i) ? "gstart" : ""}"><button type="button" class="colbtn" data-sort="${c.i}" ${sorted ? 'aria-sort="ascending"' : ""} title="Sort by ${esc(c.full)} (snapshot ${c.date}, ${(!st.sc && c.r) ? c.nr : c.n} models ranked)">${esc(c.label)}</button></th>`;
+    }).join("") + `</tr></thead><tbody>`;
+    for (const mi of rows) {
+      const m = S.models[mi];
+      h += `<tr><td class="mname"><div class="mname-in"><span class="mname-txt">${esc(m.name)}<span class="mname-org">${esc(orgLabel(m.org))}</span></span><button type="button" class="rm" data-rm="${mi}" aria-label="Remove ${esc(m.name)}">×</button></div></td>`;
+      for (const c of shownCats) {
+        const A = an.get(c.i);
+        const r = A.rows.find(x => x.mi === mi);
+        const gcls = firsts.has(c.i) ? "gstart" : "";
+        if (!r) { h += `<td class="cell ${gcls}"><div class="cellbox na" title="${esc(m.name)} has no rank on the ${esc(c.full)} leaderboard: Arena hasn't collected votes for it there${S.fam ? " under any of its effort levels" : ""}.">not tested</div></td>`; continue; }
+        const st_ = c.arena.stype;
+        const half = (r.hi - r.lo) / 2;
+        const tag = r.isLead && A.rows.length > 1 ? `<span class="tag">Best</span>` : r.tied ? `<span class="tag tie">≈ tied</span>` : "";
+        const tip = `${r.vname} · ${c.full}\nRank ${r.rank} of ${A.n}\nRating ${fmtScore(st_, r.score, true)} (CI ${fmtScore(st_, r.lo, true)} to ${fmtScore(st_, r.hi, true)})\n${r.votes.toLocaleString()} ${c.arena.id === "agent" ? "observations" : "votes"}` + (r.isLead && A.rows.length > 1 ? "\nBest of your picks here" : r.tied ? "\nCI overlaps the best pick: statistically tied" : "");
+        h += `<td class="cell ${gcls}"><div class="cellbox ${heatClass(r.rank, A.n)}${r.isLead && A.rows.length > 1 ? " lead" : ""}" title="${esc(tip)}">${tag}<span class="rk num"><small>#</small>${r.rank}</span><span class="sc num">${fmtScore(st_, r.score, true)} ±${st_ === "bt" ? Math.round(half) : half.toFixed(3)}</span>${S.fam && viaShort(r.via) ? `<span class="cvia">via ${esc(viaShort(r.via))}</span>` : ""}</div></td>`;
+      }
+      h += `</tr>`;
+    }
+    h += `</tbody></table></div>`;
+    h += `<div class="mx-foot"><div class="legend"><span>Rank within the full leaderboard:</span>
+      <span class="sw"><i style="background:var(--heat-1)"></i>Top 2%</span>
+      <span class="sw"><i style="background:var(--heat-2)"></i>Top 10%</span>
+      <span class="sw"><i style="background:var(--heat-3)"></i>Top 25%</span>
+      <span class="sw"><i style="background:var(--heat-4)"></i>Top half</span>
+      <span class="sw"><i style="background:var(--heat-5)"></i>Lower half</span>
+      <span class="sw"><span class="ring"></span>Best of your picks</span>
+      <span class="sw" style="color:var(--tie)">≈ tied: CI overlaps the best pick</span>${S.fam ? `<span>“via” = the effort level or setup that ranks best there</span>` : ""}</div>
+      ${emptyCats.length ? `<span>${emptyCats.length} chosen column${emptyCats.length > 1 ? "s" : ""} hidden because none of your picks are ranked there.</span>` : ""}
+      ${S.arenas.some(a => a.hasSC) ? `<span>Style control ${st.sc ? "on" : "off"} for Text, Vision, Search and Document.</span>` : ""}</div>`;
+    host.innerHTML = h;
+  }
+
+  /* ---- head-to-head chart ---- */
+  function availableH2H() { return S.cats.filter(c => st.sel.some(mi => boardOf(c, st.sc).has(mi))); }
+  function renderH2HSelect() {
+    const av = availableH2H();
+    const sel = $("h2h-cat");
+    if (!av.length) { sel.innerHTML = `<option>No data</option>`; sel.disabled = true; return null; }
+    sel.disabled = false;
+    let cur = av.find(c => c.key === st.h2h) || av.find(c => c.key === "text/overall") || av[0];
+    let html = "", lastA = null;
+    for (const c of av) {
+      if (c.arena !== lastA) { if (lastA) html += `</optgroup>`; html += `<optgroup label="${esc(c.arena.label)}">`; lastA = c.arena; }
+      html += `<option value="${c.key}" ${c === cur ? "selected" : ""}>${esc(c.full)}</option>`;
+    }
+    sel.innerHTML = html + `</optgroup>`;
+    return cur;
+  }
+  function renderChart() {
+    const c = renderH2HSelect();
+    const host = $("chart");
+    if (!c) { host.innerHTML = `<p class="note" style="padding:20px 0">Pick models to draw the chart.</p>`; $("chart-legend").innerHTML = ""; return; }
+    const A = analyze(c, st.sel, st.sc);
+    const rows = [...A.rows].sort((x, y) => y.score - x.score);
+    const W = Math.max(300, host.clientWidth - 32);
+    const narrow = W < 520;
+    const labelW = Math.round(Math.min(240, Math.max(118, W * (narrow ? 0.42 : 0.3))));
+    const rowH = 30, top = 30, bottom = 10, right = 16;
+    const H = top + rows.length * rowH + bottom;
+    let lo = Math.min(...rows.map(r => r.lo)), hi = Math.max(...rows.map(r => r.hi));
+    const pad = (hi - lo) * 0.06 || (c.arena.stype === "bt" ? 10 : 0.01);
+    lo -= pad; hi += pad;
+    const { ticks } = niceTicks(lo, hi, narrow ? 4 : 6);
+    const x0 = labelW + 8, x1 = W - right;
+    const X = v => x0 + (v - lo) / (hi - lo) * (x1 - x0);
+    const st_ = c.arena.stype;
+    const L = A.lead;
+    let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(c.full)}: rating and confidence interval for ${rows.length} selected models">`;
+    // leader band
+    if (L && rows.length > 1) {
+      s += `<rect x="${X(L.lo)}" y="${top - 6}" width="${Math.max(1, X(L.hi) - X(L.lo))}" height="${rows.length * rowH + 6}" fill="var(--accent-soft)" rx="3"/>`;
+    }
+    // grid + axis
+    s += `<g class="axis">`;
+    for (const t of ticks) {
+      const x = X(t);
+      if (x < x0 - 0.5 || x > x1 + 0.5) continue;
+      s += `<line x1="${x}" x2="${x}" y1="${top - 6}" y2="${H - bottom}" stroke="var(--line)" stroke-width="1"/>`;
+      s += `<text x="${x}" y="${top - 12}" text-anchor="middle" font-size="11" class="num">${fmtScore(st_, t, false)}</text>`;
+    }
+    s += `</g>`;
+    rows.forEach((r, k) => {
+      const y = top + k * rowH + rowH / 2;
+      const m = S.models[r.mi];
+      const name = m.name;
+      const maxChars = Math.floor((labelW - 34) / 6.6);
+      const shown = name.length > maxChars ? name.slice(0, Math.max(4, maxChars - 1)) + "…" : name;
+      const isL = r.isLead, tied = r.tied;
+      const col = isL ? "var(--accent)" : tied ? "var(--accent)" : "var(--ink-2)";
+      s += `<g class="h2h-row" data-k="${k}">`;
+      s += `<rect x="0" y="${y - rowH / 2}" width="${W}" height="${rowH}" fill="transparent"/>`;
+      s += `<text class="lbl num" x="0" y="${y + 4}" font-size="11.5" fill="var(--ink-3)">#${r.rank}</text>`;
+      s += `<text class="lbl" x="34" y="${y + 4}" font-size="12.5" ${isL ? 'font-weight="600" style="fill:var(--ink)"' : ""}>${esc(shown)}</text>`;
+      s += `<line x1="${X(r.lo)}" x2="${X(r.hi)}" y1="${y}" y2="${y}" stroke="${col}" stroke-width="2" stroke-linecap="round"/>`;
+      s += `<line x1="${X(r.lo)}" x2="${X(r.lo)}" y1="${y - 5}" y2="${y + 5}" stroke="${col}" stroke-width="2" stroke-linecap="round"/>`;
+      s += `<line x1="${X(r.hi)}" x2="${X(r.hi)}" y1="${y - 5}" y2="${y + 5}" stroke="${col}" stroke-width="2" stroke-linecap="round"/>`;
+      s += `<circle cx="${X(r.score)}" cy="${y}" r="5.5" fill="${isL ? "var(--accent)" : tied ? "var(--surface)" : "var(--ink-2)"}" stroke="${isL || tied ? "var(--accent)" : "var(--surface)"}" stroke-width="2"/>`;
+      s += `</g>`;
+    });
+    s += `</svg><div class="tip" id="tip" hidden></div>`;
+    host.innerHTML = s;
+    const svg = host.querySelector("svg"), tip = host.querySelector("#tip");
+    const show = (k, evt) => {
+      const r = rows[k], m = S.models[r.mi];
+      tip.innerHTML = `<b>${esc(r.vname)}</b><br>Rank ${r.rank} of ${A.n} on ${esc(c.full)}<br>Rating ${fmtScore(st_, r.score, true)}<br>CI ${fmtScore(st_, r.lo, true)} to ${fmtScore(st_, r.hi, true)}<br>${r.votes.toLocaleString()} ${c.arena.id === "agent" ? "observations" : "votes"}` + (r.isLead && rows.length > 1 ? "<br>Best of your picks" : r.tied ? "<br>Statistically tied with the best pick" : rows.length > 1 ? "<br>Clearly behind the best pick" : "");
+      tip.hidden = false;
+      const hb = host.getBoundingClientRect(), sb = svg.getBoundingClientRect();
+      const scale = sb.width / W;
+      let left = 16 + X(r.score) * scale + 12, topPx = 4 + (top + k * rowH) * scale + rowH * scale + 4;
+      const tw = tip.offsetWidth;
+      if (left + tw > hb.width - 8) left = Math.max(8, 16 + X(r.score) * scale - tw - 12);
+      tip.style.left = left + "px"; tip.style.top = topPx + "px";
+    };
+    svg.addEventListener("pointermove", e => { const g = e.target.closest(".h2h-row"); if (g) show(+g.dataset.k, e); else tip.hidden = true; });
+    svg.addEventListener("pointerleave", () => { tip.hidden = true; });
+    const lg = $("chart-legend");
+    lg.innerHTML = rows.length > 1
+      ? `<span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--accent)"/></svg>Best of your picks</span>
+         <span><svg width="14" height="14"><circle cx="7" cy="7" r="4.5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/></svg>CI overlaps the best (≈ tied)</span>
+         <span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--ink-2)"/></svg>Clearly behind</span>
+         <span><svg width="18" height="12"><rect width="18" height="12" rx="2" fill="var(--accent-soft)"/></svg>Best pick's confidence interval</span>
+         <span>${A.rows.length} of ${st.sel.length} picks ranked here · ${A.n} models on this board · snapshot ${fmtDate(c.date)}</span>`
+      : `<span>Only one of your picks is ranked on this board (${A.n} models, snapshot ${fmtDate(c.date)}).</span>`;
+  }
+
+  /* ---- state sync ---- */
+  let lastHash = "";
+  function persist() {
+    saveStore({ sel: st.sel.map(mi => S.models[mi].id), sc: st.sc, fam: st.fam, cols: [...st.cols].map(i => S.cats[i].key), h2h: st.h2h, more: st.more, vjob: st.vjob, psort: st.psort });
+    const h = encodeHash(S, st);
+    if (location.hash.replace(/^#/, "") !== h) {
+      lastHash = h;
+      try { location.replace("#" + h); } catch (e) { try { location.hash = h; } catch (e2) { /* hash unavailable */ } }
+    }
+  }
+  function renderResults() { renderChips(); renderBoards(); renderPrices(); renderMatrix(); renderChart(); }
+  function renderAll() { renderOrgChips(); renderPicker(); renderCols(); renderResults(); }
+  function changed(pickerToo) { if (pickerToo) renderPicker(); renderResults(); persist(); }
+
+  function toggle(mi) {
+    const k = st.sel.indexOf(mi);
+    if (k >= 0) st.sel.splice(k, 1); else st.sel.push(mi);
+  }
+  function setSel(list) { st.sel = [...new Set(list)]; changed(true); }
+
+  /* ---- events ---- */
+  $("pk-list").addEventListener("click", e => {
+    const b = e.target.closest(".pk-item"); if (!b) return;
+    const mi = +b.dataset.mi; toggle(mi);
+    b.setAttribute("aria-pressed", st.sel.includes(mi));
+    changed(false);
+  });
+  document.addEventListener("click", e => {
+    const rm = e.target.closest("[data-rm]");
+    if (rm) { toggle(+rm.dataset.rm); changed(true); return; }
+    const ps = e.target.closest("[data-psort]");
+    if (ps) {
+      const key = ps.dataset.psort;
+      st.psort = st.psort.key === key ? { key, dir: -st.psort.dir } : { key, dir: +ps.dataset.def || 1 };
+      renderPrices(); persist(); return;
+    }
+    const sb = e.target.closest("[data-sort]");
+    if (sb) { const i = +sb.dataset.sort; st.sortCol = st.sortCol === i ? -1 : i; renderMatrix(); return; }
+    const cg = e.target.closest(".cg-label");
+    if (cg) {
+      const g = S.groups[+cg.dataset.g]; const cs = S.cats.filter(c => c.group === g);
+      const allOn = cs.every(c => st.cols.has(c.i));
+      cs.forEach(c => allOn ? st.cols.delete(c.i) : st.cols.add(c.i));
+      renderCols(); renderMatrix(); persist(); return;
+    }
+    const cc = e.target.closest(".cchip");
+    if (cc) { const i = +cc.dataset.c; st.cols.has(i) ? st.cols.delete(i) : st.cols.add(i); renderCols(); renderMatrix(); persist(); return; }
+    const oc = e.target.closest(".ochip");
+    if (oc) { st.org = oc.dataset.org; renderOrgChips(); renderPicker(); }
+  });
+  $("pk-q").addEventListener("input", e => { st.q = e.target.value; renderPicker(); });
+  $("pk-org").addEventListener("change", e => { st.org = e.target.value; renderOrgChips(); renderPicker(); });
+  $("pk-arena").addEventListener("change", e => { st.arena = e.target.value; renderPicker(); });
+  $("pk-sort").addEventListener("change", e => { st.sort = e.target.value; renderPicker(); });
+  $("pk-group").addEventListener("change", e => { st.group = e.target.checked; renderPicker(); });
+  $("pk-toggle").addEventListener("click", () => {
+    const p = $("picker"); const open = p.classList.toggle("collapsed") === false;
+    $("pk-toggle").setAttribute("aria-expanded", open); $("pk-toggle").textContent = open ? "Hide list" : "Browse models";
+  });
+  $("p-text").addEventListener("click", () => setSel(presetTop(S, "text/overall", 10, st.sc)));
+  $("p-webdev").addEventListener("click", () => setSel(presetTop(S, "webdev/overall", 10, st.sc)));
+  $("p-flag").addEventListener("click", () => setSel(presetFlagship(S, st.sc)));
+  $("p-clear").addEventListener("click", () => setSel([]));
+  $("p-cheap").addEventListener("click", () => setSel(presetBy(S, st.sc, "cheap")));
+  $("p-fast").addEventListener("click", () => setSel(presetBy(S, st.sc, "fast")));
+  $("pk-maxp").addEventListener("change", e => { st.maxp = +e.target.value; renderPicker(); });
+  $("pk-mins").addEventListener("change", e => { st.mins = +e.target.value; renderPicker(); });
+  $("pz-job").addEventListener("change", e => { st.vjob = e.target.value; renderPrices(); persist(); });
+  $("sc-on").addEventListener("click", () => { st.sc = true; renderPicker(); changed(false); });
+  $("sc-off").addEventListener("click", () => { st.sc = false; renderPicker(); changed(false); });
+  $("h2h-cat").addEventListener("change", e => { st.h2h = e.target.value; renderChart(); persist(); });
+  $("cols-default").addEventListener("click", () => { st.cols = new Set(S.cats.filter(c => c.defOn).map(c => c.i)); renderCols(); renderMatrix(); persist(); });
+  $("cols-all").addEventListener("click", () => { st.cols = new Set(S.cats.map(c => c.i)); renderCols(); renderMatrix(); persist(); });
+  function setSpace(fam, sel) {
+    st.fam = fam; S = fam ? SP.F : SP.V; st.sel = sel;
+    $("sep").checked = !fam;
+    renderPickerMeta(); renderOrgChips();
+  }
+  $("sep").addEventListener("change", e => {
+    const fam = !e.target.checked;
+    if (fam === st.fam) return;
+    // families -> every variant of each picked family; variants -> their families
+    const ids = st.sel.map(mi => S.models[mi].id);
+    setSpace(fam, resolveIds(SP, ids, fam));
+    changed(true);
+  });
+  $("more").addEventListener("toggle", () => { st.more = $("more").open; if (st.more) renderChart(); persist(); });
+  window.addEventListener("hashchange", () => {
+    const h = location.hash.replace(/^#/, "");
+    if (h === lastHash) return;
+    const d = decodeHash(h);
+    if (d) { setSpace(d.fam, resolveIds(SP, d.ids, d.fam)); st.sc = d.sc; renderPicker(); renderResults(); persist(); }
+  });
+  let rw = 0;
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(entries => { const w = Math.round(entries[0].contentRect.width); if (w !== rw) { rw = w; renderChart(); } }).observe($("chart"));
+    let sw = 0;
+    new ResizeObserver(entries => { const w = Math.round(entries[0].contentRect.width); if (w !== sw) { sw = w; renderPrices(); } }).observe($("scatter"));
+  } else { window.addEventListener("resize", renderChart); window.addEventListener("resize", renderPrices); }
+
+  renderAll();
+  persist();
+}
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function fmtDate(iso) { const [y, m, d] = (iso || "").split("-"); return y ? `${+d} ${MONTHS[+m - 1]} ${y}` : "?"; }
+
+if (typeof document !== "undefined") boot();
+else if (typeof globalThis !== "undefined") globalThis.__arena = { decode, presetTop, presetFlagship, presetBy, priceTable, valueNotes, fmtUsd, fmtCtx, costLine, logTicks, JOBS, analyze, jobBoard, cheatSheet, encodeHash, decodeHash, resolveIds, viaShort, heatClass, niceTicks, DATA };
+</script>

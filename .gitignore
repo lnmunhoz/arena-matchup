@@ -1,0 +1,13 @@
+# generated data (rebuilt by ./refresh.sh)
+data/arena.sqlite
+data/*.csv
+raw/
+
+# working screenshots (README images live in docs/)
+shots/
+
+# local tool state
+.impeccable/
+__pycache__/
+*.pyc
+.DS_Store

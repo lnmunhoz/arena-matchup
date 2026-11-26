@@ -1,0 +1,3629 @@
+{
+ "fetched_at": "2026-11-26 07:04 UTC",
+ "records": [
+  {
+   "family": "Beam 1.0 501B A23B",
+   "org": "reflection",
+   "source": "openrouter",
+   "source_id": "reflection/beam-1.0-501b-a23b",
+   "openrouter_id": "reflection/beam-1.0-501b-a23b",
+   "input_per_m": 0.3,
+   "output_per_m": 1.0,
+   "blended_per_m": 0.475,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-10-16",
+   "arena_models": [
+    "Beam 1.0 501B A23B"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Claude Fable 5",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-fable-5",
+   "openrouter_id": "anthropic/claude-fable-5",
+   "input_per_m": 10,
+   "output_per_m": 50,
+   "blended_per_m": 20.0,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-06-07",
+   "arena_models": [
+    "Claude Fable 5 (High)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Claude Fable 5 (High)",
+     "cost_per_task_p50": 3.5676,
+     "output_tokens_per_task_p50": 23997
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Claude Fable 5.1",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-fable-5-1",
+   "openrouter_id": "anthropic/claude-fable-5.1",
+   "input_per_m": 10,
+   "output_per_m": 50,
+   "blended_per_m": 20.0,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-01",
+   "arena_models": [
+    "Claude Fable 5.1 (High)",
+    "Claude Fable 5.1 (Max)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Claude Fable 5.1 (Max)",
+     "cost_per_task_p50": 7.2625,
+     "output_tokens_per_task_p50": 56803
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Claude Fable 5.2",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-fable-5-2",
+   "openrouter_id": "anthropic/claude-fable-5.2",
+   "input_per_m": 8,
+   "output_per_m": 40,
+   "blended_per_m": 16.0,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-11-09",
+   "arena_models": [
+    "Claude Fable 5.2 (Max)",
+    "Claude Fable 5.2 (xHigh)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Claude Fable 5.2 (Max)",
+     "cost_per_task_p50": 9.1481,
+     "output_tokens_per_task_p50": 127542
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Claude Haiku 4.5",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-haiku-4-5",
+   "openrouter_id": "anthropic/claude-haiku-4.5",
+   "input_per_m": 1,
+   "output_per_m": 5,
+   "blended_per_m": 2.0,
+   "context_tokens": 200000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-10-15",
+   "arena_models": [
+    "Claude Haiku 4.5 (20251001)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Claude Haiku 5.5",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-haiku-5-5",
+   "openrouter_id": "anthropic/claude-haiku-5.5",
+   "input_per_m": 0.1,
+   "output_per_m": 0.5,
+   "blended_per_m": 0.2,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-10-07",
+   "arena_models": [
+    "Claude Haiku 5.5 (High)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Claude Haiku 5.5 (High)",
+     "cost_per_task_p50": 0.1015,
+     "output_tokens_per_task_p50": 28559
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Claude Opus 4.1",
+   "org": "anthropic",
+   "source": "openrouter",
+   "source_id": "anthropic/claude-opus-4.1",
+   "openrouter_id": "anthropic/claude-opus-4.1",
+   "input_per_m": 15.0,
+   "output_per_m": 75.0,
+   "blended_per_m": 30.0,
+   "context_tokens": 200000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-08-05",
+   "arena_models": [
+    "Claude Opus 4.1 (20250805)",
+    "Claude Opus 4.1 (Search)",
+    "Claude Opus 4.1 (Thinking 16K, 20250805)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Claude Opus 4.5",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-opus-4-5-20251101",
+   "openrouter_id": "anthropic/claude-opus-4.5",
+   "input_per_m": 5,
+   "output_per_m": 25,
+   "blended_per_m": 10.0,
+   "context_tokens": 200000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-11-24",
+   "arena_models": [
+    "Claude Opus 4.5 (20251101)",
+    "Claude Opus 4.5 (High, 32K, 20251101)",
+    "Claude Opus 4.5 (Search)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Claude Opus 4.6",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-opus-4-6",
+   "openrouter_id": "anthropic/claude-opus-4.6",
+   "input_per_m": 5,
+   "output_per_m": 25,
+   "blended_per_m": 10.0,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-02-04",
+   "arena_models": [
+    "Claude Opus 4.6",
+    "Claude Opus 4.6 (High)",
+    "Claude Opus 4.6 (Search)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Claude Opus 4.7",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-opus-4-7",
+   "openrouter_id": "anthropic/claude-opus-4.7",
+   "input_per_m": 5,
+   "output_per_m": 25,
+   "blended_per_m": 10.0,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-04-14",
+   "arena_models": [
+    "Claude Opus 4.7",
+    "Claude Opus 4.7 (High)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Claude Opus 4.8",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-opus-4-8",
+   "openrouter_id": "anthropic/claude-opus-4.8",
+   "input_per_m": 5,
+   "output_per_m": 25,
+   "blended_per_m": 10.0,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-05-28",
+   "arena_models": [
+    "Claude Opus 4.8",
+    "Claude Opus 4.8 (High)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Claude Opus 5",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-opus-5",
+   "openrouter_id": "anthropic/claude-opus-5",
+   "input_per_m": 5,
+   "output_per_m": 25,
+   "blended_per_m": 10.0,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-07-24",
+   "arena_models": [
+    "Claude Opus 5 (High)",
+    "Claude Opus 5 (Max)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Claude Opus 5 (Max)",
+     "cost_per_task_p50": 4.3569,
+     "output_tokens_per_task_p50": 58269
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Claude Opus 5.5",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-opus-5-5",
+   "openrouter_id": "anthropic/claude-opus-5.5",
+   "input_per_m": 4,
+   "output_per_m": 20,
+   "blended_per_m": 8.0,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-22",
+   "arena_models": [
+    "Claude Opus 5.5 (High)",
+    "Claude Opus 5.5 (Max)",
+    "Claude Opus 5.5 (Medium)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Claude Opus 5.5 (High)",
+     "cost_per_task_p50": 1.9335,
+     "output_tokens_per_task_p50": 31700
+    },
+    {
+     "model": "Claude Opus 5.5 (Max)",
+     "cost_per_task_p50": 5.794,
+     "output_tokens_per_task_p50": 117870
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Claude Sonnet 4.5",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-sonnet-4-5-20250929",
+   "openrouter_id": "anthropic/claude-sonnet-4.5",
+   "input_per_m": 3,
+   "output_per_m": 15,
+   "blended_per_m": 6.0,
+   "context_tokens": 200000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-09-29",
+   "arena_models": [
+    "Claude Sonnet 4.5 (20250929)",
+    "Claude Sonnet 4.5 (High, 32K, 20250929)",
+    "Claude Sonnet 4.5 (Search)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Claude Sonnet 4.6",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-sonnet-4-6",
+   "openrouter_id": "anthropic/claude-sonnet-4.6",
+   "input_per_m": 3,
+   "output_per_m": 15,
+   "blended_per_m": 6.0,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-02-17",
+   "arena_models": [
+    "Claude Sonnet 4.6",
+    "Claude Sonnet 4.6 (Search)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Claude Sonnet 5",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-sonnet-5",
+   "openrouter_id": "anthropic/claude-sonnet-5",
+   "input_per_m": 2,
+   "output_per_m": 10,
+   "blended_per_m": 4.0,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-06-29",
+   "arena_models": [
+    "Claude Sonnet 5 (High)",
+    "Claude Sonnet 5 (Search)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Claude Sonnet 5 (High)",
+     "cost_per_task_p50": 1.0022,
+     "output_tokens_per_task_p50": 27147
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Claude Sonnet 5.5",
+   "org": "anthropic",
+   "source": "models.dev",
+   "source_id": "anthropic/claude-sonnet-5-5",
+   "openrouter_id": "anthropic/claude-sonnet-5.5",
+   "input_per_m": 2,
+   "output_per_m": 10,
+   "blended_per_m": 4.0,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-28",
+   "arena_models": [
+    "Claude Sonnet 5.5 (High)",
+    "Claude Sonnet 5.5 (Max)",
+    "Claude Sonnet 5.5 (xHigh)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Claude Sonnet 5.5 (High)",
+     "cost_per_task_p50": 0.7526,
+     "output_tokens_per_task_p50": 20514
+    },
+    {
+     "model": "Claude Sonnet 5.5 (Max)",
+     "cost_per_task_p50": 3.9486,
+     "output_tokens_per_task_p50": 169179
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Command R (08-2024)",
+   "org": "cohere",
+   "source": "openrouter",
+   "source_id": "cohere/command-r-08-2024",
+   "openrouter_id": "cohere/command-r-08-2024",
+   "input_per_m": 0.15,
+   "output_per_m": 0.6,
+   "blended_per_m": 0.2625,
+   "context_tokens": 128000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-08-30",
+   "arena_models": [
+    "Command R (08-2024)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "price from first-party OpenRouter endpoint (Cohere)"
+  },
+  {
+   "family": "Command R+ (08-2024)",
+   "org": "cohere",
+   "source": "openrouter",
+   "source_id": "cohere/command-r-plus-08-2024",
+   "openrouter_id": "cohere/command-r-plus-08-2024",
+   "input_per_m": 2.5,
+   "output_per_m": 10.0,
+   "blended_per_m": 4.375,
+   "context_tokens": 128000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-08-30",
+   "arena_models": [
+    "Command R+ (08-2024)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "price from first-party OpenRouter endpoint (Cohere)"
+  },
+  {
+   "family": "DeepSeek-V3",
+   "org": "deepseek",
+   "source": "openrouter",
+   "source_id": "deepseek/deepseek-chat",
+   "openrouter_id": "deepseek/deepseek-chat",
+   "input_per_m": 0.2574,
+   "output_per_m": 1.0287,
+   "blended_per_m": 0.4502,
+   "context_tokens": 163840,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-12-26",
+   "arena_models": [
+    "DeepSeek-V3",
+    "DeepSeek-V3 (0324)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "DeepSeek-V3.1",
+   "org": "deepseek",
+   "source": "openrouter",
+   "source_id": "deepseek/deepseek-chat-v3.1",
+   "openrouter_id": "deepseek/deepseek-chat-v3.1",
+   "input_per_m": 0.25,
+   "output_per_m": 0.95,
+   "blended_per_m": 0.425,
+   "context_tokens": 163840,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-08-21",
+   "arena_models": [
+    "DeepSeek-V3.1",
+    "DeepSeek-V3.1 (Thinking)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "DeepSeek-V3.1-Terminus",
+   "org": "deepseek",
+   "source": "openrouter",
+   "source_id": "deepseek/deepseek-v3.1-terminus",
+   "openrouter_id": "deepseek/deepseek-v3.1-terminus",
+   "input_per_m": 0.27,
+   "output_per_m": 1.0,
+   "blended_per_m": 0.4525,
+   "context_tokens": 163840,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-09-22",
+   "arena_models": [
+    "DeepSeek-V3.1-Terminus",
+    "DeepSeek-V3.1-Terminus (Thinking)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "DeepSeek-V3.2",
+   "org": "deepseek",
+   "source": "openrouter",
+   "source_id": "deepseek/deepseek-v3.2",
+   "openrouter_id": "deepseek/deepseek-v3.2",
+   "input_per_m": 0.26,
+   "output_per_m": 0.38,
+   "blended_per_m": 0.29,
+   "context_tokens": 163840,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-12-01",
+   "arena_models": [
+    "DeepSeek-V3.2",
+    "DeepSeek-V3.2 (Thinking)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "DeepSeek-V3.2-Exp",
+   "org": "deepseek",
+   "source": "openrouter",
+   "source_id": "deepseek/deepseek-v3.2-exp",
+   "openrouter_id": "deepseek/deepseek-v3.2-exp",
+   "input_per_m": 0.27,
+   "output_per_m": 0.41,
+   "blended_per_m": 0.305,
+   "context_tokens": 163840,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-09-29",
+   "arena_models": [
+    "DeepSeek-V3.2-Exp",
+    "DeepSeek-V3.2-Exp (Thinking)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "DeepSeek-V4-Flash",
+   "org": "deepseek",
+   "source": "models.dev",
+   "source_id": "deepseek/deepseek-v4-flash",
+   "openrouter_id": "deepseek/deepseek-v4-flash",
+   "input_per_m": 0.15,
+   "output_per_m": 0.6,
+   "blended_per_m": 0.2625,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-10-17",
+   "arena_models": [
+    "DeepSeek-V4-Flash",
+    "DeepSeek-V4-Flash (High)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter lists $0.09/$0.18 per M"
+  },
+  {
+   "family": "DeepSeek-V4-Pro",
+   "org": "deepseek",
+   "source": "models.dev",
+   "source_id": "deepseek/deepseek-v4-pro",
+   "openrouter_id": "deepseek/deepseek-v4-pro",
+   "input_per_m": 0.66,
+   "output_per_m": 1.98,
+   "blended_per_m": 0.99,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-08-13",
+   "arena_models": [
+    "DeepSeek V4 Pro (High) (0813)",
+    "DeepSeek-V4-Pro",
+    "DeepSeek-V4-Pro (High, 20260813)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter lists $0.8882/$1.5082 per M"
+  },
+  {
+   "family": "DeepSeek-V4.1-Flash",
+   "org": "deepseek",
+   "source": "openrouter",
+   "source_id": "deepseek/deepseek-v4.1-flash",
+   "openrouter_id": "deepseek/deepseek-v4.1-flash",
+   "input_per_m": 0.14,
+   "output_per_m": 0.42,
+   "blended_per_m": 0.21,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-10",
+   "arena_models": [
+    "DeepSeek-V4.1-Flash-20260910 (Max)",
+    "DeepSeek-V4.1-Flash-20261017 (Max)",
+    "Deepseek V4.1 Flash (Max)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "DeepSeek-V4.1-Flash-20261017 (Max)",
+     "cost_per_task_p50": 0.1411,
+     "output_tokens_per_task_p50": 91044
+    }
+   ],
+   "notes": "Arena's -20261017 build is deepseek/deepseek-v4.1-flash-1017 on OpenRouter ($0.30/$1.20); price shown is the base V4.1 Flash; OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "GLM-4.5",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-4.5",
+   "openrouter_id": "z-ai/glm-4.5",
+   "input_per_m": 0.6,
+   "output_per_m": 2.2,
+   "blended_per_m": 1.0,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-07-28",
+   "arena_models": [
+    "GLM-4.5"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GLM-4.5-Air",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-4.5-air",
+   "openrouter_id": "z-ai/glm-4.5-air",
+   "input_per_m": 0.2,
+   "output_per_m": 1.1,
+   "blended_per_m": 0.425,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-07-28",
+   "arena_models": [
+    "GLM-4.5-Air"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GLM-4.5V",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-4.5v",
+   "openrouter_id": "z-ai/glm-4.5v",
+   "input_per_m": 0.6,
+   "output_per_m": 1.8,
+   "blended_per_m": 0.9,
+   "context_tokens": 64000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-08-11",
+   "arena_models": [
+    "GLM-4.5V"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GLM-4.6",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-4.6",
+   "openrouter_id": "z-ai/glm-4.6",
+   "input_per_m": 0.6,
+   "output_per_m": 2.2,
+   "blended_per_m": 1.0,
+   "context_tokens": 204800,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-09-30",
+   "arena_models": [
+    "GLM-4.6"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GLM-4.6V",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-4.6v",
+   "openrouter_id": "z-ai/glm-4.6v",
+   "input_per_m": 0.3,
+   "output_per_m": 0.9,
+   "blended_per_m": 0.45,
+   "context_tokens": 128000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-12-08",
+   "arena_models": [
+    "GLM-4.6V"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GLM-4.7",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-4.7",
+   "openrouter_id": "z-ai/glm-4.7",
+   "input_per_m": 0.6,
+   "output_per_m": 2.2,
+   "blended_per_m": 1.0,
+   "context_tokens": 204800,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-12-22",
+   "arena_models": [
+    "GLM-4.7"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GLM-4.7-Flash",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-4.7-flash",
+   "openrouter_id": "z-ai/glm-4.7-flash",
+   "input_per_m": 0,
+   "output_per_m": 0,
+   "blended_per_m": 0.0,
+   "context_tokens": 200000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-01-19",
+   "arena_models": [
+    "GLM-4.7-Flash"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "listed as free (free tier); treat as unknown for cost sorting"
+  },
+  {
+   "family": "GLM-5",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-5",
+   "openrouter_id": "z-ai/glm-5",
+   "input_per_m": 1,
+   "output_per_m": 3.2,
+   "blended_per_m": 1.55,
+   "context_tokens": 204800,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-02-12",
+   "arena_models": [
+    "GLM-5"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GLM-5.1",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-5.1",
+   "openrouter_id": "z-ai/glm-5.1",
+   "input_per_m": 1.4,
+   "output_per_m": 4.4,
+   "blended_per_m": 2.15,
+   "context_tokens": 200000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-04-07",
+   "arena_models": [
+    "GLM-5.1"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GLM-5.2",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-5.2",
+   "openrouter_id": "z-ai/glm-5.2",
+   "input_per_m": 1.4,
+   "output_per_m": 4.4,
+   "blended_per_m": 2.15,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-06-13",
+   "arena_models": [
+    "GLM 5.2 (Max)",
+    "GLM-5.2 (Max)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "GLM-5.2 (Max)",
+     "cost_per_task_p50": 0.947,
+     "output_tokens_per_task_p50": 54710
+    }
+   ],
+   "notes": "OpenRouter lists $0.62/$2.42 per M"
+  },
+  {
+   "family": "GLM-5.3",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-5.3",
+   "openrouter_id": "z-ai/glm-5.3",
+   "input_per_m": 1.4,
+   "output_per_m": 4.4,
+   "blended_per_m": 2.15,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-08-14",
+   "arena_models": [
+    "GLM 5.3 (Max)",
+    "GLM-5.3 (Max)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "GLM-5.3 (Max)",
+     "cost_per_task_p50": 0.8647,
+     "output_tokens_per_task_p50": 66888
+    }
+   ],
+   "notes": "OpenRouter lists $0.0699/$1.4 per M"
+  },
+  {
+   "family": "GLM-5.3-Flash",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-5.3-flash",
+   "openrouter_id": "z-ai/glm-5.3-flash",
+   "input_per_m": 0.15,
+   "output_per_m": 0.5,
+   "blended_per_m": 0.2375,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-08-26",
+   "arena_models": [
+    "GLM 5.3 Flash",
+    "GLM-5.3-Flash"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "GLM-5.3-Flash",
+     "cost_per_task_p50": 0.1417,
+     "output_tokens_per_task_p50": 46959
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "GLM-5V-Turbo",
+   "org": "zai",
+   "source": "models.dev",
+   "source_id": "zai/glm-5v-turbo",
+   "openrouter_id": "z-ai/glm-5v-turbo",
+   "input_per_m": 1.2,
+   "output_per_m": 4,
+   "blended_per_m": 1.9,
+   "context_tokens": 200000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-04-01",
+   "arena_models": [
+    "GLM-5V-Turbo"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-4",
+   "org": "openai",
+   "source": "openrouter",
+   "source_id": "openai/gpt-4",
+   "openrouter_id": "openai/gpt-4",
+   "input_per_m": 30.0,
+   "output_per_m": 60.0,
+   "blended_per_m": 37.5,
+   "context_tokens": 8191,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2023-05-28",
+   "arena_models": [
+    "GPT-4 (0314)",
+    "GPT-4 (0613)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "GPT-4.1",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-4.1",
+   "openrouter_id": "openai/gpt-4.1",
+   "input_per_m": 2,
+   "output_per_m": 8,
+   "blended_per_m": 3.5,
+   "context_tokens": 1047576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-04-14",
+   "arena_models": [
+    "GPT-4.1 (2025-04-14)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-4.1 mini",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-4.1-mini",
+   "openrouter_id": "openai/gpt-4.1-mini",
+   "input_per_m": 0.4,
+   "output_per_m": 1.6,
+   "blended_per_m": 0.7,
+   "context_tokens": 1047576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-04-14",
+   "arena_models": [
+    "GPT-4.1 mini (2025-04-14)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-4.1 nano",
+   "org": "openai",
+   "source": "openrouter",
+   "source_id": "openai/gpt-4.1-nano",
+   "openrouter_id": "openai/gpt-4.1-nano",
+   "input_per_m": 0.1,
+   "output_per_m": 0.4,
+   "blended_per_m": 0.175,
+   "context_tokens": 1047576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-04-14",
+   "arena_models": [
+    "GPT-4.1 nano (2025-04-14)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "GPT-4o",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-4o",
+   "openrouter_id": "openai/gpt-4o",
+   "input_per_m": 2.5,
+   "output_per_m": 10,
+   "blended_per_m": 4.375,
+   "context_tokens": 128000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-05-13",
+   "arena_models": [
+    "GPT-4o (2024-05-13)",
+    "GPT-4o (2024-08-06)",
+    "GPT-4o (Search)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-4o mini",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-4o-mini",
+   "openrouter_id": "openai/gpt-4o-mini",
+   "input_per_m": 0.15,
+   "output_per_m": 0.6,
+   "blended_per_m": 0.2625,
+   "context_tokens": 128000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-07-18",
+   "arena_models": [
+    "GPT-4o mini (2024-07-18)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-5",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5",
+   "openrouter_id": "openai/gpt-5",
+   "input_per_m": 1.25,
+   "output_per_m": 10,
+   "blended_per_m": 3.4375,
+   "context_tokens": 400000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-08-07",
+   "arena_models": [
+    "GPT-5 (High)",
+    "GPT-5 (Medium)",
+    "GPT-5 (Search)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-5 mini",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5-mini",
+   "openrouter_id": "openai/gpt-5-mini",
+   "input_per_m": 0.25,
+   "output_per_m": 2,
+   "blended_per_m": 0.6875,
+   "context_tokens": 400000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-08-07",
+   "arena_models": [
+    "GPT-5 mini (High)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-5 nano",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5-nano",
+   "openrouter_id": "openai/gpt-5-nano",
+   "input_per_m": 0.05,
+   "output_per_m": 0.4,
+   "blended_per_m": 0.1375,
+   "context_tokens": 400000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-08-07",
+   "arena_models": [
+    "GPT-5 nano (High)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-5.1",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5.1",
+   "openrouter_id": "openai/gpt-5.1",
+   "input_per_m": 1.25,
+   "output_per_m": 10,
+   "blended_per_m": 3.4375,
+   "context_tokens": 400000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-11-13",
+   "arena_models": [
+    "GPT-5.1",
+    "GPT-5.1 (High)",
+    "GPT-5.1 (Medium)",
+    "GPT-5.1 (Search)",
+    "gpt-5.1"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-5.1-Codex",
+   "org": "openai",
+   "source": "openrouter",
+   "source_id": "openai/gpt-5.1-codex",
+   "openrouter_id": "openai/gpt-5.1-codex",
+   "input_per_m": 1.25,
+   "output_per_m": 10.0,
+   "blended_per_m": 3.4375,
+   "context_tokens": 400000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-11-13",
+   "arena_models": [
+    "GPT-5.1-Codex"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "GPT-5.1-Codex-Mini",
+   "org": "openai",
+   "source": "openrouter",
+   "source_id": "openai/gpt-5.1-codex-mini",
+   "openrouter_id": "openai/gpt-5.1-codex-mini",
+   "input_per_m": 0.25,
+   "output_per_m": 2.0,
+   "blended_per_m": 0.6875,
+   "context_tokens": 400000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-11-13",
+   "arena_models": [
+    "GPT-5.1-Codex-Mini"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "GPT-5.2",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5.2",
+   "openrouter_id": "openai/gpt-5.2",
+   "input_per_m": 1.75,
+   "output_per_m": 14,
+   "blended_per_m": 4.8125,
+   "context_tokens": 400000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-12-11",
+   "arena_models": [
+    "GPT-5.2",
+    "GPT-5.2 (High)",
+    "GPT-5.2 (Search)",
+    "GPT-5.2 (Search, Non-Reasoning)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-5.2 Chat",
+   "org": "openai",
+   "source": "openrouter",
+   "source_id": "openai/gpt-5.2-chat",
+   "openrouter_id": "openai/gpt-5.2-chat",
+   "input_per_m": 1.75,
+   "output_per_m": 14.0,
+   "blended_per_m": 4.8125,
+   "context_tokens": 128000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-12-10",
+   "arena_models": [
+    "GPT-5.2 Chat (20260210)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo); no OpenRouter speed stats"
+  },
+  {
+   "family": "GPT-5.2-Codex",
+   "org": "openai",
+   "source": "openrouter",
+   "source_id": "openai/gpt-5.2-codex",
+   "openrouter_id": "openai/gpt-5.2-codex",
+   "input_per_m": 1.75,
+   "output_per_m": 14.0,
+   "blended_per_m": 4.8125,
+   "context_tokens": 400000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-01-14",
+   "arena_models": [
+    "GPT-5.2-Codex"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "GPT-5.3-Codex",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5.3-codex",
+   "openrouter_id": "openai/gpt-5.3-codex",
+   "input_per_m": 1.75,
+   "output_per_m": 14,
+   "blended_per_m": 4.8125,
+   "context_tokens": 400000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-02-05",
+   "arena_models": [
+    "GPT-5.3-Codex (Codex Harness)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-5.4",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5.4",
+   "openrouter_id": "openai/gpt-5.4",
+   "input_per_m": 2.5,
+   "output_per_m": 15,
+   "blended_per_m": 5.625,
+   "context_tokens": 1050000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-03-05",
+   "arena_models": [
+    "GPT 5.4 (High)",
+    "GPT-5.4",
+    "GPT-5.4 (High)",
+    "GPT-5.4 (High, Codex Harness)",
+    "GPT-5.4 (Medium, Codex Harness)",
+    "GPT-5.4 (Search)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-5.4 mini",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5.4-mini",
+   "openrouter_id": "openai/gpt-5.4-mini",
+   "input_per_m": 0.75,
+   "output_per_m": 4.5,
+   "blended_per_m": 1.6875,
+   "context_tokens": 400000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-03-17",
+   "arena_models": [
+    "GPT-5.4 mini (High)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-5.4 nano",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5.4-nano",
+   "openrouter_id": "openai/gpt-5.4-nano",
+   "input_per_m": 0.2,
+   "output_per_m": 1.25,
+   "blended_per_m": 0.4625,
+   "context_tokens": 400000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-03-17",
+   "arena_models": [
+    "GPT-5.4 nano (High)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-5.5",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5.5",
+   "openrouter_id": "openai/gpt-5.5",
+   "input_per_m": 5,
+   "output_per_m": 30,
+   "blended_per_m": 11.25,
+   "context_tokens": 1050000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-04-23",
+   "arena_models": [
+    "GPT 5.5",
+    "GPT 5.5 (xHigh)",
+    "GPT-5.5",
+    "GPT-5.5 (Codex Harness)",
+    "GPT-5.5 (High)",
+    "GPT-5.5 (High, Codex Harness)",
+    "GPT-5.5 (Search)",
+    "GPT-5.5 (xHigh, Codex Harness)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-5.6 Luna",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5.6-luna",
+   "openrouter_id": "openai/gpt-5.6-luna",
+   "input_per_m": 0.2,
+   "output_per_m": 1.2,
+   "blended_per_m": 0.45,
+   "context_tokens": 1050000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-07-09",
+   "arena_models": [
+    "GPT 5.6 Luna (xHigh)",
+    "GPT-5.6 Luna (xHigh)",
+    "GPT-5.6 Luna (xHigh, Codex Harness)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "GPT-5.6 Sol",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5.6-sol",
+   "openrouter_id": "openai/gpt-5.6-sol",
+   "input_per_m": 4,
+   "output_per_m": 20,
+   "blended_per_m": 8.0,
+   "context_tokens": 1050000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-07-09",
+   "arena_models": [
+    "GPT 5.6 Sol (xHigh)",
+    "GPT-5.6 Sol (xHigh)",
+    "GPT-5.6 Sol (xHigh, Codex Harness)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "GPT-5.6 Sol (xHigh)",
+     "cost_per_task_p50": 1.3085,
+     "output_tokens_per_task_p50": 21297
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "GPT-5.6 Terra",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-5.6-terra",
+   "openrouter_id": "openai/gpt-5.6-terra",
+   "input_per_m": 2,
+   "output_per_m": 12,
+   "blended_per_m": 4.5,
+   "context_tokens": 1050000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-07-09",
+   "arena_models": [
+    "GPT 5.6 Terra (xHigh)",
+    "GPT-5.6 Terra (xHigh)",
+    "GPT-5.6 Terra (xHigh, Codex Harness)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "GPT-5.6 Terra (xHigh)",
+     "cost_per_task_p50": 0.529,
+     "output_tokens_per_task_p50": 16977
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "GPT-6 Astra",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-6-astra",
+   "openrouter_id": "openai/gpt-6-astra",
+   "input_per_m": 10,
+   "output_per_m": 50,
+   "blended_per_m": 20.0,
+   "context_tokens": 1050000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-04",
+   "arena_models": [
+    "GPT 6 Astra (Max)",
+    "GPT-6 Astra (Max)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "GPT-6 Astra (Max)",
+     "cost_per_task_p50": 4.7677,
+     "output_tokens_per_task_p50": 31361
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "GPT-6 Luna",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-6-luna",
+   "openrouter_id": "openai/gpt-6-luna",
+   "input_per_m": 0.1,
+   "output_per_m": 0.5,
+   "blended_per_m": 0.2,
+   "context_tokens": 1050000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-22",
+   "arena_models": [
+    "GPT 6 Luna (Max)",
+    "GPT-6 Luna (Low)",
+    "GPT-6 Luna (Max)",
+    "GPT-6 Luna (Medium)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "GPT-6 Luna (Low)",
+     "cost_per_task_p50": 0.0092,
+     "output_tokens_per_task_p50": 3682
+    },
+    {
+     "model": "GPT-6 Luna (Medium)",
+     "cost_per_task_p50": 0.0238,
+     "output_tokens_per_task_p50": 9468
+    },
+    {
+     "model": "GPT-6 Luna (Max)",
+     "cost_per_task_p50": 0.0794,
+     "output_tokens_per_task_p50": 41811
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "GPT-6 Sol",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-6-sol",
+   "openrouter_id": "openai/gpt-6-sol",
+   "input_per_m": 2,
+   "output_per_m": 10,
+   "blended_per_m": 4.0,
+   "context_tokens": 1050000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-22",
+   "arena_models": [
+    "GPT 6 Sol (Max)",
+    "GPT-6 Sol (Max)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "GPT-6 Sol (Max)",
+     "cost_per_task_p50": 1.7466,
+     "output_tokens_per_task_p50": 38690
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "GPT-6.1 Sol",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-6.1-sol",
+   "openrouter_id": "openai/gpt-6.1-sol",
+   "input_per_m": 2,
+   "output_per_m": 10,
+   "blended_per_m": 4.0,
+   "context_tokens": 1050000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-29",
+   "arena_models": [
+    "GPT 6.1 Sol (Max)",
+    "GPT-6.1 Sol (Max)",
+    "GPT-6.1 Sol (Medium)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "GPT-6.1 Sol (Medium)",
+     "cost_per_task_p50": 0.3787,
+     "output_tokens_per_task_p50": 9391
+    },
+    {
+     "model": "GPT-6.1 Sol (Max)",
+     "cost_per_task_p50": 0.9891,
+     "output_tokens_per_task_p50": 32774
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "GPT-6.1 Terra",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-6.1-terra",
+   "openrouter_id": "openai/gpt-6.1-terra",
+   "input_per_m": 1,
+   "output_per_m": 5,
+   "blended_per_m": 2.0,
+   "context_tokens": 1050000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-10-26",
+   "arena_models": [
+    "GPT-6.1 Terra (Max)",
+    "GPT-6.1 Terra (Medium)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "GPT-6.1 Terra (Medium)",
+     "cost_per_task_p50": 0.1494,
+     "output_tokens_per_task_p50": 7055
+    },
+    {
+     "model": "GPT-6.1 Terra (Max)",
+     "cost_per_task_p50": 0.827,
+     "output_tokens_per_task_p50": 45724
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "GPT-6.2 Astra",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-6.2-astra",
+   "openrouter_id": "openai/gpt-6.2-astra",
+   "input_per_m": 8,
+   "output_per_m": 40,
+   "blended_per_m": 16.0,
+   "context_tokens": 1050000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-11-17",
+   "arena_models": [
+    "GPT-6.2 Astra (Max)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "GPT-6.2 Astra (Max)",
+     "cost_per_task_p50": 3.3434,
+     "output_tokens_per_task_p50": 35613
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "GPT-6.2 Sol",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/gpt-6.2-sol",
+   "openrouter_id": "openai/gpt-6.2-sol",
+   "input_per_m": 2,
+   "output_per_m": 10,
+   "blended_per_m": 4.0,
+   "context_tokens": 1050000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-11-17",
+   "arena_models": [
+    "GPT-6.2 Sol (Max)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "GPT-6.2 Sol (Max)",
+     "cost_per_task_p50": 1.019,
+     "output_tokens_per_task_p50": 38574
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Gemini 2.5 Flash",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-2.5-flash",
+   "openrouter_id": "google/gemini-2.5-flash",
+   "input_per_m": 0.3,
+   "output_per_m": 2.5,
+   "blended_per_m": 0.85,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-06-17",
+   "arena_models": [
+    "Gemini 2.5 Flash",
+    "gemini-2.5-flash"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Gemini 2.5 Pro",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-2.5-pro",
+   "openrouter_id": "google/gemini-2.5-pro",
+   "input_per_m": 1.25,
+   "output_per_m": 10,
+   "blended_per_m": 3.4375,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-06-17",
+   "arena_models": [
+    "Gemini 2.5 Pro",
+    "Gemini 2.5 Pro (Grounding)",
+    "gemini-2.5-pro"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Gemini 3 Flash",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-3-flash-preview",
+   "openrouter_id": "google/gemini-3-flash-preview",
+   "input_per_m": 0.5,
+   "output_per_m": 3,
+   "blended_per_m": 1.125,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-12-17",
+   "arena_models": [
+    "Gemini 3 Flash",
+    "Gemini 3 Flash (Grounding)",
+    "Gemini 3 Flash (Minimal)",
+    "gemini-3-flash"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "matched to OpenRouter gemini-3-flash-preview"
+  },
+  {
+   "family": "Gemini 3.1 Flash-Lite Preview",
+   "org": "google",
+   "source": "openrouter",
+   "source_id": "google/gemini-3.1-flash-lite-preview",
+   "openrouter_id": "google/gemini-3.1-flash-lite-preview",
+   "input_per_m": 0.125,
+   "output_per_m": 0.75,
+   "blended_per_m": 0.2812,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-03-03",
+   "arena_models": [
+    "Gemini 3.1 Flash-Lite Preview"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "price from first-party OpenRouter endpoint (Google AI Studio)"
+  },
+  {
+   "family": "Gemini 3.1 Pro Preview",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-3.1-pro-preview",
+   "openrouter_id": "google/gemini-3.1-pro-preview",
+   "input_per_m": 2,
+   "output_per_m": 12,
+   "blended_per_m": 4.5,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-02-19",
+   "arena_models": [
+    "Gemini 3.1 Pro Preview"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Gemini 3.1 Pro Preview",
+     "cost_per_task_p50": 0.6731,
+     "output_tokens_per_task_p50": 13679
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Gemini 3.5 Flash",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-3.5-flash",
+   "openrouter_id": "google/gemini-3.5-flash",
+   "input_per_m": 1.5,
+   "output_per_m": 9,
+   "blended_per_m": 3.375,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-05-19",
+   "arena_models": [
+    "Gemini 3.5 Flash (High)",
+    "Gemini 3.5 Flash (Medium)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Gemini 3.5 Flash-Lite",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-3.5-flash-lite",
+   "openrouter_id": "google/gemini-3.5-flash-lite",
+   "input_per_m": 0.3,
+   "output_per_m": 2.5,
+   "blended_per_m": 0.85,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-07-21",
+   "arena_models": [
+    "Gemini 3.5 Flash-Lite"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Gemini 3.6 Flash",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-3.6-flash",
+   "openrouter_id": "google/gemini-3.6-flash",
+   "input_per_m": 0.75,
+   "output_per_m": 3.75,
+   "blended_per_m": 1.5,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-07-21",
+   "arena_models": [
+    "Gemini 3.6 Flash (High)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Gemini 3.7 Flash",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-3.7-flash",
+   "openrouter_id": "google/gemini-3.7-flash",
+   "input_per_m": 0.75,
+   "output_per_m": 3.75,
+   "blended_per_m": 1.5,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-08-13",
+   "arena_models": [
+    "Gemini 3.7 Flash (High)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Gemini 3.7 Flash (High)",
+     "cost_per_task_p50": 0.4922,
+     "output_tokens_per_task_p50": 38502
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Gemini 3.8 Flash",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-3.8-flash",
+   "openrouter_id": "google/gemini-3.8-flash",
+   "input_per_m": 0.75,
+   "output_per_m": 3.75,
+   "blended_per_m": 1.5,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-02",
+   "arena_models": [
+    "Gemini 3.8 Flash (High)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Gemini 3.8 Flash (High)",
+     "cost_per_task_p50": 0.7171,
+     "output_tokens_per_task_p50": 59200
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Gemini 4 Argon",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-4-argon",
+   "openrouter_id": "google/gemini-4-argon",
+   "input_per_m": 2,
+   "output_per_m": 10,
+   "blended_per_m": 4.0,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-10-13",
+   "arena_models": [
+    "Gemini 4 Argon (High)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Gemini 4 Argon (High)",
+     "cost_per_task_p50": 0.7851,
+     "output_tokens_per_task_p50": 26357
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Gemini 4 Carbon",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-4-carbon",
+   "openrouter_id": "google/gemini-4-carbon",
+   "input_per_m": 2,
+   "output_per_m": 10,
+   "blended_per_m": 4.0,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-11-10",
+   "arena_models": [
+    "Gemini 4 Carbon (High)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Gemini 4 Carbon (High)",
+     "cost_per_task_p50": 1.3533,
+     "output_tokens_per_task_p50": 44878
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Gemini 4 Hydrogen",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-4-hydrogen",
+   "openrouter_id": "google/gemini-4-hydrogen",
+   "input_per_m": 1.5,
+   "output_per_m": 7.5,
+   "blended_per_m": 3.0,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-11-12",
+   "arena_models": [
+    "Gemini 4 Hydrogen (High)",
+    "Gemini 4 Hydrogen (xHigh)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Gemini 4 Hydrogen (High)",
+     "cost_per_task_p50": 1.4973,
+     "output_tokens_per_task_p50": 63438
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Gemini 4 Neon",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemini-4-neon",
+   "openrouter_id": "google/gemini-4-neon",
+   "input_per_m": 3,
+   "output_per_m": 15,
+   "blended_per_m": 6.0,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-11-18",
+   "arena_models": [
+    "Gemini 4 Neon (High)",
+    "Gemini 4 Neon (xHigh)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Gemini 4 Neon (High)",
+     "cost_per_task_p50": 2.4844,
+     "output_tokens_per_task_p50": 58326
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Gemma 2 27B IT",
+   "org": "google",
+   "source": "openrouter",
+   "source_id": "google/gemma-2-27b-it",
+   "openrouter_id": "google/gemma-2-27b-it",
+   "input_per_m": 0.65,
+   "output_per_m": 0.65,
+   "blended_per_m": 0.65,
+   "context_tokens": 8192,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-07-13",
+   "arena_models": [
+    "Gemma 2 27B IT"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Gemma 3 12B IT",
+   "org": "google",
+   "source": "openrouter",
+   "source_id": "google/gemma-3-12b-it",
+   "openrouter_id": "google/gemma-3-12b-it",
+   "input_per_m": 0.05,
+   "output_per_m": 0.15,
+   "blended_per_m": 0.075,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-03-13",
+   "arena_models": [
+    "Gemma 3 12B IT"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Gemma 3 27B IT",
+   "org": "google",
+   "source": "openrouter",
+   "source_id": "google/gemma-3-27b-it",
+   "openrouter_id": "google/gemma-3-27b-it",
+   "input_per_m": 0.08,
+   "output_per_m": 0.16,
+   "blended_per_m": 0.1,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-03-12",
+   "arena_models": [
+    "Gemma 3 27B IT",
+    "gemma-3-27b-it"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Gemma 3 4B IT",
+   "org": "google",
+   "source": "openrouter",
+   "source_id": "google/gemma-3-4b-it",
+   "openrouter_id": "google/gemma-3-4b-it",
+   "input_per_m": 0.04,
+   "output_per_m": 0.05,
+   "blended_per_m": 0.0425,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-03-13",
+   "arena_models": [
+    "Gemma 3 4B IT"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Gemma 4 26B A4B",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemma-4-26b-a4b-it",
+   "openrouter_id": "google/gemma-4-26b-a4b-it",
+   "input_per_m": 0,
+   "output_per_m": 0,
+   "blended_per_m": 0.0,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-04-02",
+   "arena_models": [
+    "Gemma 4 26B A4B"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "listed as free (free tier); treat as unknown for cost sorting"
+  },
+  {
+   "family": "Gemma 4 31B",
+   "org": "google",
+   "source": "models.dev",
+   "source_id": "google/gemma-4-31b-it",
+   "openrouter_id": "google/gemma-4-31b-it",
+   "input_per_m": 0,
+   "output_per_m": 0,
+   "blended_per_m": 0.0,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-04-02",
+   "arena_models": [
+    "Gemma 4 31B"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "listed as free (free tier); treat as unknown for cost sorting"
+  },
+  {
+   "family": "Granite 4.2 8B",
+   "org": "ibm",
+   "source": "openrouter",
+   "source_id": "ibm-granite/granite-4.2-8b",
+   "openrouter_id": "ibm-granite/granite-4.2-8b",
+   "input_per_m": 0.06,
+   "output_per_m": 0.15,
+   "blended_per_m": 0.0825,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-08-31",
+   "arena_models": [
+    "Granite 4.2 8B"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Grok 4.20 Beta 1",
+   "org": "xai",
+   "source": "openrouter",
+   "source_id": "x-ai/grok-4.20",
+   "openrouter_id": "x-ai/grok-4.20",
+   "input_per_m": 1.25,
+   "output_per_m": 2.5,
+   "blended_per_m": 1.5625,
+   "context_tokens": 2000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-03-31",
+   "arena_models": [
+    "Grok 4.20 Beta 1"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "price from first-party OpenRouter endpoint (xAI)"
+  },
+  {
+   "family": "Grok 4.3",
+   "org": "xai",
+   "source": "models.dev",
+   "source_id": "xai/grok-4.3",
+   "openrouter_id": "x-ai/grok-4.3",
+   "input_per_m": 1.25,
+   "output_per_m": 2.5,
+   "blended_per_m": 1.5625,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-04-17",
+   "arena_models": [
+    "Grok 4.3"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Grok 4.5",
+   "org": "xai",
+   "source": "models.dev",
+   "source_id": "xai/grok-4.5",
+   "openrouter_id": "x-ai/grok-4.5",
+   "input_per_m": 2,
+   "output_per_m": 6,
+   "blended_per_m": 3.0,
+   "context_tokens": 500000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-07-08",
+   "arena_models": [
+    "Grok 4.5"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Grok 4.6",
+   "org": "xai",
+   "source": "models.dev",
+   "source_id": "xai/grok-4.6",
+   "openrouter_id": "x-ai/grok-4.6",
+   "input_per_m": 2,
+   "output_per_m": 6,
+   "blended_per_m": 3.0,
+   "context_tokens": 500000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-08-12",
+   "arena_models": [
+    "Grok 4.6 (High)",
+    "Grok 4.6 (xHigh)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Grok 4.6 (xHigh)",
+     "cost_per_task_p50": 1.5508,
+     "output_tokens_per_task_p50": 35700
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Grok 4.7",
+   "org": "xai",
+   "source": "models.dev",
+   "source_id": "xai/grok-4.7",
+   "openrouter_id": "x-ai/grok-4.7",
+   "input_per_m": 2,
+   "output_per_m": 6,
+   "blended_per_m": 3.0,
+   "context_tokens": 500000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-21",
+   "arena_models": [
+    "Grok 4.7 (xHigh)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Grok 4.7 (xHigh)",
+     "cost_per_task_p50": 2.882,
+     "output_tokens_per_task_p50": 66776
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Hy3",
+   "org": "tencent",
+   "source": "openrouter",
+   "source_id": "tencent/hy3",
+   "openrouter_id": "tencent/hy3",
+   "input_per_m": 0.132,
+   "output_per_m": 0.528,
+   "blended_per_m": 0.231,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-07-06",
+   "arena_models": [
+    "Hy3"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Hy3",
+     "cost_per_task_p50": 0.0784,
+     "output_tokens_per_task_p50": 32283
+    }
+   ],
+   "notes": "price from first-party OpenRouter endpoint (Tencent)"
+  },
+  {
+   "family": "Hy4",
+   "org": "tencent",
+   "source": "openrouter",
+   "source_id": "tencent/hy4",
+   "openrouter_id": "tencent/hy4",
+   "input_per_m": 0.417,
+   "output_per_m": 1.2505,
+   "blended_per_m": 0.6254,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-11-04",
+   "arena_models": [
+    "Hy4"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Hy4",
+     "cost_per_task_p50": 0.447,
+     "output_tokens_per_task_p50": 49604
+    }
+   ],
+   "notes": "price from first-party OpenRouter endpoint (Tencent)"
+  },
+  {
+   "family": "Hy4 preview",
+   "org": "tencent",
+   "source": "openrouter",
+   "source_id": "tencent/hy4-preview",
+   "openrouter_id": "tencent/hy4-preview",
+   "input_per_m": 0.834,
+   "output_per_m": 2.501,
+   "blended_per_m": 1.2508,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-08-28",
+   "arena_models": [
+    "Hy4 preview"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Hy4 preview",
+     "cost_per_task_p50": 0.4139,
+     "output_tokens_per_task_p50": 48277
+    }
+   ],
+   "notes": "price from first-party OpenRouter endpoint (Tencent)"
+  },
+  {
+   "family": "Inkling",
+   "org": "thinky",
+   "source": "openrouter",
+   "source_id": "thinkingmachines/inkling",
+   "openrouter_id": "thinkingmachines/inkling",
+   "input_per_m": 1.0,
+   "output_per_m": 4.05,
+   "blended_per_m": 1.7625,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-07-17",
+   "arena_models": [
+    "Inkling"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Inkling",
+     "cost_per_task_p50": 0.2046,
+     "output_tokens_per_task_p50": 7986
+    }
+   ],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Inkling 2 Mini",
+   "org": "thinky",
+   "source": "openrouter",
+   "source_id": "thinkingmachines/inkling-2-mini",
+   "openrouter_id": "thinkingmachines/inkling-2-mini",
+   "input_per_m": 0.075,
+   "output_per_m": 0.3,
+   "blended_per_m": 0.1312,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-11-21",
+   "arena_models": [
+    "Inkling 2 Mini"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Inkling 2 Mini",
+     "cost_per_task_p50": 0.1423,
+     "output_tokens_per_task_p50": 55337
+    }
+   ],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Inkling 2 Small",
+   "org": "thinky",
+   "source": "openrouter",
+   "source_id": "thinkingmachines/inkling-2-small",
+   "openrouter_id": "thinkingmachines/inkling-2-small",
+   "input_per_m": 0.3,
+   "output_per_m": 1.0,
+   "blended_per_m": 0.475,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-11-09",
+   "arena_models": [
+    "Inkling 2 Small"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Inkling 2 Small",
+     "cost_per_task_p50": 0.2133,
+     "output_tokens_per_task_p50": 43156
+    }
+   ],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Inkling-Small",
+   "org": "thinky",
+   "source": "openrouter",
+   "source_id": "thinkingmachines/inkling-small",
+   "openrouter_id": "thinkingmachines/inkling-small",
+   "input_per_m": 0.45,
+   "output_per_m": 1.2,
+   "blended_per_m": 0.6375,
+   "context_tokens": 524288,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-07-30",
+   "arena_models": [
+    "Inkling Small",
+    "Inkling-Small"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Inkling-Small",
+     "cost_per_task_p50": 0.1194,
+     "output_tokens_per_task_p50": 20260
+    }
+   ],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Kimi K2.5",
+   "org": "moonshot",
+   "source": "openrouter",
+   "source_id": "moonshotai/kimi-k2.5",
+   "openrouter_id": "moonshotai/kimi-k2.5",
+   "input_per_m": 0.5,
+   "output_per_m": 2.5,
+   "blended_per_m": 1.0,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-01-27",
+   "arena_models": [
+    "Kimi K2.5 (Thinking)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Kimi K2.6",
+   "org": "moonshot",
+   "source": "models.dev",
+   "source_id": "moonshotai/kimi-k2.6",
+   "openrouter_id": "moonshotai/kimi-k2.6",
+   "input_per_m": 0.95,
+   "output_per_m": 4,
+   "blended_per_m": 1.7125,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-04-20",
+   "arena_models": [
+    "Kimi K2.6"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter lists $0.65/$3.41 per M"
+  },
+  {
+   "family": "Kimi K2.7 Code",
+   "org": "moonshot",
+   "source": "models.dev",
+   "source_id": "moonshotai/kimi-k2.7-code",
+   "openrouter_id": "moonshotai/kimi-k2.7-code",
+   "input_per_m": 0.95,
+   "output_per_m": 4,
+   "blended_per_m": 1.7125,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-06-12",
+   "arena_models": [
+    "Kimi K2.7 Code"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter lists $0.6/$3.0 per M"
+  },
+  {
+   "family": "Kimi K3",
+   "org": "moonshot",
+   "source": "models.dev",
+   "source_id": "moonshotai/kimi-k3",
+   "openrouter_id": "moonshotai/kimi-k3",
+   "input_per_m": 3,
+   "output_per_m": 15,
+   "blended_per_m": 6.0,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-07-16",
+   "arena_models": [
+    "Kimi K3 (Max)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Kimi K3 (Max)",
+     "cost_per_task_p50": 1.0438,
+     "output_tokens_per_task_p50": 26966
+    }
+   ],
+   "notes": "OpenRouter lists $0.192/$16.0 per M"
+  },
+  {
+   "family": "Kimi K3.1 Pro",
+   "org": "moonshot",
+   "source": "models.dev",
+   "source_id": "moonshotai/kimi-k3.1-pro",
+   "openrouter_id": "moonshotai/kimi-k3.1-pro",
+   "input_per_m": 2,
+   "output_per_m": 10,
+   "blended_per_m": 4.0,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-10-23",
+   "arena_models": [
+    "Kimi K3.1 Pro (Max)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter lists $0.2403/$8.4023 per M"
+  },
+  {
+   "family": "Llama 3.1 70B Instruct",
+   "org": "meta",
+   "source": "openrouter",
+   "source_id": "meta-llama/llama-3.1-70b-instruct",
+   "openrouter_id": "meta-llama/llama-3.1-70b-instruct",
+   "input_per_m": 0.72,
+   "output_per_m": 0.72,
+   "blended_per_m": 0.72,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-07-23",
+   "arena_models": [
+    "Llama 3.1 70B Instruct"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Llama 3.1 8B Instruct",
+   "org": "meta",
+   "source": "openrouter",
+   "source_id": "meta-llama/llama-3.1-8b-instruct",
+   "openrouter_id": "meta-llama/llama-3.1-8b-instruct",
+   "input_per_m": 0.05,
+   "output_per_m": 0.08,
+   "blended_per_m": 0.0575,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-07-23",
+   "arena_models": [
+    "Llama 3.1 8B Instruct"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Llama 3.2 3B Instruct",
+   "org": "meta",
+   "source": "openrouter",
+   "source_id": "meta-llama/llama-3.2-3b-instruct",
+   "openrouter_id": "meta-llama/llama-3.2-3b-instruct",
+   "input_per_m": 0.05,
+   "output_per_m": 0.33,
+   "blended_per_m": 0.12,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-09-25",
+   "arena_models": [
+    "Llama 3.2 3B Instruct"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Llama 3.3 70B Instruct",
+   "org": "meta",
+   "source": "openrouter",
+   "source_id": "meta-llama/llama-3.3-70b-instruct",
+   "openrouter_id": "meta-llama/llama-3.3-70b-instruct",
+   "input_per_m": 0.71,
+   "output_per_m": 0.71,
+   "blended_per_m": 0.71,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-12-06",
+   "arena_models": [
+    "Llama 3.3 70B Instruct"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "MiMo-V2.6-Flash",
+   "org": "xiaomi",
+   "source": "models.dev",
+   "source_id": "xiaomi/mimo-v2.6-flash",
+   "openrouter_id": "xiaomi/mimo-v2.6-flash",
+   "input_per_m": 0.14,
+   "output_per_m": 0.28,
+   "blended_per_m": 0.175,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-22",
+   "arena_models": [
+    "MiMo V2.6 Flash",
+    "MiMo-V2.6-Flash"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "MiMo-V2.6-Flash",
+     "cost_per_task_p50": 0.0775,
+     "output_tokens_per_task_p50": 45565
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "MiMo-V2.6-Pro",
+   "org": "xiaomi",
+   "source": "models.dev",
+   "source_id": "xiaomi/mimo-v2.6-pro",
+   "openrouter_id": "xiaomi/mimo-v2.6-pro",
+   "input_per_m": 0.435,
+   "output_per_m": 0.87,
+   "blended_per_m": 0.5437,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-22",
+   "arena_models": [
+    "MiMo V2.6 Pro",
+    "MiMo-V2.6-Pro"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "MiMo-V2.6-Pro",
+     "cost_per_task_p50": 0.1606,
+     "output_tokens_per_task_p50": 48195
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "MiniMax-M2",
+   "org": "minimax",
+   "source": "models.dev",
+   "source_id": "minimax/MiniMax-M2",
+   "openrouter_id": null,
+   "input_per_m": 0.3,
+   "output_per_m": 1.2,
+   "blended_per_m": 0.525,
+   "context_tokens": 204800,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-10-27",
+   "arena_models": [
+    "MiniMax-M2"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "MiniMax-M2.5",
+   "org": "minimax",
+   "source": "models.dev",
+   "source_id": "minimax/MiniMax-M2.5",
+   "openrouter_id": "minimax/minimax-m2.5",
+   "input_per_m": 0.3,
+   "output_per_m": 1.2,
+   "blended_per_m": 0.525,
+   "context_tokens": 204800,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-02-12",
+   "arena_models": [
+    "MiniMax-M2.5"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "MiniMax-M2.7",
+   "org": "minimax",
+   "source": "models.dev",
+   "source_id": "minimax/MiniMax-M2.7",
+   "openrouter_id": "minimax/minimax-m2.7",
+   "input_per_m": 0.3,
+   "output_per_m": 1.2,
+   "blended_per_m": 0.525,
+   "context_tokens": 204800,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-03-18",
+   "arena_models": [
+    "MiniMax-M2.7"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter lists $0.6/$1.8 per M"
+  },
+  {
+   "family": "MiniMax-M3",
+   "org": "minimax",
+   "source": "models.dev",
+   "source_id": "minimax/MiniMax-M3",
+   "openrouter_id": "minimax/minimax-m3",
+   "input_per_m": 0.3,
+   "output_per_m": 1.2,
+   "blended_per_m": 0.525,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-06-01",
+   "arena_models": [
+    "MiniMax-M3",
+    "Minimax M3"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "MiniMax-M3",
+     "cost_per_task_p50": 0.3831,
+     "output_tokens_per_task_p50": 24136
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "MiniMax-M3.1-Flash",
+   "org": "minimax",
+   "source": "models.dev",
+   "source_id": "minimax/MiniMax-M3.1-Flash",
+   "openrouter_id": "minimax/minimax-m3.1-flash",
+   "input_per_m": 0.15,
+   "output_per_m": 0.6,
+   "blended_per_m": 0.2625,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-10-19",
+   "arena_models": [
+    "MiniMax-M3.1-Flash"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "MiniMax-M3.1-Flash",
+     "cost_per_task_p50": 0.2037,
+     "output_tokens_per_task_p50": 68292
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Mistral Large",
+   "org": "mistral",
+   "source": "openrouter",
+   "source_id": "mistralai/mistral-large",
+   "openrouter_id": "mistralai/mistral-large",
+   "input_per_m": 2.0,
+   "output_per_m": 6.0,
+   "blended_per_m": 3.0,
+   "context_tokens": 128000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-02-26",
+   "arena_models": [
+    "Mistral Large (2402)",
+    "Mistral Large (2411)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "price from first-party OpenRouter endpoint (Mistral)"
+  },
+  {
+   "family": "Mistral Large 3",
+   "org": "mistral",
+   "source": "models.dev",
+   "source_id": "mistral/mistral-large-2512",
+   "openrouter_id": null,
+   "input_per_m": 0.5,
+   "output_per_m": 1.5,
+   "blended_per_m": 0.75,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-12-02",
+   "arena_models": [
+    "Mistral Large 3"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Mistral Large 4",
+   "org": "mistral",
+   "source": "models.dev",
+   "source_id": "mistral/mistral-large-4",
+   "openrouter_id": "mistralai/mistral-large-4-0",
+   "input_per_m": 0.7,
+   "output_per_m": 2.1,
+   "blended_per_m": 1.05,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-10-05",
+   "arena_models": [
+    "Mistral Large 4",
+    "mistral-large-4"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Mistral Large 4",
+     "cost_per_task_p50": 0.2768,
+     "output_tokens_per_task_p50": 23156
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Mistral Medium 3.5",
+   "org": "mistral",
+   "source": "models.dev",
+   "source_id": "mistral/mistral-medium-2604",
+   "openrouter_id": "mistralai/mistral-medium-3-5",
+   "input_per_m": 1.5,
+   "output_per_m": 7.5,
+   "blended_per_m": 3.0,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-04-28",
+   "arena_models": [
+    "Mistral Medium 3.5"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Mistral Medium 3.5",
+     "cost_per_task_p50": 0.2972,
+     "output_tokens_per_task_p50": 18497
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Mistral Small 3.1 24B Instruct",
+   "org": "mistral",
+   "source": "openrouter",
+   "source_id": "mistralai/mistral-small-3.1-24b-instruct",
+   "openrouter_id": "mistralai/mistral-small-3.1-24b-instruct",
+   "input_per_m": 0.351,
+   "output_per_m": 0.555,
+   "blended_per_m": 0.402,
+   "context_tokens": 128000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-03-17",
+   "arena_models": [
+    "Mistral Small 3.1 24B Instruct (2503)",
+    "mistral-small-3.1-24b-instruct-2503"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Muse Ember",
+   "org": "meta",
+   "source": "models.dev",
+   "source_id": "meta/muse-ember-1.0",
+   "openrouter_id": "meta/muse-ember",
+   "input_per_m": 0.1,
+   "output_per_m": 0.5,
+   "blended_per_m": 0.2,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-11-09",
+   "arena_models": [
+    "Muse Ember (Max)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Muse Ember (Max)",
+     "cost_per_task_p50": 0.0207,
+     "output_tokens_per_task_p50": 10507
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Muse Spark 1.1",
+   "org": "meta",
+   "source": "models.dev",
+   "source_id": "meta/muse-spark-1.1",
+   "openrouter_id": "meta/muse-spark-1.1",
+   "input_per_m": 1.25,
+   "output_per_m": 4.25,
+   "blended_per_m": 2.0,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-04-08",
+   "arena_models": [
+    "Muse Spark 1.1"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Muse Spark 1.2",
+   "org": "meta",
+   "source": "models.dev",
+   "source_id": "meta/muse-spark-1.2",
+   "openrouter_id": "meta/muse-spark-1.2",
+   "input_per_m": 1.25,
+   "output_per_m": 4.25,
+   "blended_per_m": 2.0,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-08-05",
+   "arena_models": [
+    "Muse Spark 1.2 (xHigh)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Muse Spark 1.2 (xHigh)",
+     "cost_per_task_p50": 0.4229,
+     "output_tokens_per_task_p50": 26953
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Muse Spark 1.3",
+   "org": "meta",
+   "source": "models.dev",
+   "source_id": "meta/muse-spark-1.3",
+   "openrouter_id": "meta/muse-spark-1.3",
+   "input_per_m": 1.25,
+   "output_per_m": 4.25,
+   "blended_per_m": 2.0,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-09-02",
+   "arena_models": [
+    "Muse Spark 1.3 (Max)",
+    "Muse Spark 1.3 (xHigh)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Muse Spark 1.3 (Max)",
+     "cost_per_task_p50": 0.4434,
+     "output_tokens_per_task_p50": 27259
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Muse Spark Open",
+   "org": "meta",
+   "source": "openrouter",
+   "source_id": "meta/muse-spark-open",
+   "openrouter_id": "meta/muse-spark-open",
+   "input_per_m": 1.25,
+   "output_per_m": 4.25,
+   "blended_per_m": 2.0,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-10-15",
+   "arena_models": [
+    "Muse Spark Open (Max)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Muse Wonder",
+   "org": "meta",
+   "source": "models.dev",
+   "source_id": "meta/muse-wonder-1.0",
+   "openrouter_id": "meta/muse-wonder",
+   "input_per_m": 4,
+   "output_per_m": 20,
+   "blended_per_m": 8.0,
+   "context_tokens": 1048576,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-10-12",
+   "arena_models": [
+    "Muse Wonder (Max)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Muse Wonder (Max)",
+     "cost_per_task_p50": 1.0878,
+     "output_tokens_per_task_p50": 21964
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Nemotron 3 Ultra",
+   "org": "nvidia",
+   "source": "openrouter",
+   "source_id": "nvidia/nemotron-3-ultra-550b-a55b",
+   "openrouter_id": "nvidia/nemotron-3-ultra-550b-a55b",
+   "input_per_m": 0.5,
+   "output_per_m": 2.2,
+   "blended_per_m": 0.925,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-06-04",
+   "arena_models": [
+    "Nemotron 3 Ultra"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Nemotron 3 Ultra",
+     "cost_per_task_p50": 0.1362,
+     "output_tokens_per_task_p50": 8842
+    }
+   ],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Qwen-Max",
+   "org": "alibaba",
+   "source": "models.dev",
+   "source_id": "alibaba/qwen-max",
+   "openrouter_id": null,
+   "input_per_m": 1.6,
+   "output_per_m": 6.4,
+   "blended_per_m": 2.8,
+   "context_tokens": 32768,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-04-03",
+   "arena_models": [
+    "Qwen-Max (0919)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Qwen-Plus",
+   "org": "alibaba",
+   "source": "models.dev",
+   "source_id": "alibaba/qwen-plus",
+   "openrouter_id": "qwen/qwen-plus",
+   "input_per_m": 0.4,
+   "output_per_m": 1.2,
+   "blended_per_m": 0.6,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-01-25",
+   "arena_models": [
+    "Qwen-Plus (0125)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter lists $0.26/$0.78 per M"
+  },
+  {
+   "family": "Qwen2.5-72B-Instruct",
+   "org": "alibaba",
+   "source": "openrouter",
+   "source_id": "qwen/qwen-2.5-72b-instruct",
+   "openrouter_id": "qwen/qwen-2.5-72b-instruct",
+   "input_per_m": 0.36,
+   "output_per_m": 0.4,
+   "blended_per_m": 0.37,
+   "context_tokens": 32768,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-09-19",
+   "arena_models": [
+    "Qwen2.5-72B-Instruct"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Qwen2.5-Coder-32B-Instruct",
+   "org": "alibaba",
+   "source": "openrouter",
+   "source_id": "qwen/qwen-2.5-coder-32b-instruct",
+   "openrouter_id": "qwen/qwen-2.5-coder-32b-instruct",
+   "input_per_m": 0.66,
+   "output_per_m": 1.0,
+   "blended_per_m": 0.745,
+   "context_tokens": 32768,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2024-11-11",
+   "arena_models": [
+    "Qwen2.5-Coder-32B-Instruct"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Qwen2.5-VL-72B-Instruct",
+   "org": "alibaba",
+   "source": "openrouter",
+   "source_id": "qwen/qwen2.5-vl-72b-instruct",
+   "openrouter_id": "qwen/qwen2.5-vl-72b-instruct",
+   "input_per_m": 0.8,
+   "output_per_m": 1.0,
+   "blended_per_m": 0.85,
+   "context_tokens": 128000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-02-01",
+   "arena_models": [
+    "Qwen2.5-VL-72B-Instruct"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Qwen3-30B-A3B",
+   "org": "alibaba",
+   "source": "openrouter",
+   "source_id": "qwen/qwen3-30b-a3b",
+   "openrouter_id": "qwen/qwen3-30b-a3b",
+   "input_per_m": 0.12,
+   "output_per_m": 0.5,
+   "blended_per_m": 0.215,
+   "context_tokens": 40960,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-04-28",
+   "arena_models": [
+    "Qwen3-30B-A3B"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Qwen3-32B",
+   "org": "alibaba",
+   "source": "openrouter",
+   "source_id": "qwen/qwen3-32b",
+   "openrouter_id": "qwen/qwen3-32b",
+   "input_per_m": 0.08,
+   "output_per_m": 0.28,
+   "blended_per_m": 0.13,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-04-28",
+   "arena_models": [
+    "Qwen3-32B"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Qwen3-Next-80B-A3B-Instruct",
+   "org": "alibaba",
+   "source": "openrouter",
+   "source_id": "qwen/qwen3-next-80b-a3b-instruct",
+   "openrouter_id": "qwen/qwen3-next-80b-a3b-instruct",
+   "input_per_m": 0.1,
+   "output_per_m": 1.1,
+   "blended_per_m": 0.35,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-09-11",
+   "arena_models": [
+    "Qwen3-Next-80B-A3B-Instruct"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Qwen3-VL-235B-A22B-Instruct",
+   "org": "alibaba",
+   "source": "openrouter",
+   "source_id": "qwen/qwen3-vl-235b-a22b-instruct",
+   "openrouter_id": "qwen/qwen3-vl-235b-a22b-instruct",
+   "input_per_m": 0.21,
+   "output_per_m": 1.9,
+   "blended_per_m": 0.6325,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-09-23",
+   "arena_models": [
+    "Qwen3-VL-235B-A22B-Instruct",
+    "qwen3-vl-235b-a22b-instruct"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "Qwen3.5-122B-A10B",
+   "org": "alibaba",
+   "source": "models.dev",
+   "source_id": "alibaba/qwen3.5-122b-a10b",
+   "openrouter_id": "qwen/qwen3.5-122b-a10b",
+   "input_per_m": 0.4,
+   "output_per_m": 3.2,
+   "blended_per_m": 1.1,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-02-23",
+   "arena_models": [
+    "Qwen3.5-122B-A10B"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter lists $0.26/$2.08 per M"
+  },
+  {
+   "family": "Qwen3.5-27B",
+   "org": "alibaba",
+   "source": "models.dev",
+   "source_id": "alibaba/qwen3.5-27b",
+   "openrouter_id": "qwen/qwen3.5-27b",
+   "input_per_m": 0.3,
+   "output_per_m": 2.4,
+   "blended_per_m": 0.825,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-02-23",
+   "arena_models": [
+    "Qwen3.5-27B"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Qwen3.5-35B-A3B",
+   "org": "alibaba",
+   "source": "models.dev",
+   "source_id": "alibaba/qwen3.5-35b-a3b",
+   "openrouter_id": "qwen/qwen3.5-35b-a3b",
+   "input_per_m": 0.25,
+   "output_per_m": 2,
+   "blended_per_m": 0.6875,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-02-23",
+   "arena_models": [
+    "Qwen3.5-35B-A3B"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter lists $0.14/$1.0 per M"
+  },
+  {
+   "family": "Qwen3.5-397B-A17B",
+   "org": "alibaba",
+   "source": "models.dev",
+   "source_id": "alibaba/qwen3.5-397b-a17b",
+   "openrouter_id": "qwen/qwen3.5-397b-a17b",
+   "input_per_m": 0.6,
+   "output_per_m": 3.6,
+   "blended_per_m": 1.35,
+   "context_tokens": 262144,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-02-15",
+   "arena_models": [
+    "Qwen3.5-397B-A17B"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  },
+  {
+   "family": "Qwen3.5-Flash",
+   "org": "alibaba",
+   "source": "models.dev",
+   "source_id": "alibaba/qwen3.5-flash",
+   "openrouter_id": "qwen/qwen3.5-flash-02-23",
+   "input_per_m": 0.1,
+   "output_per_m": 0.4,
+   "blended_per_m": 0.175,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-02-23",
+   "arena_models": [
+    "Qwen3.5-Flash"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter lists $0.065/$0.26 per M"
+  },
+  {
+   "family": "Qwen3.6-Plus",
+   "org": "alibaba",
+   "source": "models.dev",
+   "source_id": "alibaba/qwen3.6-plus",
+   "openrouter_id": "qwen/qwen3.6-plus",
+   "input_per_m": 0.5,
+   "output_per_m": 3,
+   "blended_per_m": 1.125,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-04-02",
+   "arena_models": [
+    "Qwen3.6-Plus"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter lists $0.325/$1.95 per M"
+  },
+  {
+   "family": "Qwen3.7-Max",
+   "org": "alibaba",
+   "source": "models.dev",
+   "source_id": "alibaba/qwen3.7-max",
+   "openrouter_id": "qwen/qwen3.7-max",
+   "input_per_m": 2.5,
+   "output_per_m": 7.5,
+   "blended_per_m": 3.75,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-05-21",
+   "arena_models": [
+    "Qwen3.7 Max",
+    "Qwen3.7-Max",
+    "Qwen3.7-Max (20260517)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Qwen3.7-Max",
+     "cost_per_task_p50": 0.2434,
+     "output_tokens_per_task_p50": 15367
+    }
+   ],
+   "notes": "OpenRouter lists $1.475/$4.425 per M"
+  },
+  {
+   "family": "Qwen3.7-Plus",
+   "org": "alibaba",
+   "source": "models.dev",
+   "source_id": "alibaba/qwen3.7-plus",
+   "openrouter_id": "qwen/qwen3.7-plus",
+   "input_per_m": 0.4,
+   "output_per_m": 1.6,
+   "blended_per_m": 0.7,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-06-02",
+   "arena_models": [
+    "Qwen3.7 Plus",
+    "Qwen3.7-Plus"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Qwen3.7-Plus",
+     "cost_per_task_p50": 0.1838,
+     "output_tokens_per_task_p50": 16908
+    }
+   ],
+   "notes": "OpenRouter lists $0.32/$1.28 per M"
+  },
+  {
+   "family": "Qwen3.8-27B",
+   "org": "alibaba",
+   "source": "openrouter",
+   "source_id": "qwen/qwen3.8-27b",
+   "openrouter_id": "qwen/qwen3.8-27b",
+   "input_per_m": 0.425,
+   "output_per_m": 2.55,
+   "blended_per_m": 0.9562,
+   "context_tokens": 1024000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-08-14",
+   "arena_models": [
+    "Qwen 3.8 27B",
+    "Qwen3.8-27B"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Qwen3.8-27B",
+     "cost_per_task_p50": 0.4305,
+     "output_tokens_per_task_p50": 55689
+    }
+   ],
+   "notes": "price from first-party OpenRouter endpoint (Alibaba)"
+  },
+  {
+   "family": "Qwen3.8-Max",
+   "org": "alibaba",
+   "source": "models.dev",
+   "source_id": "alibaba/qwen3.8-max",
+   "openrouter_id": "qwen/qwen3.8-max-0902",
+   "input_per_m": 2,
+   "output_per_m": 6,
+   "blended_per_m": 3.0,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-08-03",
+   "arena_models": [
+    "Qwen3.8 Max",
+    "Qwen3.8-Max",
+    "Qwen3.8-Max (0902)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Qwen3.8-Max",
+     "cost_per_task_p50": 1.1908,
+     "output_tokens_per_task_p50": 48294
+    }
+   ],
+   "notes": "speed from OpenRouter qwen/qwen3.8-max-0902 snapshot"
+  },
+  {
+   "family": "Qwen4-Max",
+   "org": "alibaba",
+   "source": "models.dev",
+   "source_id": "alibaba/qwen4-max",
+   "openrouter_id": "qwen/qwen4-max",
+   "input_per_m": 1.5,
+   "output_per_m": 4.5,
+   "blended_per_m": 2.25,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-11-16",
+   "arena_models": [
+    "Qwen4-Max (xHigh)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Qwen4-Max (xHigh)",
+     "cost_per_task_p50": 1.1545,
+     "output_tokens_per_task_p50": 41410
+    }
+   ],
+   "notes": null
+  },
+  {
+   "family": "Solar Pro 4",
+   "org": "upstage",
+   "source": "openrouter",
+   "source_id": "upstage/solar-pro4",
+   "openrouter_id": "upstage/solar-pro4",
+   "input_per_m": 0.15,
+   "output_per_m": 0.6,
+   "blended_per_m": 0.2625,
+   "context_tokens": 524288,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-08-10",
+   "arena_models": [
+    "Solar Pro 4"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Solar Pro 4",
+     "cost_per_task_p50": 0.046,
+     "output_tokens_per_task_p50": 15872
+    }
+   ],
+   "notes": "price from first-party OpenRouter endpoint (Upstage)"
+  },
+  {
+   "family": "Sonar Pro",
+   "org": "perplexity",
+   "source": "openrouter",
+   "source_id": "perplexity/sonar-pro",
+   "openrouter_id": "perplexity/sonar-pro",
+   "input_per_m": 3.0,
+   "output_per_m": 15.0,
+   "blended_per_m": 6.0,
+   "context_tokens": 200000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-03-07",
+   "arena_models": [
+    "Sonar Pro (High)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "price from first-party OpenRouter endpoint (Perplexity)"
+  },
+  {
+   "family": "Sonar Reasoning Pro",
+   "org": "perplexity",
+   "source": "openrouter",
+   "source_id": "perplexity/sonar-reasoning-pro",
+   "openrouter_id": "perplexity/sonar-reasoning-pro",
+   "input_per_m": 2.0,
+   "output_per_m": 8.0,
+   "blended_per_m": 3.5,
+   "context_tokens": 128000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-03-07",
+   "arena_models": [
+    "Sonar Reasoning Pro (High)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "price from first-party OpenRouter endpoint (Perplexity)"
+  },
+  {
+   "family": "Step 5 Preview",
+   "org": "stepfun",
+   "source": "openrouter",
+   "source_id": "stepfun/step-5-preview",
+   "openrouter_id": "stepfun/step-5-preview",
+   "input_per_m": 1.0,
+   "output_per_m": 2.7,
+   "blended_per_m": 1.425,
+   "context_tokens": 1000000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2026-10-08",
+   "arena_models": [
+    "Step 5 Preview",
+    "Step 5 Preview (High)"
+   ],
+   "agent_cost_per_task": [
+    {
+     "model": "Step 5 Preview",
+     "cost_per_task_p50": 0.5878,
+     "output_tokens_per_task_p50": 41959
+    }
+   ],
+   "notes": "price from first-party OpenRouter endpoint (StepFun)"
+  },
+  {
+   "family": "gpt-oss-120b",
+   "org": "openai",
+   "source": "openrouter",
+   "source_id": "openai/gpt-oss-120b",
+   "openrouter_id": "openai/gpt-oss-120b",
+   "input_per_m": 0.05,
+   "output_per_m": 0.25,
+   "blended_per_m": 0.1,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-08-05",
+   "arena_models": [
+    "gpt-oss-120b"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "gpt-oss-20b",
+   "org": "openai",
+   "source": "openrouter",
+   "source_id": "openai/gpt-oss-20b",
+   "openrouter_id": "openai/gpt-oss-20b",
+   "input_per_m": 0.03,
+   "output_per_m": 0.13,
+   "blended_per_m": 0.055,
+   "context_tokens": 131072,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-08-05",
+   "arena_models": [
+    "gpt-oss-20b"
+   ],
+   "agent_cost_per_task": [],
+   "notes": "OpenRouter listed price (may be cheapest third-party host or promo)"
+  },
+  {
+   "family": "o3",
+   "org": "openai",
+   "source": "models.dev",
+   "source_id": "openai/o3",
+   "openrouter_id": "openai/o3",
+   "input_per_m": 2,
+   "output_per_m": 8,
+   "blended_per_m": 3.5,
+   "context_tokens": 200000,
+   "tokens_per_sec": null,
+   "ttft_s": null,
+   "speed_source": null,
+   "released": "2025-04-16",
+   "arena_models": [
+    "o3 (2025-04-16)",
+    "o3 (Search)"
+   ],
+   "agent_cost_per_task": [],
+   "notes": null
+  }
+ ]
+}
