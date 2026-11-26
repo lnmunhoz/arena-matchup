@@ -29,6 +29,7 @@
   --heat-5: #eef1f6; --heat-ink-5: #485064;
   --tie: #8a5a00;
   --tie-fill: #d9971c;
+  --danger: #b4231a;
   --behind-fill: #a7afbf;
   --win-soft: #e5ecfc;
   /* effort ramp: one violet hue, light = less effort, dark = Max. Kept apart from the blue win/heat scale */
@@ -56,6 +57,7 @@
     --heat-5: #171c26; --heat-ink-5: #8f98ad;
     --tie: #f0b54a;
     --tie-fill: #d9a13a;
+    --danger: #ff8f84;
     --behind-fill: #4c566b;
     --win-soft: #1b2a4d;
     --eff-1: #241d38; --eff-ink-1: #cfc3f0;
@@ -79,6 +81,7 @@
   --heat-5: #171c26; --heat-ink-5: #8f98ad;
   --tie: #f0b54a;
   --tie-fill: #d9a13a;
+  --danger: #ff8f84;
   --behind-fill: #4c566b;
   --win-soft: #1b2a4d;
   --eff-1: #241d38; --eff-ink-1: #cfc3f0;
@@ -489,6 +492,97 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
   .xp-actions { width: 100%; }
   .xp-actions .btn { flex: 1; padding-block: 8px; }
 }
+/* ---------- saved sets ---------- */
+.set-ctl { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; min-width: 0; }
+.set-btn {
+  display: inline-flex; align-items: center; gap: 8px; max-width: 100%; min-width: 0;
+  border: 1px solid var(--line-strong); background: var(--surface-2); border-radius: 8px;
+  padding: 5px 10px; font-size: 14px; line-height: 1.3; text-align: left;
+}
+.set-btn:hover { border-color: var(--accent); }
+.set-btn .eyebrow { font-size: 11px; flex: none; }
+.set-btn .caret { flex: none; color: var(--ink-3); }
+.set-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; max-width: 28ch; }
+.set-name.none { font-weight: 500; color: var(--ink-2); }
+.set-dirty { display: inline-flex; align-items: center; gap: 5px; flex: none; font-size: 12px; font-weight: 600; color: var(--tie); }
+.set-dirty::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--tie-fill); }
+.set-stale { font-size: 13px; color: var(--tie); }
+.sets {
+  width: min(500px, calc(100% - 24px)); max-width: none; max-height: calc(100dvh - 24px); margin: auto;
+  padding: 0; border: 1px solid var(--line-strong); border-radius: var(--radius);
+  background: var(--surface); color: var(--ink); box-shadow: 0 18px 48px rgba(0, 0, 0, .28);
+}
+.sets[open] { display: flex; flex-direction: column; }
+.sets::backdrop { background: rgba(10, 14, 22, .55); }
+.sets-head { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; padding: 16px 16px 10px; }
+.sets-head p { margin: 2px 0 0; font-size: 14px; color: var(--ink-3); }
+.sets-head .btn { flex: none; }
+.sets-body { overflow-y: auto; min-height: 0; flex: 1 1 auto; display: flex; flex-direction: column; gap: 12px; padding: 2px 16px 12px; }
+.sets-warn { margin: 0; font-size: 13.5px; color: var(--ink); background: var(--surface-2); border: 1px solid var(--tie-fill); border-radius: 8px; padding: 8px 10px; }
+.sets-cur { background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.sets-cur-top { display: flex; flex-wrap: wrap; gap: 2px 10px; align-items: baseline; justify-content: space-between; }
+.sets-cur-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; min-width: 0; }
+.sets-cur-name b { font-weight: 600; overflow-wrap: anywhere; }
+.sets-cur .meta { font-size: 13px; color: var(--ink-3); }
+.sets-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.sets-form { display: flex; flex-direction: column; gap: 6px; }
+.sets-form label { font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
+.sets-form-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.sets-form input {
+  flex: 1 1 200px; min-width: 0; border: 1px solid var(--line-strong); background: var(--surface); border-radius: 8px;
+  padding: 7px 10px; font-size: 15px;
+}
+.sets-form input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+.sets-err { margin: 0; font-size: 13px; color: var(--danger); min-height: 0; }
+.sets-err:empty { display: none; }
+.sets-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.sets-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.sets-load {
+  display: flex; flex-direction: column; gap: 1px; min-width: 0; text-align: left;
+  border: 0; background: transparent; border-radius: 7px; padding: 6px 8px;
+}
+.sets-load:hover { background: var(--surface-2); }
+.sets-load .nm { font-weight: 600; font-size: 15px; line-height: 1.3; overflow-wrap: anywhere; }
+.sets-load .meta { font-size: 12.5px; color: var(--ink-3); line-height: 1.35; }
+.sets-load .gone { color: var(--tie); }
+.sets-item.on { background: var(--accent-soft); }
+.sets-item.on .sets-load:hover, .sets-item.on .lnk:hover { background: var(--surface); }
+.cur-tag { font-size: 11px; font-weight: 600; border-radius: 999px; padding: 0 7px; margin-left: 6px; border: 1px solid var(--accent-line); color: var(--accent); vertical-align: .1em; white-space: nowrap; }
+.sets-row-acts { display: flex; gap: 0; align-items: center; }
+.lnk { border: 0; background: transparent; color: var(--ink-2); font-size: 13px; font-weight: 500; padding: 6px 7px; border-radius: 6px; }
+.lnk:hover { color: var(--accent); background: var(--surface-2); }
+.lnk.danger:hover { color: var(--danger); }
+.sets-confirm { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; padding: 6px 8px; font-size: 14px; }
+.sets-confirm span { flex: 1 1 12em; min-width: 0; overflow-wrap: anywhere; }
+.btn.danger { background: var(--danger); border-color: var(--danger); color: var(--surface); }
+.btn.danger:hover { color: var(--surface); filter: brightness(1.08); }
+.sets-empty { padding: 14px 4px; font-size: 14px; color: var(--ink-3); }
+.sets-status { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 13.5px; color: var(--ink-2); }
+.sets-status:empty { display: none; }
+.sets-status .undo, .toast .undo { border: 0; background: transparent; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; padding: 4px 6px; border-radius: 6px; }
+.sets-status .undo { color: var(--accent); }
+.sets-foot { border-top: 1px solid var(--line); padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+.sets-foot p { margin: 0; font-size: 13px; color: var(--ink-3); }
+.sets-foot-acts { display: flex; gap: 6px; flex-wrap: wrap; }
+.toast {
+  position: fixed; z-index: 30; left: 50%; transform: translateX(-50%);
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px)); max-width: calc(100% - 32px);
+  display: flex; align-items: center; gap: 4px 12px; flex-wrap: wrap;
+  background: var(--ink); color: var(--bg); border-radius: 10px; padding: 8px 10px 8px 14px;
+  font-size: 14px; box-shadow: 0 8px 28px rgba(0, 0, 0, .25);
+}
+.toast .undo { color: var(--bg); }
+@media (max-width: 560px) {
+  .set-ctl { flex: 1 1 100%; }
+  .set-name { max-width: 16ch; }
+  .sets {
+    width: 100%; max-width: 100%; max-height: calc(100dvh - 40px); margin: auto 0 0;
+    border-radius: 14px 14px 0 0; border-bottom: 0;
+  }
+  .sets-foot { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .sets-item { grid-template-columns: minmax(0, 1fr); }
+  .sets-row-acts { padding-left: 1px; margin-top: -4px; }
+}
 @media (prefers-reduced-motion: no-preference) {
   .cellbox, .pk-item, .chip { transition: background-color .12s ease, box-shadow .12s ease; }
 }
@@ -509,8 +603,15 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
 
   <section class="selbar" aria-label="Selected models">
     <div class="selrow">
-      <div class="chips" id="chips"></div>
+      <div class="set-ctl">
+        <button class="set-btn" type="button" id="set-open" aria-haspopup="dialog" title="Save, name and switch between selections"><span class="eyebrow">Set</span><span class="set-name" id="set-name">Unsaved selection</span><span class="set-dirty" id="set-dirty" hidden>Edited</span><svg class="caret" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="btn" type="button" id="set-save" hidden>Save</button>
+        <span class="set-stale" id="set-stale" hidden></span>
+      </div>
       <button class="btn primary" type="button" id="xp-open" aria-haspopup="dialog" title="Copy or download your picks as a Markdown or JSON routing table for an AI agent">Export for agents</button>
+    </div>
+    <div class="selrow">
+      <div class="chips" id="chips"></div>
     </div>
     <div class="selrow">
       <div class="presets">
@@ -676,6 +777,41 @@ table.pz { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
     </div>
   </div>
 </dialog>
+
+<dialog class="sets" id="sets" aria-labelledby="sets-h">
+  <div class="sets-head">
+    <div>
+      <h2 id="sets-h">Saved sets</h2>
+      <p>Name a selection and switch back to it any time.</p>
+    </div>
+    <button class="btn ghost" type="button" id="sets-x" aria-label="Close saved sets">Close</button>
+  </div>
+  <div class="sets-body">
+    <p class="sets-warn" id="sets-warn" hidden>This browser isn't letting the page save anything (a private window or blocked site data). Your sets last until you close the tab, so use Export sets to keep them.</p>
+    <div class="sets-cur" id="sets-cur"></div>
+    <form class="sets-form" id="sets-form" hidden novalidate>
+      <label for="sets-name" id="sets-form-l">Name</label>
+      <div class="sets-form-row">
+        <input id="sets-name" type="text" maxlength="60" autocomplete="off" spellcheck="false" placeholder="e.g. Coding agents" aria-describedby="sets-err">
+        <button class="btn primary" type="submit" id="sets-ok">Save</button>
+        <button class="btn ghost" type="button" id="sets-cancel">Cancel</button>
+      </div>
+      <p class="sets-err" id="sets-err" aria-live="polite"></p>
+    </form>
+    <ul class="sets-list" id="sets-list" aria-label="Saved sets"></ul>
+    <div class="sets-status" id="sets-status" role="status" aria-live="polite"></div>
+  </div>
+  <div class="sets-foot">
+    <p>Sets are saved in this browser only. Export a backup file to keep them safe or to move them to another browser.</p>
+    <div class="sets-foot-acts">
+      <button class="btn" type="button" id="sets-export">Export sets</button>
+      <button class="btn" type="button" id="sets-import">Import sets</button>
+      <input type="file" id="sets-file" accept=".json,application/json" hidden>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
 <script>
 "use strict";
@@ -1216,6 +1352,7 @@ function exportData(SP, S, sel, sc, opts = {}) {
     };
   });
   return {
+    set_name: cleanName(opts.name) || null,
     generated: isoDay(now),
     snapshots: Object.fromEntries(S.arenas.map(a => [a.id, a.date])),
     prices_fetched: (DATA && DATA.pricesAt) || null,
@@ -1243,7 +1380,7 @@ function exportMarkdown(X) {
   const rating = v => v == null ? "–" : Math.abs(v) >= 10 ? String(Math.round(v)) : v.toFixed(3);
   const short = m => X.effort_mode === "combined" ? m.family : `${m.family} · ${m.effort_label}`;
   const out = [];
-  out.push("# Model routing table", "");
+  out.push(X.set_name ? `# Model routing table: ${X.set_name}` : "# Model routing table", "");
   out.push(`Generated ${X.generated} by Arena Matchup from ${X.models.length} picked ${X.effort_mode === "combined" ? "models (effort levels combined: each job uses the model's best-ranked level)" : "model and effort pairs"}.`);
   out.push(`- Style control: ${X.style_control ? "on (ratings discount answer length and formatting)" : "off (raw ratings)"}`);
   out.push(`- Arena snapshots: ${Object.entries(X.snapshots).map(([a, d]) => `${a} ${d}`).join(", ")}`);
@@ -1287,6 +1424,75 @@ function exportMarkdown(X) {
   return out.join("\n") + "\n";
 }
 
+/* ================= saved sets (pure helpers) =================
+   A set is a named selection: { id, name, picks: [entry ids], sc, fam, created, updated, cols?, h2h? }.
+   picks hold the same ids as the URL hash. The page keeps them in localStorage under SETS_KEY;
+   Export sets / Import sets move them between browsers as one JSON file (SETS_FORMAT). */
+const SETS_KEY = "arena-matchup-sets-v1";
+const SETS_FORMAT = "arena-matchup-sets";
+function newSetId() { return "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+/* one line, no control characters, at most 60 characters */
+function cleanName(v) { return typeof v === "string" ? v.replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 60) : ""; }
+/* validate one stored or imported set. isKnown: drop pick ids that aren't in the data (imports);
+   without it, unknown ids stay so the page can say how many picks went missing. */
+function cleanSet(o, isKnown) {
+  if (!o || typeof o !== "object" || Array.isArray(o)) return null;
+  let picks = Array.isArray(o.picks) ? [...new Set(o.picks.filter(p => typeof p === "string" && /^[a-z0-9]{1,24}$/.test(p)))] : [];
+  const before = picks.length;
+  if (isKnown) picks = picks.filter(isKnown);
+  if (!picks.length) return null;
+  const iso = v => (typeof v === "string" || typeof v === "number") && !isNaN(new Date(v).getTime()) ? new Date(v).toISOString() : null;
+  const now = new Date().toISOString();
+  const s = {
+    id: typeof o.id === "string" && /^[A-Za-z0-9_-]{1,40}$/.test(o.id) ? o.id : newSetId(),
+    name: cleanName(o.name) || "Untitled set",
+    picks, sc: o.sc !== false, fam: o.fam === true,
+    created: iso(o.created) || now, updated: iso(o.updated) || iso(o.created) || now,
+  };
+  if (Array.isArray(o.cols)) s.cols = o.cols.filter(k => typeof k === "string" && k.length < 80).slice(0, 500);
+  if (typeof o.h2h === "string" && o.h2h.length < 80) s.h2h = o.h2h;
+  return { set: s, dropped: before - picks.length };
+}
+/* "Coding agents" -> "Coding agents (2)" when the name is taken (case-insensitive) */
+function uniqueName(sets, name, exceptId) {
+  const taken = new Set(sets.filter(s => s.id !== exceptId).map(s => s.name.toLowerCase()));
+  if (!taken.has(name.toLowerCase())) return name;
+  const base = name.replace(/ \(\d+\)$/, "");
+  for (let n = 2; ; n++) { const c = `${base} (${n})`; if (!taken.has(c.toLowerCase())) return c; }
+}
+/* read a backup file: { format, v, sets: [...] } or a bare array of sets */
+function parseSetsFile(text, isKnown) {
+  let o;
+  try { o = JSON.parse(text); } catch (e) { return { error: "That file isn't valid JSON. Pick a file made with Export sets." }; }
+  const raw = Array.isArray(o) ? o : o && typeof o === "object" && Array.isArray(o.sets) && (!o.format || o.format === SETS_FORMAT) ? o.sets : null;
+  if (!raw) return { error: "That file isn't an Arena Matchup sets backup. Pick a file made with Export sets." };
+  const sets = []; let skipped = 0, dropped = 0;
+  for (const r of raw) {
+    const c = cleanSet(r, isKnown);
+    if (!c) { skipped++; continue; }
+    sets.push(c.set); dropped += c.dropped;
+  }
+  return { sets, skipped, dropped };
+}
+/* merge by id: a newer copy of a set replaces the old one; a new set whose name is taken gets " (2)" */
+function mergeSets(local, incoming) {
+  const out = local.map(s => ({ ...s }));
+  let added = 0, updated = 0, same = 0, renamed = 0;
+  for (const s of incoming) {
+    const k = out.findIndex(x => x.id === s.id);
+    if (k >= 0) {
+      if (Date.parse(s.updated) > Date.parse(out[k].updated)) { out[k] = { ...s, name: uniqueName(out, s.name, s.id) }; updated++; }
+      else same++;
+      continue;
+    }
+    const name = uniqueName(out, s.name, null);
+    if (name !== s.name) renamed++;
+    out.push({ ...s, name }); added++;
+  }
+  return { sets: out, added, updated, same, renamed };
+}
+const slugify = s => s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+
 /* ================= UI ================= */
 const STORE_KEY = "arena-matchup-v1";
 const STORE_V = 2;  // 2: selection holds effort-entry ids (or model ids with comb on); older saves hold model ids
@@ -1329,6 +1535,41 @@ function boot() {
   }
   S = st.fam ? SP.F : SP.E;
   if (!st.sel.length) st.sel = st.fam ? resolveIds(SP, presetDefault(SP.E).map(ei => SP.E.models[ei].id), true) : presetDefault(SP.E);
+
+  /* ---- saved sets: state ---- */
+  const isKnown = id => SP.E.byId.has(id) || SP.F.byId.has(id) || SP.vById.has(id);
+  // ok: storage works. form: the open name form. confirm: the set id waiting for a delete confirm.
+  const SETS = { list: [], active: null, ok: true, form: null, confirm: null };
+  try {
+    const raw = localStorage.getItem(SETS_KEY);
+    const o = raw ? JSON.parse(raw) : null;
+    if (o && Array.isArray(o.sets)) {
+      for (const r of o.sets) { const c = cleanSet(r, null); if (c && !SETS.list.some(s => s.id === c.set.id)) SETS.list.push(c.set); }
+      if (typeof o.active === "string") SETS.active = o.active;
+    }
+    localStorage.setItem(SETS_KEY + "-probe", "1"); localStorage.removeItem(SETS_KEY + "-probe");
+  } catch (e) { SETS.ok = false; }
+  // a set whose picks and settings match the page exactly shows as active (the last active one first).
+  // Otherwise a reload keeps the last active set, marked edited; a link with other picks shows "Unsaved selection".
+  {
+    const hashNow = location.hash.replace(/^#/, "");
+    const reload = !(fromHash && fromHash.ids.length) || (saved && saved.h === hashNow);
+    const prev = SETS.list.find(s => s.id === SETS.active);
+    const hadSel = (fromHash && fromHash.ids.length) || (saved && Array.isArray(saved.sel) && saved.sel.length);
+    if (prev && !hadSel) {
+      // nothing else to show (site data partly cleared): open the active set itself
+      st.fam = !!prev.fam; st.sc = prev.sc !== false; S = st.fam ? SP.F : SP.E;
+      const sel = resolveIds(SP, prev.picks, st.fam);
+      if (sel.length) st.sel = sel;
+      applyExtras(prev);
+    }
+    else if (prev && !viewDiffers(prev, true)) SETS.active = prev.id;
+    else {
+      const m = SETS.list.find(s => !viewDiffers(s, true));
+      SETS.active = m ? m.id : reload && prev ? prev.id : null;
+      if (m) applyExtras(m);
+    }
+  }
   $("comb").checked = st.fam;
   $("more").open = st.more;
   // no price file at build time: hide every price control and section
@@ -1841,8 +2082,9 @@ function boot() {
   /* ---- state sync ---- */
   let lastHash = "";
   function persist() {
-    saveStore({ v: STORE_V, sel: st.sel.map(mi => S.models[mi].id), sc: st.sc, comb: st.fam, cols: [...st.cols].map(i => S.cats[i].key), h2h: st.h2h, more: st.more, vjob: st.vjob, psort: st.psort });
     const h = encodeHash(S, st);
+    saveStore({ v: STORE_V, sel: st.sel.map(mi => S.models[mi].id), sc: st.sc, comb: st.fam, cols: [...st.cols].map(i => S.cats[i].key), h2h: st.h2h, more: st.more, vjob: st.vjob, psort: st.psort, h });
+    renderSetBar();
     if (location.hash.replace(/^#/, "") !== h) {
       lastHash = h;
       try { location.replace("#" + h); } catch (e) { try { location.hash = h; } catch (e2) { /* hash unavailable */ } }
@@ -1940,7 +2182,16 @@ function boot() {
     const h = location.hash.replace(/^#/, "");
     if (h === lastHash) return;
     const d = decodeHash(h);
-    if (d) { setSpace(d.fam, resolveIds(SP, d.ids, d.fam)); st.sc = d.sc; renderPicker(); renderResults(); persist(); }
+    if (!d) return;
+    setSpace(d.fam, resolveIds(SP, d.ids, d.fam)); st.sc = d.sc;
+    // a pasted link: show the saved set it matches, if any
+    const a = activeSet();
+    if (!a || viewDiffers(a, true)) {
+      const m = SETS.list.find(x => !viewDiffers(x, true));
+      SETS.active = m ? m.id : null; writeSets();
+      if (m) applyExtras(m);
+    }
+    renderAll(); persist();
   });
   let rw = 0;
   if ("ResizeObserver" in window) {
@@ -1949,13 +2200,246 @@ function boot() {
     new ResizeObserver(entries => { const w = Math.round(entries[0].contentRect.width); if (w !== sw) { sw = w; renderPrices(); } }).observe($("scatter"));
   } else { window.addEventListener("resize", renderChart); window.addEventListener("resize", renderPrices); }
 
+  /* ---- saved sets ---- */
+  function activeSet() { return SETS.list.find(s => s.id === SETS.active) || null; }
+  function writeSets() {
+    try { localStorage.setItem(SETS_KEY, JSON.stringify({ v: 1, active: SETS.active, sets: SETS.list })); SETS.ok = true; }
+    catch (e) { SETS.ok = false; }
+    $("sets-warn").hidden = SETS.ok;
+    return SETS.ok;
+  }
+  // function declarations, not arrows: boot calls viewDiffers() before this point
+  function pickKey(ids, fam) { const sp = fam ? SP.F : SP.E; return resolveIds(SP, ids, fam).map(i => sp.models[i].id).sort().join(","); }
+  function colKey(keys) { return keys.filter(k => S.byKey.has(k)).sort().join(","); }
+  function curCols() { return [...st.cols].map(i => S.cats[i].key); }
+  /* does the page differ from set s? picksOnly: compare what the URL hash holds (picks, style control,
+     combine). Otherwise also the matrix columns and head-to-head leaderboard, when the set has them. */
+  function viewDiffers(s, picksOnly) {
+    if (!!s.fam !== st.fam || (s.sc !== false) !== st.sc) return true;
+    if (pickKey(s.picks, s.fam) !== st.sel.map(mi => S.models[mi].id).sort().join(",")) return true;
+    if (picksOnly) return false;
+    if (Array.isArray(s.cols) && colKey(s.cols) && colKey(s.cols) !== colKey(curCols())) return true;
+    return typeof s.h2h === "string" && s.h2h !== st.h2h;
+  }
+  function staleOf(s) { return s.picks.filter(p => !isKnown(p)).length; }
+  function applyExtras(s) {
+    if (Array.isArray(s.cols)) { const want = new Set(s.cols); const c = S.cats.filter(x => want.has(x.key)).map(x => x.i); if (c.length) st.cols = new Set(c); }
+    if (typeof s.h2h === "string") st.h2h = s.h2h;
+  }
+  // snapshot of the current view, saved into a set (and used to undo a load)
+  function viewNow() { return { picks: st.sel.map(mi => S.models[mi].id), sc: st.sc, fam: st.fam, cols: curCols(), h2h: st.h2h }; }
+  function applyView(v) {
+    setSpace(!!v.fam, resolveIds(SP, v.picks, !!v.fam));
+    st.sc = v.sc !== false;
+    applyExtras(v);
+    renderAll(); persist();
+  }
+
+  function renderSetBar() {
+    const a = activeSet(), dirty = !!a && viewDiffers(a), stale = a ? staleOf(a) : 0;
+    $("set-name").textContent = a ? a.name : "Unsaved selection";
+    $("set-name").classList.toggle("none", !a);
+    $("set-dirty").hidden = !dirty;
+    $("set-save").hidden = !(a && (dirty || stale));
+    $("set-save").textContent = "Save";
+    $("set-save").title = a ? `Save the current picks and settings to “${a.name}”` : "";
+    $("set-open").setAttribute("aria-label", `Saved sets. Current: ${a ? a.name + (dirty ? ", edited" : "") : "unsaved selection"}`);
+    $("set-stale").hidden = !stale;
+    $("set-stale").textContent = stale ? `${stale} pick${stale > 1 ? "s" : ""} in this set ${stale > 1 ? "are" : "is"} no longer on the leaderboard.` : "";
+    if ($("sets").hasAttribute("open")) renderSetsPanel();
+  }
+
+  const nPicks = n => `${n} pick${n === 1 ? "" : "s"}`;
+  function setMeta(s) {
+    const n = resolveIds(SP, s.picks, s.fam).length, stale = staleOf(s);
+    return [nPicks(n), s.fam ? "effort levels combined" : "", `style control ${s.sc !== false ? "on" : "off"}`, `updated ${fmtDate(isoDay(new Date(s.updated)))}`]
+      .filter(Boolean).join(" · ") + (stale ? ` · <span class="gone">${stale} no longer listed</span>` : "");
+  }
+  function renderSetsPanel() {
+    const a = activeSet(), dirty = !!a && viewDiffers(a), stale = a ? staleOf(a) : 0, n = st.sel.length;
+    $("sets-warn").hidden = SETS.ok;
+    $("sets-cur").innerHTML = `<div class="sets-cur-top"><span class="sets-cur-name"><span class="eyebrow">Now showing</span><b>${a ? esc(a.name) : "Unsaved selection"}</b>${dirty ? `<span class="set-dirty">Edited</span>` : ""}</span><span class="meta">${nPicks(n)}</span></div>` +
+      `<div class="sets-actions">${a && (dirty || stale) ? `<button class="btn primary" type="button" data-act="save">Save changes</button>` : ""}` +
+      `<button class="btn${a && (dirty || stale) ? "" : " primary"}" type="button" data-act="saveas"${n ? "" : " disabled"}>${a ? "Save as new set" : "Save as set"}</button></div>` +
+      (n ? "" : `<span class="meta">Pick at least one model to save a set.</span>`);
+    const f = SETS.form;
+    $("sets-form").hidden = !f;
+    if (f) {
+      const s = f.mode === "rename" ? SETS.list.find(x => x.id === f.id) : null;
+      $("sets-form-l").textContent = s ? `New name for “${s.name}”` : "Name for the new set";
+      $("sets-ok").textContent = s ? "Rename" : "Save";
+    }
+    $("sets-list").innerHTML = SETS.list.length ? SETS.list.map(s => {
+      const on = s.id === SETS.active;
+      if (SETS.confirm === s.id) return `<li class="sets-item" data-id="${esc(s.id)}"><div class="sets-confirm"><span>Delete “${esc(s.name)}”?</span><button class="btn danger" type="button" data-act="del-yes">Delete</button><button class="btn ghost" type="button" data-act="del-no">Cancel</button></div></li>`;
+      return `<li class="sets-item${on ? " on" : ""}" data-id="${esc(s.id)}"${on ? ` aria-current="true"` : ""}>` +
+        `<button class="sets-load" type="button" data-act="load" aria-label="Load ${esc(s.name)}"><span class="nm">${esc(s.name)}${on ? `<span class="cur-tag">Showing</span>` : ""}</span><span class="meta">${setMeta(s)}</span></button>` +
+        `<span class="sets-row-acts"><button class="lnk" type="button" data-act="rename" aria-label="Rename ${esc(s.name)}">Rename</button><button class="lnk" type="button" data-act="dup" aria-label="Duplicate ${esc(s.name)}">Duplicate</button><button class="lnk danger" type="button" data-act="del" aria-label="Delete ${esc(s.name)}">Delete</button></span></li>`;
+    }).join("") : `<li class="sets-empty">No saved sets yet. Save the current picks to start one.</li>`;
+    $("sets-export").disabled = !SETS.list.length;
+  }
+
+  /* status line with an optional Undo: inside the panel while it's open, else a toast at the bottom */
+  let noteTimer = 0;
+  function note(text, undo) {
+    clearTimeout(noteTimer);
+    const inPanel = $("sets").hasAttribute("open");
+    const host = inPanel ? $("sets-status") : $("toast");
+    (inPanel ? $("toast") : $("sets-status")).innerHTML = "";
+    $("toast").hidden = inPanel;
+    host.innerHTML = `<span>${esc(text)}</span>` + (undo ? `<button class="undo" type="button">Undo</button>` : "");
+    if (undo) host.querySelector(".undo").addEventListener("click", () => { clearTimeout(noteTimer); host.innerHTML = ""; $("toast").hidden = true; undo(); });
+    noteTimer = setTimeout(() => { host.innerHTML = ""; $("toast").hidden = true; }, undo ? 10000 : 4000);
+  }
+
+  function openSets() {
+    SETS.form = null; SETS.confirm = null; $("sets-status").innerHTML = ""; $("toast").hidden = true;
+    renderSetsPanel();
+    const d = $("sets");
+    if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+    const first = d.querySelector(".sets-cur .btn:not([disabled])") || d.querySelector(".sets-load") || $("sets-x");
+    first.focus();
+  }
+  function closeSets() { const d = $("sets"); if (typeof d.close === "function") d.close(); else d.removeAttribute("open"); $("set-open").focus(); }
+  function openForm(mode, id) {
+    SETS.form = { mode, id }; SETS.confirm = null; renderSetsPanel();
+    const s = SETS.list.find(x => x.id === id);
+    $("sets-err").textContent = "";
+    $("sets-name").value = s ? s.name : uniqueName(SETS.list, `Set ${SETS.list.length + 1}`, null);
+    $("sets-name").focus(); $("sets-name").select();
+  }
+  function closeForm() { SETS.form = null; $("sets-err").textContent = ""; renderSetsPanel(); }
+  function saveActive() {
+    const a = activeSet(); if (!a) return;
+    const before = { ...a };
+    Object.assign(a, viewNow(), { updated: new Date().toISOString() });
+    writeSets(); renderSetBar();
+    note(`Saved “${a.name}”.`, () => { Object.assign(a, before); writeSets(); renderSetBar(); });
+  }
+  function submitForm() {
+    const f = SETS.form; if (!f) return;
+    const name = cleanName($("sets-name").value);
+    if (!name) { $("sets-err").textContent = "Give the set a name."; $("sets-name").focus(); return; }
+    if (SETS.list.some(s => s.id !== f.id && s.name.toLowerCase() === name.toLowerCase())) {
+      $("sets-err").textContent = `There's already a set called “${name}”. Pick another name.`; $("sets-name").focus(); return;
+    }
+    const now = new Date().toISOString();
+    if (f.mode === "rename") {
+      const s = SETS.list.find(x => x.id === f.id); if (!s) return closeForm();
+      s.name = name; s.updated = now;
+      SETS.form = null; writeSets(); renderSetBar(); renderSetsPanel(); note(`Renamed to “${name}”.`);
+    } else {
+      const s = { id: newSetId(), name, ...viewNow(), created: now, updated: now };
+      SETS.list.push(s); SETS.active = s.id;
+      SETS.form = null; writeSets(); renderSetBar(); renderSetsPanel(); note(`Saved “${name}”.`);
+    }
+    focusRow(f.mode === "rename" ? f.id : SETS.active, "load");
+  }
+  function focusRow(id, act) {
+    const li = id && [...$("sets-list").children].find(el => el.dataset.id === id);
+    const el = li && li.querySelector(`[data-act="${act}"]`);
+    (el || $("sets-list").querySelector("[data-act]") || $("sets-x")).focus();
+  }
+  function loadSet(id) {
+    const s = SETS.list.find(x => x.id === id); if (!s) return;
+    const prev = viewNow(), prevActive = SETS.active;
+    SETS.active = s.id; writeSets();
+    applyView(s);
+    closeSets();
+    note(`Showing “${s.name}”.`, () => { SETS.active = prevActive; writeSets(); applyView(prev); });
+  }
+  function deleteSet(id) {
+    const k = SETS.list.findIndex(x => x.id === id); if (k < 0) return;
+    const [s] = SETS.list.splice(k, 1), wasActive = SETS.active === id;
+    if (wasActive) SETS.active = null;
+    SETS.confirm = null; writeSets(); renderSetBar(); renderSetsPanel();
+    note(`Deleted “${s.name}”.`, () => {
+      SETS.list.splice(Math.min(k, SETS.list.length), 0, s);
+      if (wasActive) SETS.active = s.id;
+      writeSets(); renderSetBar(); renderSetsPanel();
+    });
+    const next = SETS.list[k] || SETS.list[k - 1];
+    focusRow(next && next.id, "load");
+  }
+  function duplicateSet(id) {
+    const k = SETS.list.findIndex(x => x.id === id); if (k < 0) return;
+    const now = new Date().toISOString();
+    const c = { ...SETS.list[k], id: newSetId(), name: uniqueName(SETS.list, SETS.list[k].name, null), created: now, updated: now };
+    SETS.list.splice(k + 1, 0, c);
+    writeSets(); renderSetsPanel(); note(`Duplicated as “${c.name}”.`);
+    focusRow(c.id, "load");
+  }
+  function saveFile(text, file, type) {
+    try {
+      const url = URL.createObjectURL(new Blob([text], { type }));
+      const a = document.createElement("a");
+      a.href = url; a.download = file; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      return true;
+    } catch (e) { return false; }
+  }
+  function exportSets() {
+    const file = `arena-matchup-sets-${isoDay(new Date())}.json`;
+    const body = JSON.stringify({ format: SETS_FORMAT, v: 1, exported: new Date().toISOString(), sets: SETS.list }, null, 2) + "\n";
+    note(saveFile(body, file, "application/json") ? `Saved ${file} with ${SETS.list.length} set${SETS.list.length === 1 ? "" : "s"}.` : "This browser blocked the download.");
+  }
+  function importSets(text) {
+    const r = parseSetsFile(text, isKnown);
+    if (r.error) { note(r.error); return; }
+    const before = SETS.list.map(s => ({ ...s }));
+    const m = mergeSets(SETS.list, r.sets);
+    SETS.list = m.sets; writeSets(); renderSetBar(); renderSetsPanel();
+    const parts = [];
+    if (m.added) parts.push(`Added ${m.added} set${m.added === 1 ? "" : "s"}${m.renamed ? ` (${m.renamed} renamed with a number because the name was taken)` : ""}.`);
+    if (m.updated) parts.push(`Updated ${m.updated} with a newer copy.`);
+    if (m.same) parts.push(`${m.same} already up to date.`);
+    if (r.skipped) parts.push(`Skipped ${r.skipped} with no models on the current leaderboard.`);
+    if (r.dropped) parts.push(`Left out ${r.dropped} pick${r.dropped === 1 ? "" : "s"} no longer on the leaderboard.`);
+    note(parts.join(" ") || "The file had no sets.", m.added || m.updated ? () => { SETS.list = before; if (!SETS.list.some(s => s.id === SETS.active)) SETS.active = null; writeSets(); renderSetBar(); renderSetsPanel(); } : null);
+  }
+
+  $("set-open").addEventListener("click", openSets);
+  $("set-save").addEventListener("click", saveActive);
+  $("sets-x").addEventListener("click", closeSets);
+  $("sets").addEventListener("click", e => {
+    if (e.target === $("sets")) { closeSets(); return; }  // backdrop
+    const b = e.target.closest("[data-act]"); if (!b) return;
+    const li = b.closest("[data-id]"), id = li && li.dataset.id, act = b.dataset.act;
+    if (act === "save") { saveActive(); focusRow(SETS.active, "load"); }
+    else if (act === "saveas") openForm("saveas", null);
+    else if (act === "load") loadSet(id);
+    else if (act === "rename") openForm("rename", id);
+    else if (act === "dup") duplicateSet(id);
+    else if (act === "del") { SETS.confirm = id; SETS.form = null; renderSetsPanel(); focusRow(id, "del-no"); }
+    else if (act === "del-no") { SETS.confirm = null; renderSetsPanel(); focusRow(id, "del"); }
+    else if (act === "del-yes") deleteSet(id);
+  });
+  // Esc closes an open name form or delete question first, then the panel
+  $("sets").addEventListener("cancel", e => {
+    if (SETS.form || SETS.confirm) { e.preventDefault(); const id = SETS.confirm; SETS.confirm = null; if (SETS.form) closeForm(); else renderSetsPanel(); focusRow(id, "del"); }
+  });
+  $("sets-form").addEventListener("submit", e => { e.preventDefault(); submitForm(); });
+  $("sets-cancel").addEventListener("click", () => { closeForm(); $("sets").querySelector(".sets-cur .btn") && $("sets").querySelector(".sets-cur .btn").focus(); });
+  $("sets-export").addEventListener("click", exportSets);
+  $("sets-import").addEventListener("click", () => $("sets-file").click());
+  $("sets-file").addEventListener("change", e => {
+    const file = e.target.files && e.target.files[0]; if (!file) return;
+    if (file.size > 2e6) { note("That file is too big to be a sets backup."); e.target.value = ""; return; }
+    const rd = new FileReader();
+    rd.onload = () => { importSets(String(rd.result)); e.target.value = ""; };
+    rd.onerror = () => { note("Couldn't read that file."); e.target.value = ""; };
+    rd.readAsText(file);
+  });
+
   /* ---- export for agents ---- */
   const xp = { fmt: "md", text: "", file: "" };
   function renderExport() {
-    const X = exportData(SP, S, st.sel, st.sc, { pageUrl: /^https?:/.test(location.protocol) ? location.href : "" });
+    const a = activeSet();
+    const X = exportData(SP, S, st.sel, st.sc, { pageUrl: /^https?:/.test(location.protocol) ? location.href : "", name: a ? a.name : "" });
     const md = xp.fmt === "md";
     xp.text = md ? exportMarkdown(X) : exportJSON(X);
-    xp.file = `arena-routing-${X.generated}.${md ? "md" : "json"}`;
+    const slug = X.set_name ? slugify(X.set_name) : "";
+    xp.file = `arena-routing-${slug ? slug + "-" : ""}${X.generated}.${md ? "md" : "json"}`;
     $("xp-out").value = xp.text;
     $("xp-out").setAttribute("aria-labelledby", md ? "xp-t-md" : "xp-t-json");
     $("xp-out").scrollTop = 0;
@@ -1963,7 +2447,7 @@ function boot() {
       const on = t.dataset.fmt === xp.fmt;
       t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1;
     }
-    $("xp-meta").textContent = `${X.models.length} ${X.effort_mode === "combined" ? "models, effort levels combined" : "model and effort pairs"} · ${X.routing.length} jobs · style control ${X.style_control ? "on" : "off"}`;
+    $("xp-meta").textContent = `${X.set_name ? X.set_name + " · " : ""}${X.models.length} ${X.effort_mode === "combined" ? "models, effort levels combined" : "model and effort pairs"} · ${X.routing.length} jobs · style control ${X.style_control ? "on" : "off"}`;
     $("xp-status").textContent = "";
   }
   $("xp-open").addEventListener("click", () => {
@@ -1994,13 +2478,8 @@ function boot() {
     } else copyFallback();
   });
   $("xp-dl").addEventListener("click", () => {
-    try {
-      const url = URL.createObjectURL(new Blob([xp.text], { type: xp.fmt === "md" ? "text/markdown" : "application/json" }));
-      const a = document.createElement("a");
-      a.href = url; a.download = xp.file; document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-      $("xp-status").textContent = `Saved ${xp.file}.`;
-    } catch (e) { $("xp-status").textContent = "This browser blocked the download. Use Copy instead."; }
+    $("xp-status").textContent = saveFile(xp.text, xp.file, xp.fmt === "md" ? "text/markdown" : "application/json")
+      ? `Saved ${xp.file}.` : "This browser blocked the download. Use Copy instead.";
   });
 
   renderAll();
@@ -2011,6 +2490,6 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 function fmtDate(iso) { const [y, m, d] = (iso || "").split("-"); return y ? `${+d} ${MONTHS[+m - 1]} ${y}` : "?"; }
 
 if (typeof document !== "undefined") boot();
-else if (typeof globalThis !== "undefined") globalThis.__arena = { decode, presetTop, presetFlagship, presetBy, presetDefault, priceTable, effortEnts, valueNotes, taskOf, fmtUsd, fmtCtx, costLine, logTicks, JOBS, analyze, jobBoard, cheatSheet, encodeHash, decodeHash, resolveIds, viaShort, heatClass, niceTicks, exportData, exportJSON, exportMarkdown, DATA };
+else if (typeof globalThis !== "undefined") globalThis.__arena = { decode, presetTop, presetFlagship, presetBy, presetDefault, priceTable, effortEnts, valueNotes, taskOf, fmtUsd, fmtCtx, costLine, logTicks, JOBS, analyze, jobBoard, cheatSheet, encodeHash, decodeHash, resolveIds, viaShort, heatClass, niceTicks, exportData, exportJSON, exportMarkdown, cleanSet, cleanName, uniqueName, parseSetsFile, mergeSets, SETS_KEY, DATA };
 </script>
 </html>

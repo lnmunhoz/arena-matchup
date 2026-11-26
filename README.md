@@ -37,6 +37,10 @@ With the key, `scripts/fetch_prices.py` reads per-provider stats from OpenRouter
 
 `--scrape-pages` (or `OPENROUTER_SCRAPE_PAGES=1`) is an opt-in fallback. It reads the same stats from OpenRouter's public model pages. [OpenRouter's terms](https://openrouter.ai/terms) prohibit scraping the site in section 7, so this flag is off by default. Use the API key instead.
 
+## Saved sets
+
+**Set** in the selection bar saves your picks, the style control setting and "Combine effort levels" under a name, and switches between saved sets. Sets live in the browser's local storage, so a local copy of `index.html` and the hosted page keep separate sets, and clearing site data deletes them. Use **Export sets** to download them as one JSON file and **Import sets** to load that file in another browser.
+
 ## Hand off to an agent
 
 **Export for agents** in the selection bar turns your picks into a routing table that an AI agent or a task router can read. It opens a dialog with two formats:
@@ -44,13 +48,15 @@ With the key, `scripts/fetch_prices.py` reads per-provider stats from OpenRouter
 - **Markdown** has a routing table with one row per job: the model and effort level to use, whether the win is clear or a toss-up, which picks tie with it and the best value pick. Below it are a models table with API ids, prices, agent task cost and what each pick is best at, a rank table, and the exact Arena model names.
 - **JSON** holds the same data as structured fields, with `null` where a value is unknown. Each model has a lowercase `effort` value such as `high`, `xhigh` or `max`, plus a display label.
 
-Copy the text or download it as `arena-routing-YYYY-MM-DD.md` or `.json`. The export follows the current picks, the style control setting and "Combine effort levels". See [docs/example-routing.md](docs/example-routing.md) and [docs/example-routing.json](docs/example-routing.json) for a sample.
+Copy the text or download it as `arena-routing-YYYY-MM-DD.md` or `.json`. The export follows the current picks, the style control setting and "Combine effort levels". With a saved set open, the Markdown title and the JSON `set_name` field use the set's name. See [docs/example-routing.md](docs/example-routing.md) and [docs/example-routing.json](docs/example-routing.json) for a sample.
 
 To get the same output without a browser, pass the hash from the page URL to `scripts/export.py`:
 
 ```sh
-python3 -I scripts/export.py --hash '#e-dg85i-zf008-b7q62-fnp2m-kwow4-z7ptt' --format md
+python3 -I scripts/export.py --hash '#e-dg85i-zf008-b7q62-fnp2m-kwow4-z7ptt' --format md --name 'Coding agents'
 ```
+
+`--name` is optional and sets the title, as a saved set does on the page.
 
 The script runs the page's own code under Node, so it needs `node` on your PATH.
 
